@@ -1,11 +1,13 @@
 import { Link } from 'react-router-dom'
 import type { CaseFrontmatter } from '@/lib/types'
 import { PatternBadge } from './pattern-badge'
+import { useT } from '@/lib/i18n/use-t'
+import type { MessageKey } from '@/lib/i18n/messages'
 
-const statusLabel: Record<CaseFrontmatter['status'], string> = {
-  documented: '거래소 확인',
-  alleged: '의혹 / 조사 중',
-  'pattern-match': '구조적 위험',
+const statusKey: Record<CaseFrontmatter['status'], MessageKey> = {
+  documented: 'card.status.documented',
+  alleged: 'card.status.alleged',
+  'pattern-match': 'card.status.patternMatch',
 }
 
 interface CaseCardProps {
@@ -19,6 +21,7 @@ export function CaseCard({
   activePatterns = [],
   onTogglePattern,
 }: CaseCardProps) {
+  const t = useT()
   const drawdown = data.metrics?.maxDrawdown
   const drawdownLabel =
     typeof drawdown === 'number' ? `${(drawdown * 100).toFixed(0)}%` : null
@@ -34,7 +37,7 @@ export function CaseCard({
           {data.tokenSymbol}
         </span>
         <span className="font-mono text-[10px] uppercase tracking-widest text-ink-500">
-          {statusLabel[data.status]}
+          {t(statusKey[data.status])}
         </span>
       </div>
 
@@ -56,7 +59,9 @@ export function CaseCard({
       <div className="mt-auto flex items-baseline justify-between pt-5 font-mono text-xs">
         <span className="text-ink-500">{data.incidentDate}</span>
         {drawdownLabel && (
-          <span className="text-ink-200">최대 {drawdownLabel}</span>
+          <span className="text-ink-200">
+            {t('card.drawdownPrefix')} {drawdownLabel}
+          </span>
         )}
       </div>
     </Link>

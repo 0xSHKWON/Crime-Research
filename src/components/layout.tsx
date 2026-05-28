@@ -1,8 +1,11 @@
 import { useEffect, useState, type ReactNode } from 'react'
 import { Link } from 'react-router-dom'
 import { Disclaimer } from './disclaimer'
+import { useLang } from '@/lib/use-lang'
+import { useT } from '@/lib/i18n/use-t'
 
 export function Layout({ children }: { children: ReactNode }) {
+  const t = useT()
   return (
     <div className="min-h-screen bg-ink-900 text-ink-100">
       <header className="border-b border-ink-700/60 px-6 py-4 md:px-12">
@@ -20,7 +23,7 @@ export function Layout({ children }: { children: ReactNode }) {
               href="https://github.com/SangHyeonKwon"
               target="_blank"
               rel="noreferrer"
-              aria-label="GitHub 프로필 (새 탭)"
+              aria-label={t('github.profileLabel')}
               title="GitHub"
               className="inline-flex h-7 w-7 items-center justify-center rounded-sm border border-ink-700/60 text-ink-300 transition hover:border-ink-500 hover:text-ink-100"
             >
@@ -71,6 +74,7 @@ function applyTheme(theme: Theme) {
 
 function ThemeToggle() {
   const [theme, setTheme] = useState<Theme>(getInitialTheme)
+  const t = useT()
 
   // 마운트 시 한번 확실히 동기화 (FOUC 스크립트 + 초기 state 가 어긋날 가능성 차단)
   useEffect(() => {
@@ -79,7 +83,7 @@ function ThemeToggle() {
   }, [])
 
   const isDark = theme === 'dark'
-  const label = isDark ? '라이트 모드로 전환' : '다크 모드로 전환'
+  const label = isDark ? t('theme.toLight') : t('theme.toDark')
 
   const handleClick = () => {
     const next: Theme = isDark ? 'light' : 'dark'
@@ -100,44 +104,8 @@ function ThemeToggle() {
   )
 }
 
-type Lang = 'ko' | 'en'
-
-function getInitialLang(): Lang {
-  if (typeof document === 'undefined') return 'ko'
-  try {
-    const stored = localStorage.getItem('lang')
-    if (stored === 'ko' || stored === 'en') return stored
-  } catch {
-    /* ignore */
-  }
-  if (typeof navigator !== 'undefined' && navigator.language.toLowerCase().startsWith('en')) {
-    return 'en'
-  }
-  return 'ko'
-}
-
-function applyLang(lang: Lang) {
-  document.documentElement.lang = lang
-  try {
-    localStorage.setItem('lang', lang)
-  } catch {
-    /* ignore */
-  }
-}
-
 function LangToggle() {
-  const [lang, setLang] = useState<Lang>(getInitialLang)
-
-  useEffect(() => {
-    applyLang(lang)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  const handleSelect = (next: Lang) => {
-    if (next === lang) return
-    applyLang(next)
-    setLang(next)
-  }
+  const [lang, setLang] = useLang()
 
   return (
     <div
@@ -147,7 +115,7 @@ function LangToggle() {
     >
       <button
         type="button"
-        onClick={() => handleSelect('ko')}
+        onClick={() => lang !== 'ko' && setLang('ko')}
         aria-pressed={lang === 'ko'}
         className={`transition hover:text-ink-100 ${lang === 'ko' ? 'text-ink-100' : 'text-ink-500'}`}
       >
@@ -156,7 +124,7 @@ function LangToggle() {
       <span aria-hidden className="text-ink-600">|</span>
       <button
         type="button"
-        onClick={() => handleSelect('en')}
+        onClick={() => lang !== 'en' && setLang('en')}
         aria-pressed={lang === 'en'}
         className={`transition hover:text-ink-100 ${lang === 'en' ? 'text-ink-100' : 'text-ink-500'}`}
       >

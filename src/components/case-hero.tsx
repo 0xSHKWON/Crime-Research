@@ -1,11 +1,13 @@
 import type { ReactNode } from 'react'
 import type { CaseFrontmatter } from '@/lib/types'
 import { PatternBadge } from './pattern-badge'
+import { useT } from '@/lib/i18n/use-t'
+import type { MessageKey } from '@/lib/i18n/messages'
 
-const statusLabel: Record<CaseFrontmatter['status'], string> = {
-  documented: '거래소 공식 확인',
-  alleged: '의혹 / 조사 진행 중',
-  'pattern-match': '구조적 위험만',
+const statusKey: Record<CaseFrontmatter['status'], MessageKey> = {
+  documented: 'case.status.documented',
+  alleged: 'case.status.alleged',
+  'pattern-match': 'case.status.patternMatch',
 }
 
 const severityLabel: Record<CaseFrontmatter['severity'], string> = {
@@ -40,32 +42,36 @@ interface CaseHeroProps {
 }
 
 export function CaseHero({ data }: CaseHeroProps) {
+  const t = useT()
   const m = data.metrics
 
   const stats: Array<{ label: string; value: string; emphasis?: boolean }> = []
   if (m) {
     if (typeof m.startPrice === 'number' && typeof m.peakPrice === 'number') {
       stats.push({
-        label: '가격 구간',
+        label: t('case.stat.priceRange'),
         value: `${formatPrice(m.startPrice)} → ${formatPrice(m.peakPrice)}`,
       })
     }
     if (typeof m.maxGain === 'number') {
-      stats.push({ label: '최대 상승률', value: formatPct(m.maxGain) })
+      stats.push({ label: t('case.stat.maxGain'), value: formatPct(m.maxGain) })
     }
     if (typeof m.maxDrawdown === 'number') {
       stats.push({
-        label: '최대 하락률',
+        label: t('case.stat.maxDrawdown'),
         value: formatPct(m.maxDrawdown),
         emphasis: true,
       })
     }
     if (typeof m.marketCapPeak === 'number') {
-      stats.push({ label: '피크 시총', value: formatUsd(m.marketCapPeak) })
+      stats.push({
+        label: t('case.stat.marketCapPeak'),
+        value: formatUsd(m.marketCapPeak),
+      })
     }
     if (typeof m.marketCapEvaporated === 'number') {
       stats.push({
-        label: '증발 시총',
+        label: t('case.stat.marketCapEvaporated'),
         value: `-${formatUsd(m.marketCapEvaporated)}`,
         emphasis: true,
       })
@@ -75,13 +81,13 @@ export function CaseHero({ data }: CaseHeroProps) {
       typeof m.crashDurationHours === 'number'
     ) {
       stats.push({
-        label: '펌프 / 폭락',
-        value: `${m.pumpDurationDays ?? '—'}일 / ${m.crashDurationHours ?? '—'}h`,
+        label: t('case.stat.pumpCrash'),
+        value: `${m.pumpDurationDays ?? '—'}d / ${m.crashDurationHours ?? '—'}h`,
       })
     }
     if (typeof m.liquidationVolume24h === 'number') {
       stats.push({
-        label: '24h 청산',
+        label: t('case.stat.liquidation24h'),
         value: formatUsd(m.liquidationVolume24h),
       })
     }
@@ -93,7 +99,7 @@ export function CaseHero({ data }: CaseHeroProps) {
         <div className="flex flex-wrap items-center gap-2 border-b border-ink-700/40 pb-3 font-mono text-[10px] uppercase tracking-widest">
           <span className="text-ink-300">Case · {data.tokenSymbol}</span>
           <span className="text-ink-700">/</span>
-          <span className="text-ink-400">{statusLabel[data.status]}</span>
+          <span className="text-ink-400">{t(statusKey[data.status])}</span>
           <span className="ml-auto rounded-sm border border-ink-600 px-1.5 py-0.5 text-ink-100">
             {severityLabel[data.severity]}
           </span>
@@ -103,7 +109,7 @@ export function CaseHero({ data }: CaseHeroProps) {
           {data.title}
         </h1>
         <p className="mt-3 font-mono text-xs text-ink-500">
-          사건일 {data.incidentDate} · 게재일 {data.publishedDate}
+          {t('case.hero.incident')} {data.incidentDate} · {t('case.hero.published')} {data.publishedDate}
         </p>
 
         <div className="mt-5 flex flex-wrap gap-1.5">

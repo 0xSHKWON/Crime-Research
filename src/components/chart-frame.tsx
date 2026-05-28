@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react'
 import { cn } from '@/lib/utils'
+import { useT } from '@/lib/i18n/use-t'
 
 type Aspect = 'video' | 'square' | 'wide' | 'tall' | 'auto'
 
@@ -28,6 +29,7 @@ export function ChartFrame({
   children,
   className,
 }: ChartFrameProps) {
+  const t = useT()
   const hasChart = Boolean(children)
   return (
     <figure
@@ -70,7 +72,7 @@ export function ChartFrame({
       <figcaption className="border-t border-ink-700/60 bg-ink-800/30 px-4 py-3">
         <p className="text-sm leading-snug text-ink-200">{caption}</p>
         <p className="mt-1.5 font-mono text-[10px] uppercase tracking-widest text-ink-500">
-          출처 · {source}
+          {t('chart.source')} · {source}
         </p>
       </figcaption>
     </figure>
