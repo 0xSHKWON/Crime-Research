@@ -1,0 +1,238 @@
+---
+slug: "gps-shell"
+title: "GoPlus Security & MyShell (GPS / SHELL)"
+tokenSymbol: "GPS / SHELL"
+incidentDate: "2025-03-09"
+publishedDate: "2026-05-12"
+status: "documented"
+severity: "critical"
+patterns:
+  - "direct-dump"
+metrics:
+  maxDrawdown: -0.95
+exchanges:
+  binanceSpot: true
+  binanceAlpha: false
+  binanceFutures: true
+  others: ["bitget", "gate", "okx"]
+allegations:
+  - source: "Binance official announcement"
+    sourceUrl: "https://www.binance.com/en/support/announcement/"
+    date: "2025-03-09"
+    summary: "Confirmed a market maker's 21-hour one-way selling (70 million GPS, ~$5M in illicit gains). Announced a permanent ban on the market maker, seizure of proceeds, and a compensation plan for affected users."
+  - source: "BeInCrypto"
+    sourceUrl: "https://beincrypto.com/binance-market-maker-ban-gps-shell/"
+    date: "2025-03-09"
+    summary: "Reported that Binance discovered misconduct by a market maker tied to GPS and SHELL and imposed a permanent ban."
+  - source: "ChainCatcher"
+    sourceUrl: "https://www.chaincatcher.com/en/article/2171684"
+    date: "2025-03-10"
+    summary: "Analysis of the Web3Port / Whisper operating structure — alleging that the entity received free tokens under the guise of an incubator and used a subsidiary market maker as the dump channel."
+relatedCases: ["rave"]
+---
+
+import { ChartFrame } from '@/components/chart-frame'
+import { Timeline, TimelineEvent } from '@/components/case-timeline'
+import { Web3PortFlow } from '@/components/web3port-flow'
+import { ZoomableImage } from '@/components/zoomable-image'
+import gpsPriceSpot from '@/assets/cases/gps-shell/gps-price-spot.png'
+import shellPriceSpot from '@/assets/cases/gps-shell/shell-price-spot.png'
+
+## Overview
+
+GPS and SHELL are two tokens handled in the same way by the same market maker (Whisper, a Web3Port affiliate). On March 9, 2025, Binance's official announcement confirmed that the market maker failed to honor its buy-side quoting obligations and one-way-sold 70 million GPS over 21 hours, pocketing roughly $5M in illicit gains. The exchange permanently banned the market maker, seized the proceeds, and announced a compensation plan for affected users — making this a rare **documented** case.
+
+> "The market maker failed to fulfill any buy-side obligations for 21 hours, dumping 70 million GPS tokens for approximately $5M in proceeds."
+> — Binance official announcement (2025-03-09)
+
+The takeaway is that **a market maker itself can be repurposed as a manipulation tool**. Unlike a sophisticated short-squeeze setup like RAVE, this case shows how one-way selling — wearing the disguise of a normal "two-sided quoting" role — actually operates.
+
+## Timeline
+
+<Timeline>
+  <TimelineEvent date="2025-02-27 — SHELL Binance Spot listing">
+MyShell lists on Binance Spot (SHELL/USDT). Selling pressure begins immediately on the first candle after listing.
+  </TimelineEvent>
+  <TimelineEvent date="2025-03-04 — GPS Binance Spot listing">
+GoPlus Security lists on Binance Spot (GPS/USDT). Industry analysts report that Web3Port handled incubation around the listing and that its affiliate Whisper provided market making.
+  </TimelineEvent>
+  <TimelineEvent date="2025-03 — First 21 hours post-listing (GPS)">
+An exchange account classified as Whisper one-way sells 70 million GPS without posting buy-side quotes. On the daily chart, the first candle after listing falls from around $0.14 to around $0.04, a -71% short-term drop. SHELL shows a similar selling pattern over the same window.
+  </TimelineEvent>
+  <TimelineEvent date="2025-03-09 — Binance official announcement">
+**Binance officially confirms** market-maker misconduct, permanently bans the account, and freezes roughly $5M+ in proceeds. A compensation plan for affected GPS and SHELL holders is announced.
+  </TimelineEvent>
+  <TimelineEvent date="2025-03-10 onward — Analyst disclosures">
+X analyst accounts ([@ab_kuai_dong](https://x.com/ab_kuai_dong), @yuyue_chris, and others) publish the Web3Port / Whisper / Spark Digital Capital network, suggesting that the same operating model may have been applied to multiple projects.
+  </TimelineEvent>
+  <TimelineEvent date="2025-03 onward — Project responses">
+MyShell denies any direct capital relationship with Web3Port but does not deny the market-making engagement itself. Market participants raise concerns about further investigations into other projects *reportedly* serviced by the same market maker.
+  </TimelineEvent>
+</Timeline>
+
+## Supply Structure — The Market Maker's Free-Token Channel
+
+### GPS / SHELL key metrics side-by-side
+
+| Metric | GPS | SHELL |
+|--------|-----|-------|
+| Market-maker selling window | 21 hours | Sustained |
+| Tokens sold | 70 million | Not disclosed |
+| Market-maker proceeds (Binance official) | ~$5M | Not disclosed |
+| First-candle drop on daily chart | ~$0.14 → ~$0.04 | ~$0.60 → ~$0.30 |
+| Cumulative drawdown since listing (to date) | -95% (currently ~$0.0077) | -93% (currently ~$0.0422) |
+| Shared market maker | Web3Port / Whisper | Web3Port / Whisper |
+| Shared VCs (Cryptorank) | YZi Labs · OKX Ventures · HashKey | YZi Labs · OKX Ventures · HashKey |
+
+The two tokens differ in fundamentals, user base, and launch timing. And yet **their price charts over the same window mirror each other almost perfectly**. Many industry analysts read this not as organic price discovery but as circumstantial evidence that a single entity's identical algorithm handled both assets in parallel.
+
+### Free tokens in, dump channel out — the alleged operating model
+
+The Web3Port operating model as compiled by X analyst [@ab_kuai_dong](https://x.com/ab_kuai_dong) and others *(Binance's official ban is fact; the operational details below are unverified analyst claims)*:
+
+1. **Spark Digital Capital era — VC disguise.** A Shanghai-based fund. Reportedly received free tokens without deploying capital and used subsequent VC rounds as exit liquidity.
+2. **Web3Port era — free tokens as service compensation.** As the VC market saturated, the entity pivoted to an incubator around 2021-2022, receiving **1-3% of supply** as free tokens under the banner of project incubation.
+3. **Whisper era — the cash-out channel.** Once a venue was needed to liquidate those tokens, the market maker Whisper was set up — with the permissions structure required to one-way sell as soon as a listing went live.
+
+> "The project team is the 'printing press', and the market maker is the venue that converts those tokens into cash and splits the proceeds by an agreed ratio. Because of this tied interest, it is highly unlikely that the market maker would dump tokens against the project team's wishes."
+> — @yuyue_chris, via ChainCatcher
+
+### Other projects *reportedly* serviced by Web3Port market making
+
+| Project | Sector | Note |
+|---------|--------|------|
+| Aethir | Decentralized cloud (AI / gaming) | — |
+| dappOS | Web3 OS | — |
+| Lumoz | Layer 2 (zkRollup) | — |
+| Mind Network | Decentralized AI | — |
+| Movement | High-performance L2 | Separate manipulation allegations in 2025 (MOVE case) |
+| Puffer | Liquid staking | — |
+| Polyhedra | Cross-chain | — |
+
+This table only lists projects *reportedly* using Web3Port's market-making service. It does not imply that misconduct comparable to GPS / SHELL occurred at any of them.
+
+## How It Worked — "One-Way Market Making"
+
+A normal market maker provides both bid and ask quotes simultaneously to seed liquidity, and earns spread in return. The substance of the misconduct Binance announced is that this role operated in a single direction — the ask side only.
+
+### Stage 1 — Receive free tokens
+
+Posing as an incubator or VC, the entity receives **1-3% of token supply for free** from the project, ostensibly as compensation for market-making services.
+
+### Stage 2 — Transfer to the affiliated market maker
+
+The free tokens are routed to the affiliate Whisper (the market maker), where the permissions structure allows direct large-scale selling on the exchange.
+
+### Stage 3 — Skip the bids, sell only
+
+Under the guise of market making, **buy-side quotes are barely posted, and selling continues**. According to Binance's official announcement, no buy-side obligation was met for 21 hours in the GPS case.
+
+### Stage 4 — Split the proceeds
+
+The selling proceeds are split with the project team at a pre-agreed ratio (per analyst claims). The project team supplies tokens; the market maker provides the cash-out channel.
+
+<ChartFrame
+  kind="FUND FLOW"
+  caption={<>
+    Four-stage flow — the project transfers free tokens to Web3Port, the affiliate Whisper sells those tokens on Binance Spot under a market-maker mandate, and the proceeds are redistributed with the project team.
+    <br />
+    <br />
+    Only the ③→④ leg is documented by Binance's official announcement (70M GPS · 21h · ~$5M).
+    <br />
+    <br />
+    The remaining stages and split ratios are analyst claims via ChainCatcher.
+  </>}
+  source="Binance official announcement (2025-03-09) · ChainCatcher analysis"
+  aspect="square"
+>
+  <Web3PortFlow />
+</ChartFrame>
+
+## Data
+
+<ChartFrame
+  kind="PRICE · GPS · 1D"
+  caption={<>
+    GPS / USDT Binance Spot, daily candles, March 2025 listing to May 2026.
+    <br />
+    <br />
+    Right after the first candle, 21 hours of one-way selling took it from ~$0.14 to ~$0.04 (-71%).
+    <br />
+    <br />
+    No recovery followed; further drawdown brought the price to ~$0.0077 today. Click the chart to enlarge.
+  </>}
+  source="Binance Spot · TradingView capture"
+  aspect="auto"
+>
+  <ZoomableImage src={gpsPriceSpot} alt="GPS/USDT Binance Spot daily (March 2025 listing to May 2026)" />
+</ChartFrame>
+
+<ChartFrame
+  kind="PRICE · SHELL · 1D"
+  caption={<>
+    SHELL / USDT Binance Spot, daily candles, February 2025 to May 2026.
+    <br />
+    <br />
+    The left segment shows an initial selloff from ~$0.60 to ~$0.30, followed by a steady decline. Currently around $0.0422.
+    <br />
+    <br />
+    Compared with the GPS chart, traces of the same algorithmic selling over the same window are visible (per multiple analyst readings). Click the chart to enlarge.
+  </>}
+  source="Binance Spot · TradingView capture"
+  aspect="auto"
+>
+  <ZoomableImage src={shellPriceSpot} alt="SHELL/USDT Binance Spot daily (February 2025 to May 2026)" />
+</ChartFrame>
+
+### Binance's response
+
+| Action | Detail |
+|--------|--------|
+| Permanent market-maker ban | The Web3Port / Whisper account on Binance was banned |
+| Proceeds frozen | Approximately $5M+ in selling proceeds were seized |
+| User compensation | A plan was announced to compensate GPS and SHELL holders using the seized proceeds |
+| Tightened MM standards | Spread stability, appropriate order sizing, and an explicit prohibition on manipulation |
+
+It is a rare case in which an exchange officially acknowledged market-maker misconduct, seized the proceeds, and went as far as compensating users. In most manipulation cases, exchanges stay silent or issue only ambiguous statements.
+
+## Lessons — Signals to identify similar cases
+
+These are the risk indicators a trader can pull from this case. Any one of them is weak on its own, but **three or more in combination is a strong warning signal**.
+
+### Market-maker signals
+
+- A single market maker handles liquidity across many tokens — if one breaks, multiple incidents fire at once
+- Undisclosed market-maker contracts — normal practice would publish quarterly activity reports
+- The same entity simultaneously plays incubator, VC, and market maker (a structural conflict of interest)
+
+### Price-chart signals
+
+- A one-way decline right after listing — an order book where bids are absent and only asks fill
+- A stair-step decline — the characteristic shape of algorithmic selling
+- Chart shapes mirroring those of other tokens in the same window — suggesting the same market maker is operating
+
+### Investor / VC network signals
+
+- The same VC simultaneously backs multiple suspect tokens — YZi Labs, OKX Ventures, and HashKey appear on the GPS, SHELL, and RAVE rosters alike
+- Exchange-affiliated VCs holding the token — possible information asymmetry. This does not imply that those VCs participated in any wrongdoing; it simply means their portfolio sits close to exchange surveillance
+
+### Listing-pattern signals
+
+- A very small gap between listing and the market-making mandate — too short for proper handover
+- Abnormal trading volume in the first 24-48 hours after listing — possible wash trading by the market maker
+
+## Industry implications
+
+1. **Market makers can be repurposed as manipulation tools.** The fact that the normal role of "liquidity provider" can operate as a "free-token disposal channel" has now been confirmed by an exchange's official announcement.
+2. **Exchanges also bear reactive responsibility.** Binance's after-the-fact actions are welcome, but the fact that they only kicked in after Web3Port's operating pattern had compounded over years exposes the limits of upstream monitoring.
+3. **VC, incubator, and market maker should be separated.** When a single entity plays all three roles, structural conflicts of interest become unavoidable.
+4. **Watch exchange-affiliated VC portfolios closely.** This does not imply those VCs participated in any wrongdoing; it means their portfolios sit close to exchange surveillance.
+
+## Sources
+
+1. **Binance official announcement (2025-03-09)** — Market maker ban + proceeds seizure + user compensation
+2. **BeInCrypto** — ["Binance Bans Mystery Market Maker for GPS and SHELL Over Misconduct"](https://beincrypto.com/binance-market-maker-ban-gps-shell/)
+3. **ChainCatcher** — ["Behind the collapse of GPS and SHELL: A complete operational chain"](https://www.chaincatcher.com/en/article/2171684)
+4. **Coinfomania** — ["GPS & SHELL Controversy: What Binance's Investigation Revealed"](https://coinfomania.com/gps-shell-controversy-what-binances-investigation-revealed/)
+5. **AInvest** — ["Binance Bans Market Maker, Seizes Profits from GPS, SHELL"](https://www.ainvest.com/news/binance-bans-market-maker-seizes-profits-gps-shell-2503/)
+6. **Yellow.com** — ["Binance Bans Mystery Market Maker, Seizes Profits Over Token Manipulation"](https://yellow.com/news/binance-bans-mystery-market-maker-seizes-profits-over-token-manipulation)

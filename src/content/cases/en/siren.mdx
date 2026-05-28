@@ -1,0 +1,329 @@
+---
+slug: "siren"
+title: "Siren (SIREN)"
+tokenSymbol: "SIREN"
+incidentDate: "2026-03-22"
+publishedDate: "2026-05-13"
+status: "alleged"
+severity: "high"
+patterns:
+  - "short-squeeze"
+  - "supply-concentration"
+  - "derivatives-frenzy"
+  - "alpha-no-spot"
+metrics:
+  startPrice: 0.045
+  peakPrice: 3.60
+  bottomPrice: 0.54
+  maxGain: 30
+  maxDrawdown: -0.85
+  marketCapPeak: 2200000000
+  pumpDurationDays: 35
+  crashDurationHours: 24
+  liquidationVolume24h: 7100000
+exchanges:
+  binanceSpot: false
+  binanceAlpha: false
+  binanceFutures: true
+  others: ["bybit", "mexc", "pancakeswap"]
+allegations:
+  - source: "ZachXBT"
+    sourceUrl: "https://x.com/zachxbt"
+    date: "2026-03-23"
+    summary: "Reported that the 48.5% SIREN cluster wallets on BNB Chain show on-chain connections to wallets linked to DWF Labs-associated tokens (LADYS, RACA, TOMO, and others). Explicitly noted that the connection is circumstantial, not direct evidence of manipulation."
+  - source: "Bubblemaps"
+    sourceUrl: "https://x.com/bubblemaps"
+    date: "2026-03-22"
+    summary: "A single entity allegedly controls roughly 50% of SIREN supply, with one cluster holding over $1B. Posted a 'This only ends one way' warning hours before the first crash."
+  - source: "EmberCN"
+    sourceUrl: "https://x.com/EmberCN"
+    date: "2026-03-23"
+    summary: "52 of the top 54 holders are presumed to belong to a single entity, holding 644M SIREN (88.5% of supply). Excludes the burn wallet and Binance Web3 wallet."
+  - source: "Crypto Times"
+    sourceUrl: "https://www.cryptotimes.io/2026/04/01/siren-crashes-77-again-three-times-in-a-row-now-classic-pump-n-dump/"
+    date: "2026-04-01"
+    summary: "Reported that SIREN repeated the same pump-and-dump cycle three times over the course of March 2026."
+relatedCases: ["rave"]
+---
+
+import { ChartFrame } from '@/components/chart-frame'
+import { Timeline, TimelineEvent } from '@/components/case-timeline'
+import { MarketcapCycles } from '@/components/marketcap-cycles'
+import { SupplyBars } from '@/components/supply-bars'
+import { ZoomableImage } from '@/components/zoomable-image'
+import sirenPerp1h from '@/assets/cases/siren/price-perp-1h.png'
+
+export const sirenHoldersATH = [
+  { rank: 1, address: "0x2aa5d15eb36e5960d056e8fea6e7bb3e2a06a351", label: "vesting · 24h distribution", category: "team", pct: 46.84, balance: 204389605 },
+  { rank: 2, address: "0xfe5bcc32063ced8384507d41c334ead5c70fbb56", label: "Bitget withdrawal", category: "unknown", pct: 16.46, balance: 71841274 },
+  { rank: 3, address: "0x73d8bd54f7cf5fab43fe4ef40a62d390644946db", label: "MEXC withdrawal", category: "unknown", pct: 13.97, balance: 60950293 },
+  { rank: 4, address: "0x5ac24c1e519cfcd4566c5e087047b5ba6001990a", label: "Bitget withdrawal", category: "unknown", pct: 8.62, balance: 37596180 },
+  { rank: 5, address: "0xfde7c07b564f314d5ee6f7746e2d92e55c2ad695", label: "unlabeled", category: "unknown", pct: 6.79, balance: 29619522 },
+  { rank: 6, address: "0xff335cdb6ff50ebe9191fb8d792911af856581d7", label: "unlabeled", category: "unknown", pct: 4.78, balance: 20852167 },
+]
+
+## Overview
+
+SIREN is a rare case in which **the same pump-and-dump cycle repeated three times** over a single month in March 2026. Market cap roughly doubled three times and fully retraced three times, with fresh retail flowing in on each leg. A triple disclosure from ZachXBT, Bubblemaps, and EmberCN landed in the same window right before the first crash — and yet the exchanges did not intervene.
+
+ZachXBT reported that the 48.5% cluster wallets showed on-chain connections to DWF Labs-linked tokens, while DWF Labs has consistently denied the related allegations. **This page does not assert that DWF Labs engaged in manipulation, and explicitly notes that on-chain connections are circumstantial evidence — not direct proof.**
+
+> "One entity controls ~50% of SIREN. One cluster holds over $1B. This only ends one way."
+> — Bubblemaps (warning posted hours before the first crash)
+
+## Timeline
+
+<Timeline>
+  <TimelineEvent date="February 2025 — BNB Chain launch">
+SIREN launches under the concept of "the first on-chain AI agent analyst," qualifying for the BNB Chain Meme Liquidity Support Plan.
+  </TimelineEvent>
+  <TimelineEvent date="February to July 2025 — Quiet accumulation window">
+The project is effectively abandoned (per Bubblemaps' assessment). Over the same window, some cluster wallets begin accumulating. Four wallets are pre-positioned during June and July 2025 (per EmberCN's analysis).
+  </TimelineEvent>
+  <TimelineEvent date="2026-02-05 to 02-06 — 484M accumulated (905 transfers in 24 hours)">
+**484M SIREN (~48% of supply)** is accumulated into a single distribution contract `0x2aa5…a351` via 905 transfers in 24 hours. The source is another single contract `0xb1c5…6699`. Both contracts were deployed in 2022 and appear to be reusable vesting/distribution infrastructure (presumed Hedgey, Sablier, or similar — based on this page's own Dune indexing).
+  </TimelineEvent>
+  <TimelineEvent date="Mid-February 2026 — Pump begins">
+Price starts rising from an average accumulation cost around $0.045. No catalyst.
+  </TimelineEvent>
+  <TimelineEvent date="Mid-March 2026 — Binance · Bybit perp listings">
+SIREN perps list on Binance Futures and Bybit Futures, expanding derivatives exposure.
+  </TimelineEvent>
+  <TimelineEvent date="2026-03-21 to 03-22 — Vesting cliff (24-hour distribution)">
+The 484M SIREN that had been held for six weeks is unlocked and almost entirely distributed from the same contract `0x2aa5…a351` via 905 transfers within 24 hours. Price moves toward ATH immediately before and after distribution.
+  </TimelineEvent>
+  <TimelineEvent date="2026-03-22 09:13 to 10:56 UTC — Concentrated retail distribution window">
+Over roughly 1 hour and 43 minutes leading into ATH, the top 30 receivers each take 2–5M SIREN (totaling ~96M, or ~20% of the distribution). The largest wallets among the 905 transfers cluster into this window. The final unlock transfer lands at 11:53 UTC. Many of the receiving wallets are observed to have had gas funded by withdrawals from Bitget, OKX, and MEXC.
+  </TimelineEvent>
+  <TimelineEvent date="2026-03-22 — ATH $3.60+">
+Market cap reaches $2.2B and the token enters the top 50, roughly 30x higher than mid-February.
+  </TimelineEvent>
+  <TimelineEvent date="2026-03-22 to 03-23 — Triple disclosure">
+Within the same 24 hours: (1) Bubblemaps warns that "One entity controls ~50% of SIREN," (2) EmberCN reports that "52 of the top 54 = 88.5% of supply," and (3) ZachXBT posts that "the 48.5% cluster shows on-chain connections to DWF-linked tokens." All three land right after the 484M unlock from the vesting contract.
+  </TimelineEvent>
+  <TimelineEvent date="2026-03-24 to 03-25 — First crash">
+First cycle: $1.71B → $743M (**-57%**).
+  </TimelineEvent>
+  <TimelineEvent date="2026-03-26 to 03-28 — Second cycle">
+$743M → $1.51B (+103%) → $586M (-61%).
+  </TimelineEvent>
+  <TimelineEvent date="2026-03-30 to 04-01 — Third cycle">
+$586M → $1.30B (+122%) → $393.7M (-70%). Bubblemaps posts a "You were warned" meta tweet.
+  </TimelineEvent>
+  <TimelineEvent date="2026-04-18 — ZachXBT re-flag">
+During the RAVE disclosure, ZachXBT once again includes SIREN on a list of "tokens showing manipulation-suspect patterns."
+  </TimelineEvent>
+  <TimelineEvent date="As of May 2026">
+Price hovers around $1.79. One more small short squeeze occurs (+50%, with $1.56M liquidated). Supply concentration is gradually dispersing from 50% to roughly 8% — possibly reflecting ongoing cluster distribution.
+  </TimelineEvent>
+</Timeline>
+
+## Supply Structure — Two estimates
+
+Two analysts arrived at different estimates of SIREN's supply concentration because they used different cluster-identification methods.
+
+| Analyst | Estimated share | Identification method | Holdings value (at peak) |
+|---------|----------------|----------------------|--------------------------|
+| **Bubblemaps** | ~48.5% | Based on direct fund flows (200+ wallets, later spread across 47 addresses) | ~$1.5B |
+| **EmberCN** | ~88.5% | Based on gas funding and behavioral patterns (52 of the top 54 holders, 644M SIREN) | ~$1.44B |
+
+It is not possible to assert which figure is correct. **Either estimate, however, sits well outside normal levels.** Even 50% alone is enough supply control for manipulation.
+
+<ChartFrame
+  kind="SUPPLY DISTRIBUTION · AS OF ATH"
+  caption={<>
+    Top 6 holders as of 2026-03-22 00:00 UTC.
+    <br />
+    <br />
+    Rank 1 is the vesting/distribution contract (just before immediate distribution).
+    <br />
+    Ranks 2 through 4 are single EOAs whose gas was funded by withdrawals from Bitget and MEXC.
+    <br />
+    <br />
+    The top 6 combined hold roughly 97% — every holder from rank 7 onward sits below 1%, in retail-style dispersion.
+  </>}
+  source="In-house Dune indexing (transfers_bnb.erc20 · labels.addresses)"
+  aspect="auto"
+>
+  <SupplyBars rows={sirenHoldersATH} asOf="2026-03-22 00:00 UTC" symbol="SIREN" />
+</ChartFrame>
+
+### 484M distributed in 24 hours — in-house indexing
+
+This page independently indexed the transfer events of the SIREN contract (`0x997A…18e1`) via Dune (based on `transfers_bnb.erc20`). The findings are as follows.
+
+- **484,103,975 SIREN** (~**48%** of supply, assuming a 1B total) was accumulated into the single distribution contract `0x2aa5…a351` between **2026-02-05 and 02-06 (a 24-hour window)** — 905 of 906 receives (**99.99%**) came from a single source
+- The single source is another contract, `0xb1c5…6699` — **905 batched transfers within 24 hours**
+- The same 484M was then distributed almost entirely between **2026-03-21 10:19 and 03-22 11:53 UTC (roughly 25 hours)** via 905 transfers
+- The final unlock transfer landed at **2026-03-22 11:53 UTC** — about 30 minutes before the first ATH
+- Distribution to the top 30 receivers was concentrated between **2026-03-22 09:13 and 10:56 UTC (1 hour 43 minutes)**. Each received 2–5M SIREN, totaling roughly 96M (~20% of the 484M) — the remaining 80% went to smaller wallets within the same 25-hour window
+- Both contracts were **deployed in 2022** as reusable infrastructure (with a track record of handling ETH, BUSD, USDC, CAKE, and other tokens) — presumed to be a Hedgey- or Sablier-style vesting / claim contract
+
+This analysis backs EmberCN's *"~$1B withdrawn from vesting"* circumstantial claim with directly measurable facts. That said, **which specific vesting service the contract is an instance of** cannot be asserted without BscScan source-code verification.
+
+## How It Worked — Why the cycles could repeat
+
+The defining feature of this case is that **the manipulation pattern repeated clearly three times** — distinct enough that CoinGecko itself published the visualization.
+
+<ChartFrame
+  kind="MARKET CAP · 3 CYCLES"
+  caption={<>
+    Six inflection points in SIREN's market cap between 2026-03-24 and 04-01.
+    <br />
+    <br />
+    The case's defining feature is that the same entity reportedly repeated the same mechanism *three times*.
+    <br />
+    <br />
+    Each cycle's peak steps progressively lower — a signal of ongoing distribution.
+  </>}
+  source="CoinGecko · Crypto Times"
+  aspect="video"
+>
+  <MarketcapCycles />
+</ChartFrame>
+
+### Stage 1 — Fundamental setup
+
+SIREN entered an effectively abandoned state shortly after launch. With no real users or product, the token survived on *narrative plus market-maker capital* alone. In tokens like this, most of the volume is likely wash trading between insider wallets, which keeps the accumulation cost far below the market price.
+
+### Stage 2 — Pre-positioning
+
+According to EmberCN's analysis, 48 of the cluster wallets accumulated *around* 2026-03-22, while the remaining 4 had been pre-positioned since June and July 2025. The average accumulation cost is around $0.045 — effectively an unbounded profit zone at almost any exit price.
+
+### Stage 3 — Short squeeze (same mechanism as RAVE)
+
+While the pump was in progress, perps listed on Binance Futures and Bybit Futures, opening short baiting. In the same window, the cluster sent large deposits to exchanges → traders read this as a "dump imminent" signal → shorts accumulated → a sudden buy-side push triggered a liquidation cascade. At the peak, liquidations totaled $2.4M on Binance and $4.7M on Bybit, for a combined $7M+. Open Interest peaked at $105M.
+
+### Stage 4 — The burn paradox
+
+A 26% supply burn was executed, further shrinking the circulating float. When insiders already hold most of the supply, a burn **only makes manipulation easier**. A reminder that burns are not always bullish.
+
+### Stage 5 — Repetition (the most sophisticated part)
+
+First pump → first dump (realizing profit) → the same cluster accumulates again at a lower price → second pump → second dump → a third repetition. With each cycle, the average retail entry rises (losses on each dump) while the insider average entry falls.
+
+## The DWF Labs connection — the most controversial area
+
+This is the most sensitive part of the case. The source and the scope of the assertion need to be kept clearly separate.
+
+### ZachXBT's finding (the factual portion)
+
+On 2026-03-23, while graphing the 48.5% SIREN cluster wallets on BSC, ZachXBT reported finding that the addresses are on-chain connected to several obscure DWF-affiliated tokens (LADYS, RACA, TOMO, and others).
+
+### Publicly available facts
+
+- DWF Labs is a major crypto market maker
+- DWF Labs has previously made a strategic investment in SIREN (public information)
+- SIREN was supported under the BNB Chain Meme Liquidity Support Plan
+
+The fact itself that *"DWF is SIREN's official market maker and an investor"* is publicly available information.
+
+### DWF Labs' position
+
+DWF Labs has denied the manipulation allegations around SIREN, and has consistently denied earlier allegations (LADYS and others).
+
+### The scope of this page's assertion
+
+**This page does not assert that DWF Labs engaged in manipulation.** ZachXBT's on-chain analysis only shows the fact that *the 48.5% cluster wallets exhibit on-chain connections to DWF-linked token wallets*. Whether that connection is direct evidence of manipulation or merely traces of normal market-making activity is something that cannot be concluded without off-chain materials (market-maker contracts, internal chat logs, and so on).
+
+## Data
+
+<ChartFrame
+  kind="PRICE · 1H"
+  caption={<>
+    SIREN/USDT Binance Perpetual 1-hour candles plus Open Interest, January through May 2026.
+    <br />
+    <br />
+    ATH wick ~$4.80 (March 22), close-basis ATH ~$3.60+.
+    <br />
+    OI peak ~$105M (late March).
+    <br />
+    <br />
+    The three pump-and-dump cycles are visually clear. Click the chart to enlarge.
+  </>}
+  source="Binance Futures · TradingView capture"
+  aspect="auto"
+>
+  <ZoomableImage src={sirenPerp1h} alt="SIREN/USDT Binance Perpetual 1-hour candles plus Open Interest (January through May 2026)" />
+</ChartFrame>
+
+### Market structure
+
+| Exchange | SIREN |
+|----------|-------|
+| Binance Spot | X |
+| **Binance Futures** | O (listed mid-March 2026) |
+| Bybit Spot | O |
+| **Bybit Futures** | O (listed mid-March 2026) |
+| MEXC Futures | O |
+| **PancakeSwap (BSC)** | O — primary spot venue |
+
+As a BNB Chain token, PancakeSwap serves as the primary spot venue. The Binance-spot-absent, perp-listed structure mirrors RAVE's *alpha-no-spot* setup. PancakeSwap's shallow-pool price feeds into the perp's mark-price index.
+
+### Liquidations · derivatives metrics
+
+- Forced liquidations at the first crash — $2.4M on Binance, $4.7M on Bybit, $7M+ combined
+- Open Interest peak — $105M
+- Short ratio during the pump exceeded 59%
+
+## Lessons — Signals to identify similar cases
+
+SIREN is the case that most clearly illustrates the rule *"don't re-enter a token that has already crashed once."*
+
+### Repeating-cycle signals
+
+- A token that has already crashed once pumps to a similar level again within a short window — the first cycle may be a *prototype*, with the 2nd and 3rd as the real game
+- The volume pattern in each cycle is nearly identical — a trace of algorithmic accumulate-and-dump
+- Each cycle's peak steps progressively lower — artificial distribution
+
+### Vesting / lockup-service signals
+
+- A large unlock right *before* the pump from a vesting/claim contract like Hedgey or Sablier — locked tokens flipping into tradable state
+- A gap of **less than 36 hours** between the vesting cliff and ATH is a very strong risk signal (SIREN: the final unlock landed 30 minutes before ATH)
+- When 30%+ of supply sits in a single contract with an approaching vesting cliff, expect imminent volatility at the price-discovery venue (such as perps)
+- When many of the receiving retail wallets had their **gas funded by exchange withdrawals** right after the unlock — not proof of a common entity, but consistent with preparation to sell through exchange channels
+
+### Market-maker / VC connection signals
+
+- An official market maker that is simultaneously a strategic investor — a dual conflict of interest
+- Beneficiary of a chain-level incentive program (such as the BNB Chain Meme Liquidity Support) — capital and legitimacy secured in one shot
+- Insider wallets sharing gas-funding or trading connections with other tokens of the same market maker — ZachXBT's forensic method
+
+### Forensic-tool warnings
+
+- A public warning from Bubblemaps — typically lands *right before* a crash
+- A direct phrase like "This only ends one way" — a signal of analyst conviction
+
+### The burn paradox
+
+- A burn executed in a high-concentration setting — further compresses the float, making manipulation *easier*
+- A reminder that burns are not always bullish
+
+### Derivatives signals
+
+- A short ratio above 50% during the pump — a squeeze setup in progress
+- An abnormal OI / market-cap ratio — common to both RAVE and SIREN
+
+### Listing-timing signals
+
+- A near-dead token suddenly listing perps on a major exchange — expanding the price-discovery venue to maximize manipulation effect
+- The pump starts within days of the listing — evidence of pre-setup
+
+## Industry implications
+
+1. **Forensic tools detect, but cannot stop.** Bubblemaps warned accurately *hours in advance* — yet without any exchange intervention, the pattern *repeated three times*. These tools only deliver value in combination with exchange willingness to act.
+2. **Market maker = strategic investor — a structural conflict of interest.** Setting aside the truth of the DWF Labs allegations, the structure in which a single entity wears both market-maker and investor hats is an inherent conflict.
+3. **Failure to learn through repetition.** Even with the same pattern repeating three times on the same token, fresh retail flowed in each round. Market information asymmetry remains extreme.
+4. **On-chain alone is not 100% proof.** Even with strong circumstantial evidence, a definitive conclusion is hard to reach without off-chain materials such as market-maker contracts or internal logs.
+
+## Sources
+
+1. **ZachXBT** — [X (Twitter)](https://x.com/zachxbt) — 2026-03-23 disclosure of DWF-linked wallet connections
+2. **Bubblemaps** — [X (Twitter)](https://x.com/bubblemaps) — 2026-03-22 "One entity controls ~50% of SIREN" warning
+3. **EmberCN** — [X (Twitter)](https://x.com/EmberCN) — 2026-03-23 analysis of 88.5% supply concentration
+4. **CoinGecko** — [X (Twitter)](https://x.com/coingecko) — 2026-03-31 visualization of three repeating cycles in a single month
+5. **Crypto Times** — ["SIREN Crashes 77% Again, Three Times in a Row Now: Classic Pump-n-Dump"](https://www.cryptotimes.io/2026/04/01/siren-crashes-77-again-three-times-in-a-row-now-classic-pump-n-dump/)
+6. **Crypto Potato** — ["SIREN Tanks 70% in a Single Day as ZachXBT and Bubblemaps Sound the Alarm"](https://cryptopotato.com/siren-tanks-70-in-a-single-day-as-zachxbt-and-bubblemaps-sound-the-alarm/)
+7. **BeInCrypto** — ["Analysts Give Major Warning After SIREN Crypto Jumps 800%"](https://beincrypto.com/siren-crypto-800-percent-rally-analyst-warning/)
+8. **Yellow.com** — ["SIREN Loses 70% After Investigators Flag Wallet Cluster"](https://yellow.com/news/siren-token-price-crash-supply-risk)
+9. **Crypto Times** — ["Binance-Listed Siren Token Rallies 30X — Here's Why You Should Stay Away"](https://www.cryptotimes.io/2026/03/24/binance-listed-siren-token-rallies-30x-heres-why-you-should-stay-away/)

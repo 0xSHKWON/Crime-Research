@@ -1,0 +1,375 @@
+---
+slug: "memecore"
+title: "MemeCore (M)"
+tokenSymbol: "M"
+incidentDate: "2026-04-20"
+publishedDate: "2026-05-14"
+status: "alleged"
+severity: "high"
+patterns:
+  - "supply-concentration"
+  - "low-float"
+  - "cross-exchange-coordination"
+metrics:
+  marketCapPeak: 6500000000
+  pumpDurationDays: 270
+exchanges:
+  binanceSpot: false
+  binanceAlpha: true
+  binanceFutures: false
+  others: ["kraken", "bitget"]
+allegations:
+  - source: "ZachXBT"
+    sourceUrl: "https://x.com/zachxbt"
+    date: "2026-04-20"
+    summary: "Roughly 99.6% of M token supply allegedly controlled by insiders (Binance Alpha 48.85% + insider cluster 23.46% + Genesis team 25.82%). Non-insider free float estimated at 0.1% (~$4M). Market cap $6B / cumulative app trading volume $66M ≈ 91:1 ratio. On the day Kraken listed M, a suspect team wallet reportedly sent 5.3M M to Kraken deposit addresses — flow visualized via TRM Labs."
+  - source: "ZachXBT (RAVE disclosure list)"
+    sourceUrl: "https://x.com/zachxbt"
+    date: "2026-04-18"
+    summary: "Alongside the RAVE crash disclosure, six additional tokens flagged for 'highly questionable price action': SIREN, MYX, COAI, M, PIPPIN, RIVER."
+  - source: "Cointelegraph"
+    sourceUrl: "https://cointelegraph.com/news/investigator-concentration-concerns-memecore"
+    date: "2026-04-21"
+    summary: "ZachXBT publicly asked MemeCore to disclose data justifying its $6B market cap and the rationale for 90%+ insider holdings."
+  - source: "Bitcoin.com News"
+    sourceUrl: "https://news.bitcoin.com/zachxbt-flags-kraken-m-token-manipulation/"
+    date: "2026-04-20"
+    summary: "ZachXBT flagged Kraken as a 'key venue' in alleged M token manipulation, describing the exchanges as 'co-conspirators'."
+relatedCases: ["rave", "siren"]
+---
+
+import { ChartFrame } from '@/components/chart-frame'
+import { Timeline, TimelineEvent } from '@/components/case-timeline'
+import { ZoomableImage } from '@/components/zoomable-image'
+import { SupplyBars } from '@/components/supply-bars'
+import { KrakenFlow } from '@/components/kraken-flow'
+import mPriceSpot1d from '@/assets/cases/memecore/price-spot-1d.png'
+
+export const memecoreHoldersATH = [
+  { rank: 1, address: "0x05cb186ab8ec85378a2cbf8a858568a8fb216b07", label: "EOA · unlabeled", category: "team", pct: 41.39, balance: 95058050 },
+  { rank: 2, address: "0x8b800787d7e47d9720512ea596ee7a44c9962e08", label: "EOA · unlabeled", category: "team", pct: 21.77, balance: 50000000 },
+  { rank: 3, address: "0x73d8bd54f7cf5fab43fe4ef40a62d390644946db", label: "Same wallet as SIREN top holder", category: "unknown", pct: 7.47, balance: 17162635 },
+  { rank: 4, address: "0x6f1f0a1ccc76d2d292249b19c19e401f0e843ba9", label: "ZachXBT-flagged suspect team wallet", category: "unknown", pct: 4.05, balance: 9305844 },
+  { rank: 5, address: "0x9b8fb7ff2ffdc0e75383c7bb4b8e823e2ecf9d76", label: "Unlabeled", category: "unknown", pct: 2.12, balance: 4864958 },
+  { rank: 6, address: "0xc51eb7c9dc5ebd7c5433376a52fa85cb00c5bcaf", label: "Unlabeled", category: "unknown", pct: 2.09, balance: 4805621 },
+]
+
+## Overview
+
+MemeCore (M) is a major token that broke into the top 20 by market cap at around $6.5B. Per ZachXBT's on-chain analysis, however, **roughly 99.6% of the supply is allegedly controlled by insiders**, with the non-insider free float estimated at only **0.1% (~$4M)**. Other manipulation-allegation cases (RAVE, SIREN, LAB) follow a *single vertical pump and abrupt dump* shape; M is different — its market cap **accumulated in stages over nine months** (two distinct pump phases in 2025-09 and 2026-04, separated by a long range).
+
+In this case, ZachXBT explicitly framed the *exchanges* not as neutral venues but as **"co-conspirators"**. On July 3, 2025, the day Kraken listed M on spot, a suspect team wallet reportedly transferred 5.3M M to Kraken deposit addresses, with 18 newly created addresses receiving withdrawals — a flow he visualized using TRM Labs. **This page does not assert that Kraken, Binance, or Bitget participated in any manipulation**; it cites the allegations ZachXBT raised and the exchanges' non-response as stated.
+
+> "Their largest accomplishment is reaching $66M total volume on the app but the token has $6B market cap. lol."
+> — ZachXBT
+
+> "Please present a single data point that supports a top 20 token at a $6B market cap. And explain why insiders hold over 90%."
+> — ZachXBT, public question to MemeCore (posted right after MemeCore's Grayscale-recognition announcement)
+
+## Timeline
+
+<Timeline>
+  <TimelineEvent date="2025-07-03 — Kraken spot listing">
+Kraken lists M on spot. *On the same day*, a suspect team wallet (`0x6f1f0a1ccc76d2d292249b19c19e401f0e843ba9`, which received 200M M at TGE) reportedly transfers 5.3M M to two Kraken deposit addresses. From Kraken, 18 newly created addresses received a total of $7.9M (at the time) — 11.7M M, worth roughly $39.8M at current value.
+  </TimelineEvent>
+  <TimelineEvent date="2025-09 — Mainnet launch">
+MemeCore mainnet goes live. "Meme 2.0 economy" marketing campaign begins in earnest.
+  </TimelineEvent>
+  <TimelineEvent date="2025-07 ~ 2026-04 (~9 months) — Gradual accumulation">
+M price rises gradually without an explosive pump. Market cap climbs from top 30 to top 25 to top 20. ATH market cap around $6.5B, with FDV briefly reaching $35B.
+  </TimelineEvent>
+  <TimelineEvent date="2026-04-18 ~ 19 — Included in RAVE disclosure list">
+Right after the RAVE crash and ZachXBT disclosure, ZachXBT adds M to his list of tokens with 'highly questionable price action': SIREN, MYX, COAI, M, PIPPIN, RIVER.
+  </TimelineEvent>
+  <TimelineEvent date="2026-04-20 — Direct disclosure">
+MemeCore posts "Grayscale recognized us" on X. ZachXBT replies with a challenge: *"a single data point justifying the $6B market cap, and the rationale for 90%+ insider holdings."* On the same day, Kraken publicly announces support for Operation Atlantic (a joint financial-crime-prevention operation by the US Secret Service, the UK NCA, and Canadian authorities) → ZachXBT, *at the same moment*, posts a separate disclosure criticizing Kraken. The suspect fund flows are visualized via TRM Labs.
+  </TimelineEvent>
+  <TimelineEvent date="After 2026-04-20 — Public clash">
+The MemeCore CEO publicly mocks ZachXBT. ZachXBT warns that he will report the MemeCore team to US ICE (Immigration and Customs Enforcement): *"We're just getting started."* All three exchanges (Kraken, Binance, Bitget) remain unresponsive. Price holds relatively steady despite the disclosure (around $3.50).
+  </TimelineEvent>
+  <TimelineEvent date="As of 2026-05 — Ongoing">
+Market cap drifts down slightly to about $4.57B. The manipulation allegations remain unresolved. ZachXBT's investigation is ongoing.
+  </TimelineEvent>
+</Timeline>
+
+## Supply Structure — Official Disclosure vs On-Chain Analysis
+
+The core allegation in this case is the **~60-percentage-point gap between MemeCore's official tokenomics and ZachXBT's on-chain analysis**.
+
+### MemeCore official distribution (per the project)
+
+| Category | Share |
+|---------|------|
+| Community | 58% |
+| Foundation | 15% |
+| Core Contributors | 13% |
+| Investors | 12% |
+| Meme Treasury | 2% |
+
+By these numbers, insiders (Foundation + Core + Investors) total **40%** — a simple majority, but not at a manipulation threshold.
+
+### ZachXBT on-chain analysis
+
+| Category | Share |
+|---------|------|
+| Binance Alpha wallets | 48.85% |
+| Insider cluster | 23.46% |
+| Genesis team wallets | 25.82% |
+| **Total insider-controlled** | **~99.6%** |
+| Meson Finance + Kraken et al. | ~0.27% |
+| Non-insider holdable free float | **~0.1%** |
+
+### What the 60-point gap means
+
+ZachXBT stated that this gap **must be explained**. Possible hypotheses:
+
+1. Tokens classified as "Community" may have actually been distributed to the insider cluster
+2. Insider wallets disguised as airdrop / incentive program recipients
+3. Foundation-controlled multisigs split across many wallets to evade counting
+
+This page does not assert which hypothesis is correct; with no official MemeCore response, the *gap itself* is the strongest available circumstance.
+
+### Reported vs actual circulating supply — a 6x discrepancy
+
+An additional allegation:
+
+| Metric | Value |
+|------|-----|
+| CoinMarketCap / CoinGecko reported | **1.29B M circulating** |
+| ZachXBT-estimated actual unlock | **~230M M** |
+| Discrepancy | **~6x** |
+
+If accurate, the market cap calculation itself is inflated by a factor of six. CMC and CoinGecko may be receiving incorrect unlock data and over-reporting market cap. That data-validation failure at the indexing layer then flows directly into retail's safety judgment ("a top 20 token should be safe") — an infrastructure problem worth flagging.
+
+### Verified directly via in-house indexing
+
+This page directly indexed transfer events for M's BSC contract `0x22b1…31fa` on Dune (based on `transfers_bnb.erc20`). The results — testing ZachXBT's estimates as *measurable facts* — are as follows:
+
+- **On-chain BSC circulating ≈ 229M** (back-calculated from Top 1's 95.06M ÷ 41.51%). Directly measured **~5.6x gap vs CMC / CoinGecko's reported 1.29B** — consistent with ZachXBT's ~6x estimate
+- **Top 2 cumulative = 63.35% · Top 10 = 87.30% · Top 50 = 99.5%+** — closely matches the 99.6% insider estimate
+- **Top 1 (`0x05cb…6b07`, 41.51%) and Top 2 (`0x8b80…2e08`, 21.84%) are both EOAs** — two direct-custody wallets rather than vesting / distribution contracts (not present in `bnb.creation_traces`). Structurally distinct from SIREN's vesting-infrastructure case
+- **Zero Binance Alpha · Kraken · Bitget · MEXC hot wallets in the Top 50** (only a Meson bridge at Rank 33 with 0.20% matches a public Dune label). ZachXBT's "Binance Alpha 48.85%" classification is based on his own clustering and is not present in public labels
+- ATH-time distribution (2026-04-20) and current distribution are **nearly identical** — insiders have not redistributed even after ZachXBT's disclosure
+
+<ChartFrame
+  kind="SUPPLY DISTRIBUTION · AS OF ATH"
+  caption={<>
+    Top 6 holders on BSC as of 2026-04-20 00:00 UTC.
+    <br />
+    <br />
+    Top 1 and 2 (63%) are two unlabeled EOAs — direct-custody rather than vesting contracts.
+    <br />
+    <br />
+    Top 3 is the same wallet as SIREN's top holder (cross-token).
+    <br />
+    Top 4 is the suspect team wallet ZachXBT explicitly flagged.
+    <br />
+    <br />
+    Top 6 cumulative = 78.93% (Top 50 = 99.5%+).
+  </>}
+  source="In-house Dune indexing (transfers_bnb.erc20 · bnb.creation_traces)"
+  aspect="auto"
+>
+  <SupplyBars rows={memecoreHoldersATH} asOf="2026-04-20 00:00 UTC" symbol="M" />
+</ChartFrame>
+
+### Cross-token finding
+
+Top 3 `0x73d8bd54…46db` is **the same wallet as Top 3 in the SIREN case** — a single entity holds large positions in both flagged tokens (17M M + 17M SIREN). This may be consistent with the cross-token holding pattern across ZachXBT's "RAVE · SIREN · MYX · COAI · M · PIPPIN · RIVER" suspect list, though this page does not assert that the *same entity intentionally coordinated cross-holdings*.
+
+## How It Worked — A "Staged Accumulation" Pattern
+
+What sets this case apart from other manipulation-allegation cases is decisive: it is not a single vertical pump-and-dump cycle, but a **staged accumulation over nine months**.
+
+<ChartFrame
+  kind="PRICE · M / USDT · BITGET SPOT · 1D"
+  caption={<>
+    M / USDT daily candles (Bitget Spot, 2025-07 ~ 2026-05). The Kraken pair is not integrated with TradingView, so Bitget serves as the substitute major spot venue.
+    <br />
+    <br />
+    (1) 2025-09: first pump from ~$0.50 to ~$3.20
+    <br />
+    → (2) 2025-10 ~ 2026-02: range-bound between $1.20 and $2.00
+    <br />
+    → (3) 2026-03 ~ 04: second pump from ~$2.80 to an ATH of ~$4.80 (close basis)
+    <br />
+    → (4) Late 2026-04: drop to ~$3.30 after the ZachXBT disclosure
+    <br />
+    <br />
+    Notable for its *segmented* accumulation pattern, in contrast to RAVE/SIREN's single vertical pump.
+  </>}
+  source="Bitget Spot · TradingView capture"
+  aspect="auto"
+>
+  <ZoomableImage src={mPriceSpot1d} alt="M/USDT Bitget Spot daily (2025-07 ~ 2026-05)" />
+</ChartFrame>
+
+### What staged accumulation implies
+
+RAVE was a *9-day pump followed by a 24-hour dump*; SIREN cycled three times within a month. M, by contrast, has unfolded as two pump phases over nine months with a long range in between — a **segmented accumulation** rather than a single vertical move. Implications:
+
+- Because it is segmented rather than a single event, analysts and reporters arrive late
+- Even when ZachXBT discloses, price does not crash immediately (insider control is tight; sellers are scarce — about -30% from the ~$4.80 ATH to ~$3.30 after the disclosure)
+- Exchange surveillance systems have weaker triggers to flag short-term abnormal patterns
+- Insiders can *gradually* distribute during the range phase (2025-10 ~ 2026-02)
+- This is **ongoing manipulation** — not a finished event, but something *unfolding now*
+
+M differs from other cases on this site in being a **real-time alert rather than a post-mortem**.
+
+### The Kraken allegation — "Is the exchange a co-conspirator?"
+
+ZachXBT's most provocative claim is that **the exchanges are not neutral venues but part of the alleged manipulation**.
+
+<ChartFrame
+  kind="FUND FLOW · 2025-07-01~03 (in-house measurement)"
+  caption={<>
+    A larger flow than ZachXBT's 5.3M Kraken deposit claim was measured via in-house indexing.
+    <br />
+    <br />
+    (1) The suspect team wallet ZachXBT flagged, 0x6f1f0a1…ba9, received 211.6M M at TGE (9 transfers, 2025-06-20 ~ 12-21)
+    <br />
+    → (2) 175M of that (86.5% of outflow) was sent in a single transfer to 0x06ef…f0fc two days before the Kraken listing — and this receiver re-dispersed all 175M within three days using only 4 transfers (1-hop passthrough)
+    <br />
+    → (3) On Kraken listing day (2025-07-03), 21M was dispersed in parallel to 3 receivers
+    <br />
+    → (4) Of those, 15.72M went to receiver 0xd544…ac8b, a large hot wallet that processed 1.15B M across 1.25M transfers over 11 months — unlabeled in public Dune data, but its activity scale is consistent with an exchange (no assertion).
+  </>}
+  source="In-house Dune indexing (transfers_bnb.erc20 · bnb.creation_traces)"
+  aspect="square"
+>
+  <KrakenFlow />
+</ChartFrame>
+
+The reasons this flow draws scrutiny:
+
+1. **86.5% of outflow was pre-distributed via a single transfer *two days before* listing** — a *pre-coordinated* pattern rather than ordinary vesting unlock
+2. **A large hot wallet deposit on listing day** — 15.72M went straight to a wallet that has processed 1.15B M. Potential identity laundering via the exchange
+3. **Different EOAs at each stage / single-hop passthrough** — identity separation between KYC-cleared exchange accounts
+
+In ZachXBT's words:
+
+> "The exchanges are 'co-conspirators' in the manipulation. On-chain flows suggest the exchanges may have received M tokens as part of listing fees or liquidity agreements."
+
+> "Why did Kraken list M (Memecore) on spot on July 3, 2025? And how did they pass it through due diligence?"
+
+ZachXBT posted this disclosure on *the same day* Kraken announced its support for *Operation Atlantic* — the joint financial-crime-prevention operation by the US Secret Service, the UK NCA, and Canadian authorities. The timing reads as intentional: a message that "an exchange that has joined an illicit-finance-prevention campaign continues to host tokens like this."
+
+## Data
+
+### $66M vs $6B — fundamentals against market cap, in a single comparison
+
+The clearest single set of figures in this case:
+
+| Item | Value |
+|------|-----|
+| MemeCore app cumulative trading volume (including incentivized campaigns) | $66M |
+| M token market cap | $6B |
+| **Ratio** | **~91 : 1** |
+
+For comparison, a normal top 20 token's market-cap-to-daily-volume ratio is 20-50:1 (Bitcoin ~25:1, Ethereum ~30:1). M stands at **~91:1 on cumulative app volume, and 200:1 or more on daily volume**.
+
+Note the emphasis on "total": *cumulative* trading volume is $66M — and that figure is itself inflated by MemeCore's incentivized InfoFi (reward) campaigns. Even so, it caps out there.
+
+### Market structure
+
+| Exchange | M |
+|--------|---|
+| Binance Spot | X |
+| **Binance Alpha** | O (the 48.85% allegedly held by insiders sits here) |
+| Binance Futures | X |
+| **Kraken Spot** | O (main spot venue · primary target of ZachXBT's criticism) |
+| **Bitget Spot** | O |
+| Coinbase | X |
+
+How this differs from other cases:
+- **Kraken is the main spot venue** (RAVE/SIREN were Bitget/Gate)
+- **No Binance perp** — no derivatives-pump mechanism
+- And therefore no explosive moves like a short-squeeze cascade
+- Instead, the structure relies on **long-horizon accumulation** and *distribution via Kraken*
+
+### Exchange non-response
+
+The responses (as of May 2026) of the three exchanges ZachXBT disclosed against:
+
+| Exchange | M status | Response after ZachXBT's disclosure |
+|--------|---------|-------------------|
+| **Kraken** | Spot listed (2025-07-03) | No response |
+| **Binance** | Alpha listed | No response |
+| **Bitget** | Listed | No response |
+
+In the RAVE case, all three exchanges (Binance, Bitget, Gate) publicly announced investigations. With M, by contrast, *no one has responded*.
+
+Possible reasons (no assertion):
+1. M is an *ongoing* case, and exchanges have not finalized a position
+2. Business risk of touching a $6B major token
+3. Possible self-involvement via listing fees / liquidity agreements
+
+ZachXBT's criticism:
+
+> "While the exchanges delay intervention day by day, retail traders absorb the losses, and the platforms pocket the trading-volume fees."
+
+## Lessons — Signals to identify similar cases
+
+M is a *staged-accumulation*-shaped allegation case with a different rhythm from others, so the identifying signals are also different.
+
+### "Major-token credibility trap" signals
+
+- **Sits in the top 20-30 by market cap, yet fundamentals are unclear** — market cap itself is not evidence of legitimacy
+- **Large gaps between CMC / CoinGecko reported figures and actual unlocks** — a 6x discrepancy is a strong red flag
+- **Self-justification via "elite recognition" such as Grayscale or exchange listings** — recognition does not imply due diligence
+
+### Volume-ratio signals (the clearest set)
+
+- **A market-cap-to-cumulative-app-volume ratio of 50:1 or higher** — highly abnormal
+- **A market-cap-to-daily-volume ratio of 100:1 or higher** — effectively a non-traded asset
+- **Volume inflated by incentivized campaigns** — verify whether the "real users" figure is propped up by reward incentives
+
+### Distribution-vs-control gap signals
+
+- **A large gap between official tokenomics and on-chain analysis** — the strongest single signal
+- **The "Community" category potentially being an insider cluster in practice** — labeling does not guarantee truth
+- **Airdrops / incentive distributions concentrated across many newly created addresses** — a trace of distributed accumulation by insiders
+
+### Listing-day pattern signals
+
+- **Team wallet sending large amounts to exchanges *on the listing day itself*** — a trace of pre-coordinated activity
+- **Heavy buying by newly created addresses right after listing** — pre-positioned insiders
+- **Price action between the listing announcement and the open** — a normal market needs time for price discovery
+
+### Forensic-tool usage
+
+- **Visualizations from TRM Labs · Chainalysis and similar tools** — they expose fund-flow patterns at a glance
+- **Exchange hot wallet → many newly created addresses pattern** — a trace of distribution-side identity laundering
+
+### Project-response signals
+
+- **CEO / team publicly mocking critics** — not a normal business response. A sign of confidence or desperation
+- **Ignoring criticism without issuing a denial** — in contrast with the RAVE team's denial thread
+- **Synchronized non-response from exchanges** — a signal that exchanges, too, cannot settle on a position
+
+### Exchange-credibility signals
+
+- **An exchange that joins a sanctions / illicit-finance-prevention campaign while continuing to list suspect tokens** — internal inconsistency
+- **Undisclosed listing due-diligence process** — no way to explain how the listing was approved
+- **Continued non-response even after public disclosure** — surveillance system not operating
+
+## Industry implications
+
+1. **The lifespan of pump-and-dump is extending.** Traditional pump-and-dumps run in days; M is a 9-month staged accumulation (first pump → range → second pump). Disclosures land late, retail enters as *slow* inelastic buyers and stack up, and exchange surveillance loses the trigger to flag any single abnormality. The model unfolds *while analysts wait for a clear event*.
+2. **Exchange sanctimony.** That ZachXBT disclosed the M case the same day Kraken announced support for Operation Atlantic is not coincidence. It is a direct challenge to exchanges' "compliance theater."
+3. **The accountability of indexing sites.** CMC and CoinGecko display 1.29B M as circulating (estimated actual ~230M). Even when the market cap is inflated sixfold, retail decides "a top 20 token should be safe." The indexing layer's data-validation failure becomes part of the infrastructure of alleged manipulation.
+4. **A CEO's social-media behavior as forensic evidence.** When publicly mocking critics is consistent with the manipulation allegations, that behavior pattern becomes data, not noise.
+5. **Escalation.** ZachXBT's ICE-report warning signals more than disclosure — *potential law-enforcement follow-through*. Manipulation cases are escalating into law-enforcement territory.
+
+## Sources
+
+1. **ZachXBT** — [X (Twitter)](https://x.com/zachxbt) — 2026-04-20 Kraken criticism + TRM Labs visualization
+2. **ZachXBT** — [X (Twitter)](https://x.com/zachxbt) — 2026-04-18~19 RAVE disclosure + M and other suspect tokens list
+3. **Cryptopolitan** — ["Insider manipulation watch finds new target after RAVE, SIREN implosions"](https://www.cryptopolitan.com/insider-manipulation-new-target-after-rave/)
+4. **Bitget News** — [Same content reposted](https://www.bitget.com/news/detail/12560605376215)
+5. **Bitcoin.com News** — ["ZachXBT Flags Kraken as Key Venue in M Token Manipulation"](https://news.bitcoin.com/zachxbt-flags-kraken-m-token-manipulation/)
+6. **KuCoin News** — ["ZachXBT targets MemeCore! Demands explanation for $6 billion"](https://www.kucoin.com/news/insight/SIREN/69e709b59b8ebc0007ccf40f)
+7. **Cointelegraph** — ["ZachXBT asks MemeCore to explain valuation and token supply"](https://cointelegraph.com/news/investigator-concentration-concerns-memecore)
+8. **BlockchainNews** — ["MemeCore Token Faces ZachXBT Scrutiny Over 90% Insider Holdings Claim"](https://blockchain.news/news/memecore-token-zachxbt-insider-holdings-scrutiny)
+9. **Bitcoin Sistemi** — ["Allegations of Major Manipulation in an Altcoin"](https://en.bitcoinsistemi.com/allegations-of-major-manipulation-in-an-altcoin-crypto-detective-zachxbt-speaks-out/)
+10. **TRM Labs visualization** — fund-flow visualization attached to ZachXBT's tweet (capture pending)

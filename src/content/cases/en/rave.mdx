@@ -1,0 +1,277 @@
+---
+slug: "rave"
+title: "RaveDAO (RAVE)"
+tokenSymbol: "RAVE"
+incidentDate: "2026-04-18"
+publishedDate: "2026-05-12"
+status: "alleged"
+severity: "critical"
+patterns:
+  - "short-squeeze"
+  - "supply-concentration"
+  - "alpha-no-spot"
+  - "cross-exchange-coordination"
+metrics:
+  startPrice: 0.25
+  peakPrice: 27.94
+  bottomPrice: 0.50
+  maxGain: 103.83
+  maxDrawdown: -0.95
+  marketCapPeak: 6000000000
+  marketCapEvaporated: 5700000000
+  pumpDurationDays: 9
+  crashDurationHours: 24
+  liquidationVolume24h: 44000000
+exchanges:
+  binanceSpot: false
+  binanceAlpha: true
+  binanceFutures: true
+  others: ["bitget", "gate", "kucoin"]
+allegations:
+  - source: "ZachXBT"
+    sourceUrl: "https://x.com/zachxbt"
+    date: "2026-04-18"
+    summary: "Alleged ongoing market manipulation while insiders hold more than 90% of the supply, and requested exchange investigations. Offered a $25K bounty."
+  - source: "CoinDesk"
+    sourceUrl: "https://www.coindesk.com/markets/2026/04/19/ravedao-s-rave-token-collapses-90-in-a-day-as-exchange-probes-widen"
+    date: "2026-04-19"
+    summary: "Reported a 90% RAVE collapse within 24 hours, with Binance and Bitget opening investigations into the alleged market manipulation."
+  - source: "DL News"
+    sourceUrl: "https://www.dlnews.com/articles/markets/binance-and-bitget-under-fire-after-ravedao-crash/"
+    date: "2026-04-19"
+    summary: "Bitget CEO Gracy Chen and Binance Co-CEO Richard Teng each confirmed that an official investigation had been opened."
+relatedCases: ["lab", "siren"]
+---
+
+import { ChartFrame } from '@/components/chart-frame'
+import { FundFlow } from '@/components/fund-flow'
+import { LongShortRatio } from '@/components/long-short-ratio'
+import { SupplyBars } from '@/components/supply-bars'
+import { Timeline, TimelineEvent } from '@/components/case-timeline'
+import { ZoomableImage } from '@/components/zoomable-image'
+import priceCandle4h from '@/assets/cases/rave/price-candle-4h.png'
+
+export const raveHolders = [
+  { rank: 1, address: "0x9831156f1a6e506fca41503590b42f07c2e80f54", label: "Gnosis Safe · alleged team", category: "team", pct: 76.82, balance: 751955556 },
+  { rank: 2, address: "0x6020656d1ef182173e45d4fc375bdd5a48c674b0", label: "Gnosis Safe · alleged team", category: "team", pct: 9.78, balance: 95702737 },
+  { rank: 3, address: "0x0a1f07993a51cceb4f52ca67765aeceadda790d7", label: "Gnosis Safe · alleged team", category: "team", pct: 4.46, balance: 43658417 },
+  { rank: 4, address: "0xffa8db7b38579e6a2d14f9b347a9ace4d044cd54", label: "Bitget 35", category: "exchange", pct: 3.33, balance: 32565659 },
+  { rank: 5, address: "0x53d7d52301366dc14e1916b14efec1add8f3487b", label: "Cleared 04-19 → Bitget 6", category: "dispersed", pct: 2.35, balance: 22996077 },
+  { rank: 6, address: "0xeb74df8588cfc1c179df4bd96c0bb8b227b9be92", category: "unknown", pct: 2.30, balance: 22480977 },
+  { rank: 7, address: "0x31694d761a8e851cffbcd286ac54d01e5ce5afe6", category: "unknown", pct: 0.51, balance: 5000000 },
+  { rank: 8, address: "0x0d0707963952f2fba59dd06f2b425ace40b492fe", label: "Gate.io deposit", category: "exchange", pct: 0.33, balance: 3243279 },
+  { rank: 9, address: "0x1ab4973a48dc892cd9971ece8e01dcc7688f8f23", label: "Bitget 6", category: "exchange", pct: 0.06, balance: 577285 },
+  { rank: 10, address: "0x911203d9228f01503d8ffcd7b66eff367f1d3ee0", category: "unknown", pct: 0.02, balance: 239813 },
+]
+
+## Overview
+
+A +10,383% run in nine days, then a -95% collapse in twenty-four hours. Roughly $52M in liquidations was enough to evaporate $5.7B of market cap.
+
+The structural setup is a token with no Binance Spot listing but with Binance Alpha and Binance Futures live in parallel. A team-affiliated multisig that allegedly held about 90% of supply cycled deposits in and out of exchanges, building a short-squeeze environment. The price ran from $0.25 to $27.94 and then unwound 95% in a single day. After ZachXBT's public disclosure, Binance, Bitget, and Gate each opened a formal investigation.
+
+> "A 52M-dollar liquidation that vaporizes 6B in market cap is not the kind of ratio a healthy market produces." — paraphrased from ZachXBT (X, 2026-04-18)
+
+## Timeline
+
+<Timeline>
+  <TimelineEvent date="December 2025 — Binance Alpha listing">
+RAVE lists on Binance Alpha. 1B total supply, price drifts around $0.25, and market attention is minimal.
+  </TimelineEvent>
+  <TimelineEvent date="Early April 2026 — roughly nine days">
+Price begins ripping without an identifiable catalyst. There is no broad alt-season tape, and other tokens in the same sector trade sideways over the same window.
+  </TimelineEvent>
+  <TimelineEvent date="2026-04-13 / 04-14 — private outreach">
+ZachXBT reportedly sends a private DM to a RaveDAO co-founder, flagging concerns. He receives no reply.
+  </TimelineEvent>
+  <TimelineEvent date="2026-04-17 — peak">
+Price reaches $27.94. The 30-day cumulative move stands at **+10,383%**. Market cap is around $6B, putting RAVE inside the top 15.
+  </TimelineEvent>
+  <TimelineEvent date="2026-04-18 07:26 UTC — public disclosure">
+ZachXBT posts the public disclosure on X, requests investigations from Binance, Bitget, and Gate, and offers a $10K bounty. He raises the bounty to **$25K** later the same day.
+  </TimelineEvent>
+  <TimelineEvent date="2026-04-18 — same day, hours later">
+Bitget CEO Gracy Chen and Binance Co-CEO Richard Teng each confirm that an official investigation has been opened.
+  </TimelineEvent>
+  <TimelineEvent date="2026-04-19 — denial and crash">
+RaveDAO publishes a six-part denial thread. After the denial, selling actually accelerates. Within 24 hours, price goes from roughly $27 to $1 — a **-95% drop**. Forced liquidations total about $44M.
+  </TimelineEvent>
+  <TimelineEvent date="2026-04-19 — same day, hours later">
+The multisig `0x53d7` forwards roughly 23M RAVE to Bitget. Price drops a further ~40%, from about $1 to $0.60.
+  </TimelineEvent>
+  <TimelineEvent date="2026-04-20 onward — analyst watchlist">
+Price trades around $0.50. ZachXBT names six additional tokens with similar structural conditions (SIREN, MYX, COAI, M, PIPPIN, RIVER).
+  </TimelineEvent>
+</Timeline>
+
+## Supply Structure
+
+### Market structure — why this setup was possible
+
+The core of this case is a **structural gap: Binance Spot is missing**.
+
+| Exchange | Spot | Perpetual | Alpha |
+|----------|------|-----------|-------|
+| **Binance** | ❌ | O | O |
+| Bitget | O | O | — |
+| Gate.io | O | O | — |
+| KuCoin | O | — | — |
+| Coinbase | ❌ | ❌ | — |
+
+The mark price for Binance perpetuals does not reference an in-house spot book. Instead, it references a spot index built from external exchanges — Bitget, Gate, and KuCoin. Those external books carry thin liquidity, so relatively small flows can move the mark price. A moved mark price, in turn, becomes the trigger that liquidates the multi-billion-dollar open interest sitting on Binance perpetuals.
+
+### Supply distribution — free float is in the low single digits
+
+1B tokens are issued, but the top 3 wallets — all Gnosis Safe contracts, allegedly team-affiliated per ZachXBT's analysis — hold 91.06%. After adding the exchange deposit addresses (Bitget, Gate, KuCoin), the share that actually circulates in the market falls to a low single-digit percentage.
+
+<ChartFrame
+  kind="SUPPLY DISTRIBUTION"
+  caption={<>
+    Top 10 holders — RAVE distribution at the time of the incident (2026-04-18 00:00 UTC).
+    <br />
+    <br />
+    Labels come from Etherscan tags (exchanges) and ZachXBT's analysis (alleged team affiliation).
+  </>}
+  source="Dune Analytics · Etherscan"
+  aspect="auto"
+>
+  <SupplyBars rows={raveHolders} asOf="2026-04-18 00:00 UTC" symbol="RAVE" />
+</ChartFrame>
+
+## How It Worked — The Short-Squeeze Setup
+
+### Stage 1 — Bait the shorts with deposit-then-withdraw cycling
+
+Team-affiliated wallets reportedly deposit roughly $42M worth of RAVE into Bitget. The market reads this as "the team is about to dump", and short positions accumulate (at the peak, around 74% of Binance traders are positioned short).
+
+Roughly $32M is then withdrawn back on-chain. The expected sell pressure disappears from the order book, leaving the book with bid pressure only.
+
+### Stage 2 — Liquidation cascade
+
+As price runs higher, forced short liquidations begin. The liquidation engine's automatic market-buy orders push price further up, which triggers the next band of liquidations — a self-reinforcing loop.
+
+Inside this mechanism, an insider barely needs to sell spot to walk price higher. The cascade does the work of pushing the price.
+
+### Stage 3 — Layered deposit at the peak
+
+At 2026-04-19 19:47:59 UTC, in a single transaction, the multisig `0x53d7...487b` split its entire **22,996,077 RAVE** balance into two paths. Both paths, within one to six minutes, forwarded onward into another set of burner wallets (each path used the small **test** transfer first, then a **bulk** transfer of the remainder — the standard SOP for validating an exchange deposit). Within 11 minutes, every dollar of that flow had converged into the exchange hot wallet `Bitget 6` (`0x1ab4...8f23`).
+
+Notably, all of the intermediate burner wallets had been activated using ETH gas sent from `Bitget 6` itself (Etherscan's "Funded By" tag). Because the funder and the final receiver are the same address, the layered deposits are most plausibly read as **a single Bitget account holder deliberately designing the routing** — that is the allegation.
+
+In the eleven minutes following this layered deposit, price dropped a further 40%, from about $1 to $0.60.
+
+<ChartFrame
+  kind="FUND FLOW"
+  caption={<>
+    Fund flow from the 0x53d7 multisig into Bitget 6.
+    <br />
+    <br />
+    22.99M RAVE, 2026-04-19 19:47 → 19:58 UTC, routed via 2-hop burner wallets.
+    <br />
+    <br />
+    Each burner was gas-funded by Bitget 6.
+  </>}
+  source="Dune Analytics · Etherscan"
+  aspect="square"
+>
+  <FundFlow />
+</ChartFrame>
+
+## Data
+
+<ChartFrame
+  kind="PRICE · 4H"
+  caption={<>
+    RAVE/USDT perpetual, 4-hour candles, 2026-03-25 to 2026-05-11. The lower panel shows open interest (USD).
+    <br />
+    <br />
+    Right after the 04-17 / 04-18 peak at $27.94, the 04-19 session collapses 95% in 24 hours.
+    <br />
+    <br />
+    Click the chart to enlarge.
+  </>}
+  source="Binance Futures · TradingView capture"
+  aspect="auto"
+>
+  <ZoomableImage src={priceCandle4h} alt="RAVE/USDT perpetual 4-hour candles with open interest panel" />
+</ChartFrame>
+
+<ChartFrame
+  kind="LONG / SHORT RATIO"
+  caption={<>
+    Just before the pump (around 04/18) the ratio sits near 0.30 — shorts roughly 3x dominant.
+    <br />
+    <br />
+    The day after the crash (04/19–20) it flips sharply from 1.25 to 2.20, and then settles around 3.0 to 3.5.
+    <br />
+    <br />
+    A footprint of the short-liquidation cascade flipping market positioning itself into a long skew.
+  </>}
+  source="Binance Futures · 1d aggregate"
+  aspect="video"
+>
+  <LongShortRatio />
+</ChartFrame>
+
+**ZachXBT, in his own words:**
+
+> "We cannot allow this blatant market manipulation by insiders controlling >90% RAVE support to further extract from retail investors."
+
+### Current status (as of late April 2026)
+
+- Official investigations remain in progress at Binance, Bitget, and Gate
+- The single wallet holding approximately 750M RAVE has not unwound its position
+- Price trades sideways around $0.50
+- The RaveDAO team has stated that it is considering a "price-triggered or performance-triggered lockup" model, but no concrete mechanism or timeline has been committed
+- A partial dead-cat bounce (+138%) has occurred, with no clear evidence of follow-through
+
+## Lessons — Signals to identify similar tokens
+
+These are the risk indicators a trader can pull from this case. Any single one is weak on its own, but **three or more in combination is a strong warning signal**.
+
+### Market-structure signals
+
+- No Binance Spot listing while Binance Alpha and perpetuals run in parallel
+- Thin spot venues (Bitget, Gate, KuCoin) act as the primary price-discovery layer
+- A newly issued token is listed quickly across multiple exchanges
+
+### Supply-structure signals
+
+- The top 3 to 10 wallets hold 85%+ of supply
+- Circulating supply sits at 25% or less of total
+- No clear vesting or lockup schedule is published
+- Gnosis Safe multisigs hold a large share
+
+### Price-action signals
+
+- A sharp run without an identifiable catalyst (no news, no partnership, no upgrade)
+- Abnormal market-cap to volume ratio (e.g. $1B cap on under $50M of daily volume)
+- **Market cap to liquidation ratio above 100:1** — the clearest single indicator in RAVE
+
+### Derivatives signals
+
+- OI / market cap above 0.3
+- Abnormal funding (sustained at ±0.05% per 8h or more)
+- Long/short ratio skewed more than 70% to one side
+
+### On-chain signals
+
+- Large deposits from team-affiliated wallets to exchanges just before a pump
+- Large withdrawals from exchanges back to team-affiliated wallets after a pump (reclaiming the apparent sell pressure)
+- Contract admin privileges that have not been renounced
+
+### ZachXBT's own caution
+
+> "I also do not recommend shorting suspected manipulation tokens with concentrated supply."
+
+A short-squeeze setup can be re-run at any time, which means that any token with high insider concentration is dangerous to position in — long or short. The safest choice, by a wide margin, is **not to trade it**.
+
+## Sources
+
+1. **ZachXBT** — [X (Twitter)](https://x.com/zachxbt) — 2026-04-18 original disclosure
+2. **CoinDesk** — ["RaveDAO's RAVE token collapses 90% in a day as exchange probes widen"](https://www.coindesk.com/markets/2026/04/19/ravedao-s-rave-token-collapses-90-in-a-day-as-exchange-probes-widen) — 2026-04-19
+3. **The Block** — ["RaveDAO team denies role in RAVE token pump"](https://www.theblock.co/post/397991/ravedao-team-denies-role-in-rave-token-pump-as-binance-bitget-open-investigations) — 2026-04-19
+4. **DL News** — ["Binance and Bitget to investigate Rave token market manipulation claims"](https://www.dlnews.com/articles/markets/binance-and-bitget-under-fire-after-ravedao-crash/)
+5. **CryptoPotato** — ["From $26 to Under $1: RAVE's Historic Crash Draws Investigation Calls"](https://cryptopotato.com/from-26-to-under-1-raves-historic-crash-draws-investigation-calls/)
+6. **KuCoin Blog** — ["RaveDAO Pump and Dump April 2026"](https://www.kucoin.com/blog/ravedap-pump-dump-april-2026)
+7. **TradingView News** — ["Rave Token Crashes 95% As Manipulation Allegations Trigger Panic"](https://www.tradingview.com/news/newsbtc:43fe3da3d094b:0-rave-token-crashes-95-as-manipulation-allegations-trigger-panic/)
