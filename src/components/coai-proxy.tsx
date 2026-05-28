@@ -1,16 +1,63 @@
 import { cn } from '@/lib/utils'
+import { useLang } from '@/lib/use-lang'
 
 const NODE_X = 35
 const NODE_W = 470
 const CENTER_X = NODE_X + NODE_W / 2
 
+const text = {
+  ko: {
+    ariaLabel:
+      'COAI (ChainOpera AI) 케이스 — EIP-1967 Transparent Proxy 구조 다이어그램. 사용자 → Proxy(storage) → Implementation(logic) 호출 흐름과, admin 권한 미포기 상태에서 Implementation 을 교체할 수 있는 제어 경로를 표시',
+    callArrow1: 'transfer() 호출',
+    callArrow2: 'delegatecall (logic 위임)',
+    node1Title: '사용자 / 트레이더',
+    node1Sub: '지갑에서 transfer · approve 호출',
+    node2Title: 'Proxy Contract — storage',
+    node2Sub: '0x0A8D...6EA5 · 주소 고정 (변경 불가)',
+    node3Title: 'Implementation — logic',
+    node3Sub: '0xa9d0...a877 · admin 이 교체 가능',
+    adminArrow: 'upgradeTo() — 사전 공지 없이',
+    adminNodeTitle: 'Admin 권한 — renounce 안 됨 (미포기)',
+    adminNodeSub: 'ZachXBT 폭로 시점 기준 zero address 이전 미적용',
+    capLabel: 'admin 이 사전 공지 없이 가능한 것',
+    cap1: 'Implementation 교체 — 토큰 동작 로직 전체 변경',
+    cap2: 'transfer 비활성화 — 전체 잔고 freeze',
+    cap3: 'mint 추가 — 무한 발행으로 가치 희석',
+    cap4: 'blacklist · tax 추가 — 특정 지갑 차단 / 수수료',
+  },
+  en: {
+    ariaLabel:
+      'COAI (ChainOpera AI) case — EIP-1967 Transparent Proxy architecture diagram. User → Proxy (storage) → Implementation (logic) call path, plus the control path that lets admin swap the Implementation while ownership has not been renounced',
+    callArrow1: 'transfer() call',
+    callArrow2: 'delegatecall (delegate to logic)',
+    node1Title: 'User / Trader',
+    node1Sub: 'calls transfer · approve from wallet',
+    node2Title: 'Proxy Contract — storage',
+    node2Sub: '0x0A8D...6EA5 · address fixed (cannot change)',
+    node3Title: 'Implementation — logic',
+    node3Sub: '0xa9d0...a877 · admin can swap',
+    adminArrow: 'upgradeTo() — without prior notice',
+    adminNodeTitle: 'Admin authority — not renounced',
+    adminNodeSub: 'No OwnershipTransferred to zero address as of ZachXBT disclosure',
+    capLabel: 'what admin can do without prior notice',
+    cap1: 'Swap Implementation — change all token behavior',
+    cap2: 'Disable transfer — freeze all balances',
+    cap3: 'Add mint — infinite issuance dilution',
+    cap4: 'Add blacklist · tax — block specific wallets / charge fees',
+  },
+} as const
+
 export function CoaiProxy() {
+  const [lang] = useLang()
+  const t = text[lang]
+
   return (
     <svg
       viewBox="0 0 540 540"
       className="h-full w-full"
       role="img"
-      aria-label="COAI (ChainOpera AI) 케이스 — EIP-1967 Transparent Proxy 구조 다이어그램. 사용자 → Proxy(storage) → Implementation(logic) 호출 흐름과, admin 권한 미포기 상태에서 Implementation 을 교체할 수 있는 제어 경로를 표시"
+      aria-label={t.ariaLabel}
     >
       <defs>
         <marker
@@ -59,37 +106,19 @@ export function CoaiProxy() {
         y="95"
         className="fill-ink-400 font-mono text-[10px] font-semibold"
       >
-        transfer() 호출
+        {t.callArrow1}
       </text>
       <text
         x={CENTER_X + 14}
         y="191"
         className="fill-ink-400 font-mono text-[10px] font-semibold"
       >
-        delegatecall (logic 위임)
+        {t.callArrow2}
       </text>
 
-      <Node
-        y={14}
-        no="01"
-        title="사용자 / 트레이더"
-        sub="지갑에서 transfer · approve 호출"
-        tone="neutral"
-      />
-      <Node
-        y={110}
-        no="02"
-        title="Proxy Contract — storage"
-        sub="0x0A8D...6EA5 · 주소 고정 (변경 불가)"
-        tone="neutral"
-      />
-      <Node
-        y={206}
-        no="03"
-        title="Implementation — logic"
-        sub="0xa9d0...a877 · admin 이 교체 가능"
-        tone="warn"
-      />
+      <Node y={14} no="01" title={t.node1Title} sub={t.node1Sub} tone="neutral" />
+      <Node y={110} no="02" title={t.node2Title} sub={t.node2Sub} tone="neutral" />
+      <Node y={206} no="03" title={t.node3Title} sub={t.node3Sub} tone="warn" />
 
       {/* admin control arrow: Admin (below) → up into Implementation */}
       <g fill="none" strokeLinecap="round" strokeWidth="1.4">
@@ -108,14 +137,14 @@ export function CoaiProxy() {
         y="290"
         className="fill-ink-300 font-mono text-[10px] font-semibold"
       >
-        upgradeTo() — 사전 공지 없이
+        {t.adminArrow}
       </text>
 
       <Node
         y={304}
         no="!"
-        title="Admin 권한 — renounce 안 됨 (미포기)"
-        sub="ZachXBT 폭로 시점 기준 zero address 이전 미적용"
+        title={t.adminNodeTitle}
+        sub={t.adminNodeSub}
         tone="alert"
       />
 
@@ -125,12 +154,12 @@ export function CoaiProxy() {
         y="404"
         className="fill-ink-500 font-mono text-[9px] uppercase tracking-[0.25em]"
       >
-        admin 이 사전 공지 없이 가능한 것
+        {t.capLabel}
       </text>
-      <CapRow y={426} text="Implementation 교체 — 토큰 동작 로직 전체 변경" />
-      <CapRow y={450} text="transfer 비활성화 — 전체 잔고 freeze" />
-      <CapRow y={474} text="mint 추가 — 무한 발행으로 가치 희석" />
-      <CapRow y={498} text="blacklist · tax 추가 — 특정 지갑 차단 / 수수료" />
+      <CapRow y={426} text={t.cap1} />
+      <CapRow y={450} text={t.cap2} />
+      <CapRow y={474} text={t.cap3} />
+      <CapRow y={498} text={t.cap4} />
     </svg>
   )
 }
