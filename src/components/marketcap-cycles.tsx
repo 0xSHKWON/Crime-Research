@@ -1,8 +1,9 @@
 import { cn } from '@/lib/utils'
+import { useLang } from '@/lib/use-lang'
 
 interface CyclePoint {
   date: string
-  label: string
+  labelKey: 'p1' | 't1' | 'p2' | 't2' | 'p3' | 't3'
   marketCapUsd: number
   changePct: number
   kind: 'peak' | 'trough'
@@ -10,13 +11,42 @@ interface CyclePoint {
 }
 
 const points: CyclePoint[] = [
-  { date: '03-24', label: '1차 ATH', marketCapUsd: 1_710_000_000, changePct: 0, kind: 'peak', cycle: 1 },
-  { date: '03-25', label: '1차 붕괴', marketCapUsd: 743_000_000, changePct: -57, kind: 'trough', cycle: 1 },
-  { date: '03-26', label: '2차 펌프', marketCapUsd: 1_510_000_000, changePct: 103, kind: 'peak', cycle: 2 },
-  { date: '03-28', label: '2차 붕괴', marketCapUsd: 586_000_000, changePct: -61, kind: 'trough', cycle: 2 },
-  { date: '03-30', label: '3차 펌프', marketCapUsd: 1_300_000_000, changePct: 122, kind: 'peak', cycle: 3 },
-  { date: '04-01', label: '3차 붕괴', marketCapUsd: 393_700_000, changePct: -70, kind: 'trough', cycle: 3 },
+  { date: '03-24', labelKey: 'p1', marketCapUsd: 1_710_000_000, changePct: 0, kind: 'peak', cycle: 1 },
+  { date: '03-25', labelKey: 't1', marketCapUsd: 743_000_000, changePct: -57, kind: 'trough', cycle: 1 },
+  { date: '03-26', labelKey: 'p2', marketCapUsd: 1_510_000_000, changePct: 103, kind: 'peak', cycle: 2 },
+  { date: '03-28', labelKey: 't2', marketCapUsd: 586_000_000, changePct: -61, kind: 'trough', cycle: 2 },
+  { date: '03-30', labelKey: 'p3', marketCapUsd: 1_300_000_000, changePct: 122, kind: 'peak', cycle: 3 },
+  { date: '04-01', labelKey: 't3', marketCapUsd: 393_700_000, changePct: -70, kind: 'trough', cycle: 3 },
 ]
+
+const text = {
+  ko: {
+    ariaLabel: 'SIREN 시총 변화 — 2026.03.24 ~ 04.01 사이 3회 반복된 펌프-덤프 사이클',
+    labels: {
+      p1: '1차 ATH',
+      t1: '1차 붕괴',
+      p2: '2차 펌프',
+      t2: '2차 붕괴',
+      p3: '3차 펌프',
+      t3: '3차 붕괴',
+    },
+    cycle: 'Cycle',
+    footer: 'peak (light) · trough (dark) — 2026 dates, market cap (USD)',
+  },
+  en: {
+    ariaLabel: 'SIREN market cap — three repeating pump-and-dump cycles between 2026-03-24 and 04-01',
+    labels: {
+      p1: '1st ATH',
+      t1: '1st crash',
+      p2: '2nd pump',
+      t2: '2nd crash',
+      p3: '3rd pump',
+      t3: '3rd crash',
+    },
+    cycle: 'Cycle',
+    footer: 'peak (light) · trough (dark) — 2026 dates, market cap (USD)',
+  },
+} as const
 
 const VIEW_W = 720
 const VIEW_H = 380
@@ -45,6 +75,8 @@ function formatB(value: number): string {
 }
 
 export function MarketcapCycles() {
+  const [lang] = useLang()
+  const t = text[lang]
   const barWidth = (CHART_W / points.length) * 0.5
 
   return (
@@ -52,7 +84,7 @@ export function MarketcapCycles() {
       viewBox={`0 0 ${VIEW_W} ${VIEW_H}`}
       className="h-full w-full"
       role="img"
-      aria-label="SIREN 시총 변화 — 2026.03.24 ~ 04.01 사이 3회 반복된 펌프-덤프 사이클"
+      aria-label={t.ariaLabel}
     >
       {/* y-axis gridlines + labels */}
       <g>
@@ -106,7 +138,7 @@ export function MarketcapCycles() {
                 textAnchor="middle"
                 className="fill-ink-500 font-mono text-[10px] uppercase tracking-[0.25em]"
               >
-                Cycle {c}
+                {t.cycle} {c}
               </text>
             </g>
           )
@@ -132,7 +164,7 @@ export function MarketcapCycles() {
           const h = PAD_T + CHART_H - y
           const isPeak = p.kind === 'peak'
           return (
-            <g key={`${p.date}-${p.label}`}>
+            <g key={`${p.date}-${p.labelKey}`}>
               <rect
                 x={x}
                 y={y}
@@ -182,7 +214,7 @@ export function MarketcapCycles() {
                 textAnchor="middle"
                 className="fill-ink-500 font-mono text-[9px]"
               >
-                {p.label}
+                {t.labels[p.labelKey]}
               </text>
             </g>
           )
@@ -206,7 +238,7 @@ export function MarketcapCycles() {
         textAnchor="middle"
         className="fill-ink-500 font-mono text-[10px] uppercase tracking-[0.25em]"
       >
-        peak (light) · trough (dark) — 2026 dates, market cap (USD)
+        {t.footer}
       </text>
     </svg>
   )

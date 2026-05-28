@@ -1,3 +1,5 @@
+import { useLang } from '@/lib/use-lang'
+
 interface DataPoint {
   date: string
   ratio: number
@@ -36,7 +38,31 @@ const data: DataPoint[] = [
   { date: '05/12', ratio: 3.25 },
 ]
 
+const text = {
+  ko: {
+    ariaLabel:
+      'Long/Short Ratio 시계열 — RAVE 4월 13일 ~ 5월 12일. 펌프 직전 약 0.30 (숏 우세) 에서 폭락 다음 날 2.20 이상으로 급반전 후 3.0 ~ 3.5 부근 유지',
+    balanceLabel: 'balance (1:1)',
+    discloseLabel: '04-18 disclose',
+    crashLabel: '04-19 short squeeze →',
+    shortsDominate: 'shorts dominate',
+    longsDominate: 'longs dominate',
+  },
+  en: {
+    ariaLabel:
+      'Long/Short ratio time series — RAVE, April 13 to May 12. From around 0.30 (shorts dominant) just before the pump, the ratio flips above 2.20 the day after the crash and holds around 3.0 to 3.5',
+    balanceLabel: 'balance (1:1)',
+    discloseLabel: '04-18 disclose',
+    crashLabel: '04-19 short squeeze →',
+    shortsDominate: 'shorts dominate',
+    longsDominate: 'longs dominate',
+  },
+} as const
+
 export function LongShortRatio() {
+  const [lang] = useLang()
+  const t = text[lang]
+
   const W = 720
   const H = 280
   const M = { l: 50, r: 24, t: 24, b: 36 }
@@ -68,7 +94,7 @@ export function LongShortRatio() {
       viewBox={`0 0 ${W} ${H}`}
       className="h-full w-full"
       role="img"
-      aria-label="Long/Short Ratio 시계열 — RAVE 4월 13일 ~ 5월 12일. 펌프 직전 약 0.30 (숏 우세) 에서 폭락 다음 날 2.20 이상으로 급반전 후 3.0 ~ 3.5 부근 유지"
+      aria-label={t.ariaLabel}
     >
       {/* Y-axis grid + labels */}
       {[0, 1, 2, 3, 4].map((v) => {
@@ -103,7 +129,7 @@ export function LongShortRatio() {
         textAnchor="end"
         className="fill-ink-500 font-mono text-[9px] uppercase tracking-widest"
       >
-        balance (1:1)
+        {t.balanceLabel}
       </text>
 
       {/* Area fill */}
@@ -126,7 +152,7 @@ export function LongShortRatio() {
           textAnchor="end"
           className="fill-ink-400 font-mono text-[9px] uppercase tracking-widest"
         >
-          04-18 disclose
+          {t.discloseLabel}
         </text>
       </g>
 
@@ -146,7 +172,7 @@ export function LongShortRatio() {
           y={M.t + 14}
           className="fill-ink-300 font-mono text-[9px] uppercase tracking-widest"
         >
-          04-19 short squeeze →
+          {t.crashLabel}
         </text>
       </g>
 
@@ -180,7 +206,7 @@ export function LongShortRatio() {
         textAnchor="middle"
         className="fill-ink-400 font-mono text-[10px] uppercase tracking-widest"
       >
-        shorts dominate
+        {t.shortsDominate}
       </text>
       <text
         x={xScale(22)}
@@ -188,7 +214,7 @@ export function LongShortRatio() {
         textAnchor="middle"
         className="fill-ink-400 font-mono text-[10px] uppercase tracking-widest"
       >
-        longs dominate
+        {t.longsDominate}
       </text>
 
       {/* X-axis labels */}

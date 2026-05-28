@@ -1,10 +1,46 @@
+import { useLang } from '@/lib/use-lang'
+
+const text = {
+  ko: {
+    ariaLabel:
+      '0x53d7 multisig가 2-hop burner를 거쳐 Bitget 6 hot wallet으로 22.99M RAVE를 송금한 자금 흐름 다이어그램',
+    sourceLabel: 'Source · multisig',
+    destinationLabel: 'Destination · Bitget 6',
+    pathALabel: 'PATH A · 10M',
+    pathBLabel: 'PATH B · 13M',
+    burner1: 'burner #1',
+    burner2: 'burner #2',
+    patternA: 'test 1,001 → bulk 9.999M',
+    patternB: 'test 10K → bulk 12.986M',
+    funded: 'funded by Bitget 6',
+    timeNote: '2026-04-19 · 19:47 → 19:58 UTC · 11 min',
+  },
+  en: {
+    ariaLabel:
+      'Fund-flow diagram — the 0x53d7 multisig forwards 22.99M RAVE through 2-hop burner wallets into the Bitget 6 hot wallet',
+    sourceLabel: 'Source · multisig',
+    destinationLabel: 'Destination · Bitget 6',
+    pathALabel: 'PATH A · 10M',
+    pathBLabel: 'PATH B · 13M',
+    burner1: 'burner #1',
+    burner2: 'burner #2',
+    patternA: 'test 1,001 → bulk 9.999M',
+    patternB: 'test 10K → bulk 12.986M',
+    funded: 'funded by Bitget 6',
+    timeNote: '2026-04-19 · 19:47 → 19:58 UTC · 11 min',
+  },
+} as const
+
 export function FundFlow() {
+  const [lang] = useLang()
+  const t = text[lang]
+
   return (
     <svg
       viewBox="0 0 540 470"
       className="h-full w-full"
       role="img"
-      aria-label="0x53d7 multisig가 2-hop burner를 거쳐 Bitget 6 hot wallet으로 22.99M RAVE를 송금한 자금 흐름 다이어그램"
+      aria-label={t.ariaLabel}
     >
       <defs>
         <marker
@@ -48,7 +84,7 @@ export function FundFlow() {
           textAnchor="middle"
           className="fill-ink-400 font-mono text-[10px] uppercase tracking-[0.2em]"
         >
-          Source · multisig
+          {t.sourceLabel}
         </text>
         <text
           x="100"
@@ -64,26 +100,26 @@ export function FundFlow() {
       <PipelineBox
         x={20}
         y={128}
-        label="PATH A · 10M"
+        label={t.pathALabel}
         hop1="0x7474…0fe3"
-        hop1Sub="burner #1"
+        hop1Sub={t.burner1}
         hop2="0x26ac…9b45"
-        hop2Sub="burner #2"
-        pattern="test 1,001 → bulk 9.999M"
-        funded="funded by Bitget 6"
+        hop2Sub={t.burner2}
+        pattern={t.patternA}
+        funded={t.funded}
       />
 
       {/* right pipeline */}
       <PipelineBox
         x={300}
         y={128}
-        label="PATH B · 13M"
+        label={t.pathBLabel}
         hop1="0xf763…ada8"
-        hop1Sub="burner #1"
+        hop1Sub={t.burner1}
         hop2="0x64d6…3c2b"
-        hop2Sub="burner #2"
-        pattern="test 10K → bulk 12.986M"
-        funded="funded by Bitget 6"
+        hop2Sub={t.burner2}
+        pattern={t.patternB}
+        funded={t.funded}
       />
 
       {/* destination */}
@@ -95,7 +131,7 @@ export function FundFlow() {
           textAnchor="middle"
           className="fill-ink-900 font-mono text-[10px] font-semibold uppercase tracking-[0.2em]"
         >
-          Destination · Bitget 6
+          {t.destinationLabel}
         </text>
         <text
           x="100"
@@ -114,7 +150,7 @@ export function FundFlow() {
         textAnchor="middle"
         className="fill-ink-500 font-mono text-[9px] uppercase tracking-[0.3em]"
       >
-        2026-04-19 · 19:47 → 19:58 UTC · 11 min
+        {t.timeNote}
       </text>
     </svg>
   )

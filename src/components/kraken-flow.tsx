@@ -1,12 +1,63 @@
 import { cn } from '@/lib/utils'
+import { useLang } from '@/lib/use-lang'
+
+type Confidence = 'documented' | 'mixed' | 'alleged'
+
+const text = {
+  ko: {
+    ariaLabel:
+      'M (MemeCore) 케이스 — TGE → 의심 팀 지갑 → 상장 2일 전 175M passthrough → Kraken 상장 당일 거대 hot wallet 입금까지 4단계 자금 흐름 다이어그램 (자체 Dune 인덱싱 결과)',
+    arrow1: '211.6M / 9 tx · 2025-06-20 ~ 12-21',
+    arrow2: '175M / 1 tx · 2025-07-01 (상장 2일 전)',
+    arrow3: '15.72M / 1 tx · 2025-07-03 07:20 (상장 당일)',
+    stage1Title: 'TGE / 초기 분배',
+    stage1Sub: "공급의 약 21% 이 단일 의심 지갑에 집중 (ZachXBT 분류 'Genesis')",
+    stage2Title: '0x6f1f0a1...ba9 — 의심 팀 지갑',
+    stage2Sub: 'TGE 211.6M 수령 → 약 95% 분산 → 현재 9.3M 잔여 (Q1 rank 4)',
+    stage3Title: '0x06ef...f0fc — 1-hop passthrough hub',
+    stage3Sub: '3일 만에 175M 단발성 전량 재송신 (4 tx 만 발생)',
+    stage4Title: '0xd544...ac8b — 거대 hot wallet 추정',
+    stage4Sub: '11개월간 1.15B M 처리 · 125만 transfer · Dune 라벨 미등록',
+    sideLabel: '상장 당일 21M / 3 tx (병렬 분산)',
+    confidence: {
+      documented: '자체 측정',
+      mixed: '일부 자체 측정',
+      alleged: '추정 / 분석',
+    } as Record<Confidence, string>,
+  },
+  en: {
+    ariaLabel:
+      'M (MemeCore) case — four-stage fund flow diagram: TGE → suspect team wallet → 175M passthrough two days before listing → large hot wallet deposit on Kraken listing day (in-house Dune indexing)',
+    arrow1: '211.6M / 9 tx · 2025-06-20 ~ 12-21',
+    arrow2: '175M / 1 tx · 2025-07-01 (2 days before listing)',
+    arrow3: '15.72M / 1 tx · 2025-07-03 07:20 (listing day)',
+    stage1Title: 'TGE / Initial distribution',
+    stage1Sub: "~21% of supply concentrated in a single suspect wallet (ZachXBT classification: 'Genesis')",
+    stage2Title: '0x6f1f0a1...ba9 — Suspect team wallet',
+    stage2Sub: 'Received 211.6M at TGE → ~95% dispersed → 9.3M remaining (Q1 rank 4)',
+    stage3Title: '0x06ef...f0fc — 1-hop passthrough hub',
+    stage3Sub: 'Re-sent all 175M in 3 days using only 4 tx',
+    stage4Title: '0xd544...ac8b — Presumed large hot wallet',
+    stage4Sub: 'Processed 1.15B M over 11 months · 1.25M transfers · unlabeled in Dune',
+    sideLabel: '21M / 3 tx on listing day (parallel dispersal)',
+    confidence: {
+      documented: 'in-house measurement',
+      mixed: 'partially measured',
+      alleged: 'estimate / analysis',
+    } as Record<Confidence, string>,
+  },
+} as const
 
 export function KrakenFlow() {
+  const [lang] = useLang()
+  const t = text[lang]
+
   return (
     <svg
       viewBox="0 0 540 540"
       className="h-full w-full"
       role="img"
-      aria-label="M (MemeCore) 케이스 — TGE → 의심 팀 지갑 → 상장 2일 전 175M passthrough → Kraken 상장 당일 거대 hot wallet 입금까지 4단계 자금 흐름 다이어그램 (자체 Dune 인덱싱 결과)"
+      aria-label={t.ariaLabel}
     >
       <defs>
         <marker
@@ -65,58 +116,62 @@ export function KrakenFlow() {
         y="148"
         className="fill-ink-200 font-mono text-[10px] font-semibold"
       >
-        211.6M / 9 tx · 2025-06-20 ~ 12-21
+        {t.arrow1}
       </text>
       <text
         x="232"
         y="266"
         className="fill-ink-200 font-mono text-[10px] font-semibold"
       >
-        175M / 1 tx · 2025-07-01 (상장 2일 전)
+        {t.arrow2}
       </text>
       <text
         x="232"
         y="384"
         className="fill-ink-200 font-mono text-[10px] font-semibold"
       >
-        15.72M / 1 tx · 2025-07-03 07:20 (상장 당일)
+        {t.arrow3}
       </text>
 
       <FlowStage
         x={20}
         y={50}
         no="01"
-        title="TGE / 초기 분배"
-        sub="공급의 약 21% 이 단일 의심 지갑에 집중 (ZachXBT 분류 'Genesis')"
+        title={t.stage1Title}
+        sub={t.stage1Sub}
         confidence="alleged"
+        confidenceLabel={t.confidence.alleged}
       />
       <FlowStage
         x={20}
         y={168}
         no="02"
-        title="0x6f1f0a1...ba9 — 의심 팀 지갑"
-        sub="TGE 211.6M 수령 → 약 95% 분산 → 현재 9.3M 잔여 (Q1 rank 4)"
+        title={t.stage2Title}
+        sub={t.stage2Sub}
         confidence="documented"
+        confidenceLabel={t.confidence.documented}
       />
       <FlowStage
         x={20}
         y={286}
         no="03"
-        title="0x06ef...f0fc — 1-hop passthrough hub"
-        sub="3일 만에 175M 단발성 전량 재송신 (4 tx 만 발생)"
+        title={t.stage3Title}
+        sub={t.stage3Sub}
         confidence="documented"
+        confidenceLabel={t.confidence.documented}
       />
       <FlowStage
         x={20}
         y={404}
         no="04"
-        title="0xd544...ac8b — 거대 hot wallet 추정"
-        sub="11개월간 1.15B M 처리 · 125만 transfer · Dune 라벨 미등록"
+        title={t.stage4Title}
+        sub={t.stage4Sub}
         confidence="alleged"
+        confidenceLabel={t.confidence.alleged}
         highlight
       />
 
-      {/* side note: split-off arrows from stage 2 to stage 4 (상장 당일 분산) */}
+      {/* side note: split-off arrows from stage 2 to stage 4 (listing day dispersal) */}
       <g fill="none" strokeLinecap="round" strokeWidth="1.2">
         <path
           d="M 420 207 C 500 207, 500 443, 420 443"
@@ -132,13 +187,11 @@ export function KrakenFlow() {
         transform="rotate(-90 500 325)"
         className="fill-ink-500 font-mono text-[9px] uppercase tracking-[0.25em]"
       >
-        상장 당일 21M / 3 tx (병렬 분산)
+        {t.sideLabel}
       </text>
     </svg>
   )
 }
-
-type Confidence = 'documented' | 'mixed' | 'alleged'
 
 interface FlowStageProps {
   x: number
@@ -147,13 +200,8 @@ interface FlowStageProps {
   title: string
   sub: string
   confidence: Confidence
+  confidenceLabel: string
   highlight?: boolean
-}
-
-const confidenceLabel: Record<Confidence, string> = {
-  documented: '자체 측정',
-  mixed: '일부 자체 측정',
-  alleged: '추정 / 분석',
 }
 
 function FlowStage({
@@ -163,6 +211,7 @@ function FlowStage({
   title,
   sub,
   confidence,
+  confidenceLabel,
   highlight,
 }: FlowStageProps) {
   const width = 400
@@ -228,7 +277,7 @@ function FlowStage({
           confColor,
         )}
       >
-        {confidenceLabel[confidence]}
+        {confidenceLabel}
       </text>
     </g>
   )
