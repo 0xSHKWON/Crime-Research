@@ -1,0 +1,290 @@
+---
+slug: "coai"
+title: "ChainOpera AI (COAI)"
+tokenSymbol: "COAI"
+incidentDate: "2026-04-19"
+publishedDate: "2026-05-17"
+status: "pattern-match"
+severity: "high"
+patterns:
+  - "proxy-contract-risk"
+  - "cross-exchange-coordination"
+  - "alpha-no-spot"
+metrics:
+  marketCapPeak: 365000000
+exchanges:
+  binanceSpot: false
+  binanceAlpha: true
+  binanceFutures: true
+  others: ["bybit", "bitget", "gate", "aster"]
+allegations:
+  - source: "ZachXBT"
+    sourceUrl: "https://x.com/zachxbt"
+    date: "2026-04-19"
+    summary: "Alongside the RAVE -95% disclosure, included COAI on a 'highly questionable price action' watchlist. Flagged that the proxy contract's ownership has not been renounced — leaving administrative control alive — and that the market cap of $315M against ~$5M in daily volume implies almost no organic demand."
+  - source: "The Block"
+    sourceUrl: "https://www.theblock.co/post/400465/zachxbt-accuses-projects-like-lab-of-highly-questionable-price-action-posts-10000-bounty-for-info-on-alleged-market-manipulation"
+    date: "2026-04-18"
+    summary: "ZachXBT posted a $10,000 bounty on tokens including LAB and RAVE, publishing a watchlist that included COAI."
+  - source: "GNCrypto"
+    sourceUrl: "https://www.gncrypto.news/news/investigator-flags-token-manipulation-rave-95-crash/"
+    date: "2026-04-19"
+    summary: "Following the RAVE -95% crash, reported the investigator's flag on alleged token manipulation, naming watchlist tokens including COAI."
+relatedCases: ["memecore", "rave", "siren"]
+---
+
+import { ChartFrame } from '@/components/chart-frame'
+import { Timeline, TimelineEvent } from '@/components/case-timeline'
+import { ZoomableImage } from '@/components/zoomable-image'
+import { SupplyBars } from '@/components/supply-bars'
+import { CoaiProxy } from '@/components/coai-proxy'
+import coaiPricePerp1d from '@/assets/cases/coai/price-perp-1d.png'
+
+export const coaiTopHolders = [
+  { rank: 1, address: "0x8348bcc1e920fa9e6afe5bbca1e28704a2322974", label: "Unlabeled", category: "unknown", pct: 23.07, balance: 230690401 },
+  { rank: 2, address: "0x38cd6dceb44a1ca1388baeef1ed1a7a3a7bf2d62", label: "Unlabeled", category: "unknown", pct: 18.85, balance: 188500001 },
+  { rank: 3, address: "0xa5e42f9d8881c1fa0533730a0680cb89adc8320f", label: "Unlabeled", category: "unknown", pct: 15.93, balance: 159309500 },
+  { rank: 4, address: "0x24c667542ccd8d1d48f44c9b199e61cc65243c30", label: "Unlabeled", category: "unknown", pct: 11.35, balance: 113500000 },
+  { rank: 5, address: "0x1b0d24c705d00b7f15f0b9e21013375c1ada4f8a", label: "Unlabeled", category: "unknown", pct: 10.50, balance: 105000000 },
+  { rank: 6, address: "0x6a787f2ef27b67b47166c1123a110735f5bae053", label: "Unlabeled", category: "unknown", pct: 5.00, balance: 50000100 },
+  { rank: 7, address: "0xf76d4edecb753539bf0ddeed25246bb70ffe592d", label: "Unlabeled", category: "unknown", pct: 3.00, balance: 30000000 },
+  { rank: 8, address: "0x9433988b74df5435e9534d0279b5705eab73c47c", label: "Unlabeled", category: "unknown", pct: 2.43, balance: 24269651 },
+  { rank: 9, address: "0xffa8db7b38579e6a2d14f9b347a9ace4d044cd54", label: "Unlabeled", category: "unknown", pct: 1.54, balance: 15374110 },
+  { rank: 10, address: "0x1939d709b3c7c39fe1cc6ce9d5f8351710f48b43", label: "Unlabeled", category: "unknown", pct: 1.50, balance: 15000000 },
+]
+
+## Overview
+
+ChainOpera AI is a full-stack AI × blockchain project that has marketed collaborations with Google Cloud, Microsoft Azure, and Samsung. On 2025-09-25 it listed simultaneously on four CEXs (Binance Alpha · Bybit · Bitget · Gate) and one DEX (Aster), at one point reaching ~$18B FDV. What sets this case apart from the others is the *nature* of the evidence. Where RAVE, SIREN, and M lean on wallet flows and price data, what ZachXBT flagged on COAI is **the contract code itself** — the proxy contract's admin has not been renounced, leaving a structure in which the team *could*, at any time, change how the token behaves.
+
+This is not an inference. It is public information that anyone can verify on BscScan. So this page does not relitigate a *past single event*. There was a months-long drawdown from the post-listing peak, but no 24-hour -95% liquidation cascade like RAVE, and no exchange-level investigation has been announced. The point is not the price curve — it is the **live contract privilege** that remains today: a structural condition vulnerable to manipulation is *currently* armed.
+
+> "COAI's proxy contract ownership has not been renounced, leaving administrative control still alive."
+> — ZachXBT (2026-04-19 watchlist)
+
+## Timeline
+
+<Timeline>
+  <TimelineEvent date="2025-06-26 — Platform launch">
+ChainOpera AI platform officially launches. Reports 1M daily active users.
+  </TimelineEvent>
+  <TimelineEvent date="2025-09-20~30 — Airdrop distribution">
+Bitget runs a free airdrop campaign (~1.5% of supply, 15M COAI). A separate distribution goes to Binance Alpha Points holders.
+  </TimelineEvent>
+  <TimelineEvent date="2025-09-25 — Simultaneous listing on 5 venues">
+COAI lists the same day on Binance Alpha · Bybit · Bitget · Gate · Aster (DEX) — Binance also runs a perpetual (confirmed on the price chart). Perpetuals volume on listing day exceeds $6B; FDV reaches ~$4B almost immediately.
+  </TimelineEvent>
+  <TimelineEvent date="2025-10 — FDV peak">
+FDV peaks around $18.57B. Market cap ~$365M; circulating ~19.67% (196.7M / 1B).
+  </TimelineEvent>
+  <TimelineEvent date="2025-10 ~ 2026-04 — Round-trip back to low-range chop">
+From the post-listing peak (~$18–25), most of the move is given back over several months down to ~$0.3. Volume contracts alongside. A prolonged decline without a single liquidation event.
+  </TimelineEvent>
+  <TimelineEvent date="2026-04-18~19 — Added to watchlist">
+ZachXBT, disclosing the RAVE crash, adds COAI to a 'highly questionable price action' watchlist, flagging the un-renounced proxy admin and the market-cap-to-volume ratio.
+  </TimelineEvent>
+  <TimelineEvent date="2026-05 — No response, structure unchanged">
+No public response from ChainOpera. Proxy admin authority unchanged. Price chops near the low without additional sharp drops. The contract-privilege risk remains unrealized.
+  </TimelineEvent>
+</Timeline>
+
+## Supply structure
+
+| Item | Value |
+|------|-------|
+| Launch date | 2025-09-25 |
+| Total supply | 1,000,000,000 COAI |
+| Circulating (2025-10) | 196.7M (19.67%) |
+| FDV peak | ~$18.57B |
+| Market cap (at disclosure) | ~$315M |
+| Daily volume | ~$5M |
+| Token contract (BSC) | `0x0A8D6C86e1bcE73fE4D0bD531e1a567306836EA5` |
+| Implementation contract | `0xa9d0b1770ad65cbc4f5dffc0f24f42c57933a877` |
+| Contract pattern | EIP-1967 Transparent Proxy |
+| Proxy owner | `0xAC17F51B2F5BDBC63132AB434F92C1A36D2DF10C` (own measurement — unchanged since genesis) |
+| Ownership renounced? | No — zero `OwnershipTransferred` events to zero address (own indexing) |
+
+### Market structure
+
+| Exchange | COAI |
+|----------|------|
+| Binance Spot | X |
+| Binance Alpha | O |
+| Binance Futures | O (perpetual — source of the price chart) |
+| Bybit | O (spot · futures) |
+| Bitget | O (spot · futures) |
+| Gate | O (spot · futures) |
+| Aster (DEX) | O |
+
+A configuration of no Binance spot + Alpha + multiple exchanges simultaneously belongs to the same cross-exchange-coordinated pattern as RAVE ("Binance Alpha + Bitget + Gate + KuCoin") and LAB ("Bitget + Bybit + Binance + OKX"). The distinguishing scale here is that COAI filled *five venues on the same day*.
+
+### Direct verification via own indexing
+
+This page directly indexed the COAI BSC contract's transfer events on Dune (`transfers_bnb.erc20`). Re-checking the externally reported "circulating 19.67%" as a *measurable fact*:
+
+- **Supply is concentrated in a small set of top wallets.** The external "circulating 196.7M (19.67%)" appears to follow the project's unlock schedule; how narrow the *effective tradable* float is shows not in that schedule but in *wallet concentration*. Whether each of these top wallets is a vesting/distribution contract or an EOA is outside the scope of this measurement (verify on BscScan if it matters to you).
+- **Top 5 wallets hold 79.70%, Top 10 hold 93.16%, Top 50 hold 99.44%.** The five largest addresses individually hold 10–23% (105M · 113.5M · 159.3M · 188.5M · 230.7M).
+- First on-chain activity: **2025-09-22 09:52:10 UTC** — *three days before* the 2025-09-25 exchange listings. Contract deployment and initial distribution preceded the listings.
+
+<ChartFrame
+  kind="SUPPLY DISTRIBUTION · TOP 10 (own measurement)"
+  caption={<>
+    Top 10 COAI holders on BSC (as of 2026-05-16, own Dune indexing).
+    <br />
+    <br />
+    Top 5 = 79.70% · Top 10 = 93.16% · Top 50 = 99.44%.
+    <br />
+    <br />
+    Supply concentrated in a small set of top wallets — the concentration itself is the signal (whether each wallet is locked or an EOA is outside this measurement's scope).
+  </>}
+  source="Own Dune indexing (transfers_bnb.erc20)"
+  aspect="auto"
+>
+  <SupplyBars rows={coaiTopHolders} asOf="2026-05-16 (own indexing)" symbol="COAI" />
+</ChartFrame>
+
+#### Cross-token finding
+
+Wallet rank #13 `0x73d8bd54f7cf5fab43fe4ef40a62d390644946db` (9.68M COAI · 0.97%) is **the same wallet as the MemeCore case's Top 3, and the large SIREN holder**. The same entity holds three of ZachXBT's watchlist tokens — SIREN, M (MemeCore), and COAI — at the same time. This page does not assert this is *intentional cross-holding*, but the overlap between tokens flagged in the same period by the same analyst is worth noting.
+
+## How it works — the "technical signal" pattern
+
+For traders who are not engineers, proxy contracts are an unfamiliar concept, so a primer first. An ordinary contract has logic and storage in one place and cannot be changed once deployed. The proxy pattern splits that in two — a fixed-address Proxy (storage) takes user calls and delegates them to a swappable Implementation (logic).
+
+The proxy itself is a legitimate technique. It lets a project patch a discovered security vulnerability without reissuing the token, and lets DeFi protocols evolve incrementally. The problem appears when the *upgrade authority*, the admin, is still *alive*.
+
+<ChartFrame
+  kind="PROXY ARCHITECTURE · EIP-1967"
+  caption={<>
+    COAI's BSC contract structure.
+    <br />
+    <br />
+    The Proxy (0x0A8D...6EA5) has a fixed address, but its actual logic is delegated to a swappable Implementation (0xa9d0...a877).
+    <br />
+    <br />
+    Because admin has not been renounced, a single `upgradeTo()` call can swap the Implementation in its entirety — a path that remains open.
+    <br />
+    <br />
+    This path operates without prior user notice.
+  </>}
+  source="BscScan contract verification (public data)"
+  aspect="square"
+>
+  <CoaiProxy />
+</ChartFrame>
+
+Healthy projects either transfer admin to the zero address (renounce) after some period post-launch, or wrap it in a multisig + timelock so that any change is gated by a 24–48-hour notice. As of the ZachXBT disclosure, COAI had explicitly applied neither. The implication goes beyond "the team holds authority" — it means **the path by which the team could, if it chose, reduce user assets to zero has not been closed**. This page does not assert that ChainOpera *has exercised* or *will exercise* that authority. It only notes that the path exists in a verifiable form.
+
+### Own measurement — full enumeration of privilege events
+
+Rather than re-citing ZachXBT's "ownership not renounced" claim, we exhaustively indexed every EIP-1967 privilege event (`Upgraded` · `AdminChanged` · `OwnershipTransferred`) on the proxy (`0x0A8D…6EA5`) and the implementation (`0xa9d0…a877`) from deployment to today (`bnb.logs`). The full history is **just two events, both in the genesis block** (2025-09-22 09:52:10 UTC):
+
+- `Upgraded` → sets implementation to `0xA9D0…A877` — matches the address stated in this article (verified)
+- `OwnershipTransferred` → from `0x0000…0000` to `0xAC17F51B2F5BDBC63132AB434F92C1A36D2DF10C`
+
+From then until the last indexed block (2026-05-16), there have been **zero additional `Upgraded`, zero `AdminChanged`, and zero `OwnershipTransferred` to the zero address**. Summarizing:
+
+| ZachXBT claim | Own Dune measurement |
+|---|---|
+| proxy ownership not renounced | Ownership set at genesis to `0xAC17…F10C`, with **zero transfer events to the zero address** since → independently confirmed as not renounced |
+| (added) Implementation upgrade capability | Upgrade authority is alive, but **zero actual upgrades since the genesis configuration** — a *potential* risk, not a *realized* one |
+| (added) Admin control | `AdminChanged` zero — admin slot unchanged since deployment |
+
+A methodological caveat, stated honestly: Dune cannot read arbitrary storage slots directly, so the *current* owner is back-derived from the last event. Whether `0xAC17…F10C` is a single key (EOA) or a multisig/timelock is not determinable from event logs alone — and the *severity* of the risk hinges on what that address actually is. Confirming it is left to the trader.
+
+### Second signal — market cap vs. volume
+
+Beyond the technical signal, market behavior is also out of range. ZachXBT characterized COAI as having "almost no demand" given a market cap of $315M against ~$5M in daily volume — a ratio of about 63:1. A normal mid-cap sits in the 20–50:1 range; for comparison, BTC is around 25:1 and ETH around 30:1. Volume that thin suggests a lack of natural market participation and that the market cap is *being held without being traded*.
+
+### Impressive façade — the fundamentals narrative
+
+COAI's fundamentals story is polished. Cloud infrastructure with Google Cloud · Microsoft Azure · Amazon; enterprise collaborations with Samsung · Toyota; crypto infrastructure tie-ups with EigenLayer · Babylon — together with launch-window numbers like 1M DAU on the AI Terminal, 150K paying users, and 1,000+ community AI agents.
+
+How *real* those numbers are is hard to verify from the outside. *Official statements* from Google · Microsoft · Samsung confirming any of these are largely absent; only ChainOpera's own announcements exist. 1M DAU may include incentivized-campaign users; whether the 1,000 AI agents represent *actual usage* or merely *submissions* is difficult to distinguish from outside. The verification burden has shifted to traders, and self-reported numbers alone are hard to evaluate.
+
+## Data
+
+The core evidence in this case is the contract structure above, not a price pattern. That said, the chart visually supports ZachXBT's "almost no demand" reading.
+
+<ChartFrame
+  kind="PRICE · COAI / USDT · BINANCE PERP · 1D"
+  caption={<>
+    COAI/USDT perpetual daily candles (Binance, 2025-09 to 2026-05).
+    <br />
+    <br />
+    (1) Vertical surge to ~$18–25 immediately after listing, with volume explosion
+    <br />
+    → (2) Sustained drawdown over the following months
+    <br />
+    → (3) Chops near ~$0.3 with contracted volume into 2026 (including the ZachXBT disclosure window)
+    <br />
+    <br />
+    Consistent with the "naturally absent demand" reading implied by the ~63:1 market-cap-to-volume ratio.
+  </>}
+  source="Binance COAI/USDT perpetual · TradingView capture (locally hosted)"
+  aspect="auto"
+>
+  <ZoomableImage
+    src={coaiPricePerp1d}
+    alt="COAI/USDT Binance perpetual daily (2025-09 to 2026-05)"
+  />
+</ChartFrame>
+
+### Verify the contract directly
+
+The strength of this case is that the reader can verify it themselves.
+
+1. Search `0x0A8D6C86e1bcE73fE4D0bD531e1a567306836EA5` on BscScan → confirm the "EIP-1967 Transparent Proxy pattern" indicator
+2. Confirm the Implementation `0xa9d0b1770ad65cbc4f5dffc0f24f42c57933a877` has its logic verified
+3. In the "Read as Proxy" tab, check the admin address — the zero address (`0x0000...0000`) is safe; an EOA or multisig means that party retains control
+4. If admin is a multisig, check the threshold (1-of-N? 5-of-N?) and whether a timelock applies
+
+## Lessons — signals to identify similar cases
+
+Unlike the other cases, COAI provides **quantitative and structural signals verifiable on-chain**. These are not inferred from wallet flows; they are facts confirmable in the code, which lowers the identification bar.
+
+### Technical signals (most explicit)
+
+- Use of the proxy pattern itself is normal — but admin verification must always accompany it
+- Admin as an EOA (a personal wallet) means one key holder has full authority — the highest risk
+- Even a multisig admin without a timelock is mutable on the spot — medium risk
+- An admin renounced to the zero address can no longer change — safe
+- An unverified Implementation makes the logic itself a black box — very high risk
+- `mint` and `blacklist` functions, even if unused, are a risk by *existence alone*
+
+### Fundamentals-verification signals
+
+- Cross-check headline collaborations against the *counterparty's official announcements*
+- For DAU/MAU, distinguish incentivized-campaign users from organic users
+- Use GitHub activity to check whether the codebase is under active development
+
+### Market-behavior signals
+
+- Market-cap-to-daily-volume ratios above 50:1 suggest a lack of natural demand
+- Perp volume on listing day at 100x+ of spot means derivatives-led trading
+- A single day's perp volume exceeding market cap is an abnormal turnover
+
+### Listing-pattern signals
+
+- Three or more exchanges listing on the same day points to a cross-exchange coordinated setup
+- Binance Alpha + spot/futures listed simultaneously is a variant of the alpha-no-spot pattern
+- Airdrops distributed via insider-friendly channels like Alpha Points leave room for distribution identity laundering
+
+### Five-minute checklist before buying
+
+The procedure learned from COAI applies to any token. Search contract address → verified? → proxy? (if so, check the implementation) → owner/admin address → is it the zero address? → are `mint`/`blacklist`/tax functions present? → is liquidity locked? → top-holder distribution. Any single red flag is a reason to think twice before buying. Neither a $315M market cap nor a top-exchange listing guarantees safety.
+
+### "Potential" risk vs. "realized" risk
+
+The most important takeaway from COAI is that *the infrastructure can be unsafe even before manipulation occurs*. "Nothing has happened, so it must be safe" is a flawed judgment. It also reframes a contract audit: not as a simple bug check, but as an *authority-structure* review.
+
+## Sources
+
+1. **ZachXBT** — [X (Twitter)](https://x.com/zachxbt) — 2026-04-19 RAVE disclosure + COAI on the watchlist, flag on the un-renounced proxy admin
+2. **The Block** — ["ZachXBT accuses projects like LAB of highly questionable price action"](https://www.theblock.co/post/400465/zachxbt-accuses-projects-like-lab-of-highly-questionable-price-action-posts-10000-bounty-for-info-on-alleged-market-manipulation)
+3. **GNCrypto** — ["Investigator Flags Token Manipulation After RAVE 95% Crash"](https://www.gncrypto.news/news/investigator-flags-token-manipulation-rave-95-crash/)
+4. **BscScan** — [COAI token contract](https://bscscan.com/token/0x0A8D6C86e1bcE73fE4D0bD531e1a567306836EA5)
+5. **IQ.wiki** — [ChainOpera AI project page](https://iq.wiki/wiki/chainopera-ai-coai)
+6. **CoinMarketCap AI** — [ChainOpera AI overview](https://coinmarketcap.com/cmc-ai/chainopera-ai/what-is/)
+7. **WEEX Wiki** — [COAI token detail](https://www.weex.com/wiki/article/introducing-chainopera-ai-complete-guide-to-coai-and-airdrop-opportunities-24649)
+8. **DEXTools** — ["What Is a Proxy Contract in Crypto?"](https://www.dextools.io/tutorials/what-is-a-proxy-contract-in-crypto-guide-2026) (reference: general risks of proxy contracts)
