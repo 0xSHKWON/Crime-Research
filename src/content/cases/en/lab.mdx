@@ -1,0 +1,274 @@
+---
+slug: "lab"
+title: "LAB (LABtrade)"
+tokenSymbol: "LAB"
+incidentDate: "2026-05-11"
+publishedDate: "2026-05-29"
+status: "alleged"
+severity: "high"
+patterns:
+  - "supply-concentration"
+  - "cross-exchange-coordination"
+  - "alpha-no-spot"
+  - "proxy-contract-risk"
+metrics:
+  startPrice: 0.70
+  peakPrice: 6.66
+  bottomPrice: 2.91
+  maxGain: 8.51
+  maxDrawdown: -0.65
+  marketCapPeak: 6000000000
+  pumpDurationDays: 9
+  crashDurationHours: 24
+exchanges:
+  binanceSpot: false
+  binanceAlpha: true
+  binanceFutures: true
+  others: ["bitget", "bybit", "okx", "gate", "kucoin"]
+allegations:
+  - source: "ZachXBT"
+    sourceUrl: "https://x.com/zachxbt"
+    date: "2026-05-14"
+    summary: "Alleged insiders control 95%+ of the AI trading terminal LAB's supply, coordinating with an unknown market maker and Bitget to pump it to a $6B FDV. Posted a $10K bounty tied to LAB's operators (named the X handle @vsadkovv)."
+  - source: "The Block"
+    sourceUrl: "https://www.theblock.co/post/401290/zachxbt-alleges-95-insider-control-of-lab-token-in-investigation-into-ai-terminals-6-billion-fdv-project"
+    date: "2026-05-14"
+    summary: "Reported ZachXBT's investigation alleging 95% insider supply control of the $6B FDV AI terminal LAB."
+  - source: "Bitcoin News"
+    sourceUrl: "https://news.bitcoin.com/lab-token-bitget-withdrawal-manipulation-2026/"
+    date: "2026-05-12"
+    summary: "~100M LAB (~$480M) moved from Bitget to 10 fresh wallets on May 11-12 — equal to 32.26% of the reported 309.95M circulating supply."
+relatedCases: ["rave", "siren", "aria"]
+---
+
+import { ChartFrame } from '@/components/chart-frame'
+import { LabFlow } from '@/components/lab-flow'
+import { LabWithdrawal } from '@/components/lab-withdrawal'
+import { SupplyBars } from '@/components/supply-bars'
+import { Timeline, TimelineEvent } from '@/components/case-timeline'
+import { ZoomableImage } from '@/components/zoomable-image'
+import priceCandle4h from '@/assets/cases/lab/price-candle-4h.png'
+
+export const labHolders = [
+  { rank: 1, address: "0xb4b74d63f30076870d54ab9e8e6a7d18293273c3", category: "unknown", pct: 20.00, balance: 200000000 },
+  { rank: 2, address: "0xffa8db7b38579e6a2d14f9b347a9ace4d044cd54", label: "Bitget · same as RAVE", category: "exchange", pct: 15.34, balance: 153370464 },
+  { rank: 3, address: "0xb471837f03d01b628bff32a515baf679ccdfabb8", category: "unknown", pct: 15.00, balance: 150000000 },
+  { rank: 4, address: "0x7cfd8d2d8626b287bea569b5e65ab5cbb75e9265", category: "unknown", pct: 13.80, balance: 138000010 },
+  { rank: 5, address: "0x78a79d0fa0eaf58741f5bde7e05b5cc8f33d24d3", category: "unknown", pct: 10.80, balance: 108000000 },
+  { rank: 6, address: "0xf79ff8a5052e969a6d13e18c4e439fe5202b02fa", category: "unknown", pct: 9.36, balance: 93600000 },
+  { rank: 7, address: "0xc882b111a75c0c657fc507c04fbfcd2cc984f071", category: "unknown", pct: 1.23, balance: 12339985 },
+  { rank: 9, address: "0xbcf0771e983af09a67f10812fb336731e4c5d688", label: "fresh cluster", category: "dispersed", pct: 1.08, balance: 10800033 },
+  { rank: 10, address: "0xef80a2b120925c3aa794c6dcfd999fdecbfec01e", label: "fresh cluster", category: "dispersed", pct: 1.08, balance: 10800020 },
+  { rank: 11, address: "0x7db446e489b08f3f33354fc233e0022bc59c4032", label: "fresh cluster", category: "dispersed", pct: 1.06, balance: 10600066 },
+  { rank: 18, address: "0x1ab4973a48dc892cd9971ece8e01dcc7688f8f23", label: "Bitget 6 · cluster funder", category: "exchange", pct: 0.86, balance: 8600620 },
+  { rank: 22, address: "0x73d8bd54f7cf5fab43fe4ef40a62d390644946db", label: "cross-token wallet", category: "dispersed", pct: 0.25, balance: 2471104 },
+]
+
+## Overview
+
+~+350% in 72 hours to a $6B FDV, then −65% within hours. Roughly three weeks after the RAVE crash (April 2026), the same pattern repeated on the same exchange infrastructure.
+
+LAB is a BNB Chain token marketed as an "AI multi-chain trading terminal." It had the no-Binance-spot + alpha/perp structure, an extremely concentrated supply, and a short early-May pump that reversed within hours. ZachXBT alleged that insiders control more than 95% of the supply in coordination with an unknown market maker and Bitget, and posted a $10K bounty.
+
+This token is unrelated to the 2021 real-estate NFT project "LABS Group" — it is a separate token (contract `0x7ec4…593a`, BNB Chain).
+
+> "An unknown MM operating via Chinese exchanges" — ZachXBT argued the same playbook seen in RAVE, RIVER and SIREN was repeated with LAB.
+
+We indexed this contract ourselves to verify ZachXBT's key figures. The results appear in each section below.
+
+## Timeline
+
+<Timeline>
+  <TimelineEvent date="Oct 14, 2025">
+LAB TGE on Binance Alpha. 1B total supply, starting below $1.
+  </TimelineEvent>
+  <TimelineEvent date="Mar-Apr 2026">
+Per ZachXBT, insiders accumulated ~226M LAB across five wallets into Bitget deposit addresses, holding them dormant.
+  </TimelineEvent>
+  <TimelineEvent date="May 2-3, 2026">
+First pump. ~$0.70 → ~$3, i.e. +364% in a day, with ~$147M 24h volume. A −60%-range drop followed within hours.
+  </TimelineEvent>
+  <TimelineEvent date="May 8-12, 2026">
+Bitget hot wallet `0x1ab4…8f23` (the same address labeled "Bitget 6" in the RAVE case) distributed ~91.4M LAB to 9 fresh wallets across 18 transfers. Final batch at May 12 00:57 UTC. **(own measurement)**
+  </TimelineEvent>
+  <TimelineEvent date="May 10, 2026">
+A well-known investor publicly warned users to sell LAB.
+  </TimelineEvent>
+  <TimelineEvent date="May 11, 2026">
+All-time high ~$6.66, FDV ~$6B. The Bitget → fresh-wallet withdrawals ran over the same window. Against the reported 309.95M circulating supply, the ~100M withdrawn equals 32.26%.
+  </TimelineEvent>
+  <TimelineEvent date="May 11-12, 2026 — hours later">
+Down more than 65% from the peak, to roughly $2.9.
+  </TimelineEvent>
+  <TimelineEvent date="May 14, 2026">
+ZachXBT published a comprehensive investigation thread — alleging 95%+ insider control, OTC loans (7.5%/month), unilateral vesting extension, and a market-making deal — and called on Binance, Bitget and Gate to freeze insider profits. Posted a $10K bounty.
+  </TimelineEvent>
+  <TimelineEvent date="After May 16, 2026">
+A temporary bounce (recovery into the $4s) on mobile-app launch speculation. Durability unclear.
+  </TimelineEvent>
+</Timeline>
+
+## Supply structure
+
+### Market structure — the same "no spot" flaw as RAVE
+
+| Exchange | Spot | Perpetual | Alpha |
+|----------|------|-----------|-------|
+| **Binance** | ❌ | O | O |
+| Bitget | O | — | — |
+| Bybit | — | O | — |
+| OKX | — | O | — |
+| Gate.io | O | — | — |
+| KuCoin | O | — | — |
+
+Binance has no LAB spot. The perp's mark price references the thin spot indices of outside exchanges (Bitget, Gate, KuCoin), and the market-making activity ZachXBT cited was framed across "Bitget spot · Bybit perp · Binance perp · OKX perp." Move the shallow external spot with little capital, and perps on several venues move together. The same flaw seen in RAVE.
+
+### Supply distribution — our own measurement
+
+ZachXBT claimed insiders control more than 95% of the supply. We indexed every transfer of the BNB Chain contract `0x7ec4…593a` and computed net balances as of 2026-05-14.
+
+- The top 6 wallets hold **84.3%** of the 1B total supply
+- The top 20 wallets hold roughly **97.8%**
+- The single largest wallet holds 20.0% (a round 200M LAB)
+
+The top ranks mix round-number large holders (200M, 150M, 138M, 108M) with Bitget hot wallets. The freely circulating float measures in the single-digit percentages. The external "95%" figure uses the reported circulating supply (309.95M) as its denominator while our measurement uses total supply (1B) — different denominators, but both lead to the same conclusion: extreme concentration.
+
+<ChartFrame
+  kind="SUPPLY DISTRIBUTION"
+  caption="LAB holder distribution (BNB Chain, net balance as of 2026-05-14, own Dune indexing). Round-number large holders + Bitget hot wallets labeled. Labels based on cross-referencing RAVE-case addresses and fund tracing"
+  source="Dune Analytics · BscScan"
+  aspect="auto"
+>
+  <SupplyBars rows={labHolders} asOf="2026-05-14 00:00 UTC" symbol="LAB" />
+</ChartFrame>
+
+## Method analysis — layered withdrawal via Bitget
+
+### The same addresses show up again
+
+The most striking finding is address reuse. In our own measurement, the LAB top holders include **the exact same exchange addresses seen in the RAVE case**.
+
+- `0xffa8db7b…cd54` — the hot wallet labeled "Bitget 35" in RAVE. Holds 15.34% of LAB.
+- `0x1ab4973a…8f23` — "Bitget 6" in RAVE. In LAB it is the **source** that funded the fresh-wallet cluster.
+- `0x0d070796…92fe` — the same address as RAVE's "Gate.io deposit" and ARIA's Gate.io hot wallet.
+- `0x73d8bd54…46db` — a cross-token wallet also observed in SIREN and ARIA.
+
+This is consistent with ZachXBT's description of "the same market maker operating via Chinese exchanges" sharing one infrastructure across LAB, RAVE, SIREN and ARIA.
+
+### Fresh-wallet cluster — own measurement
+
+ZachXBT said ~100M LAB (~$480M) left Bitget for 10 fresh wallets on May 11-12. Our measurement: a single Bitget hot wallet (`0x1ab4…8f23`) distributed **~91.4M LAB across 18 transfers to 9 fresh wallets between 2026-05-08 and 05-12**, roughly evenly (~9-11M each). The final batch was at May 12 00:57 UTC. The source being a Bitget hot wallet, and the timing overlapping the peak, both match the external account.
+
+<ChartFrame
+  kind="FUND FLOW"
+  caption={<>
+    Bitget 6 → 9 fresh wallets fund flow (own measurement).
+    <br />
+    <br />
+    91.4M LAB, 18 transfers, 2026-05-08 ~ 05-12 00:57 UTC.
+    <br />
+    <br />
+    Funder `0x1ab4…8f23` is the same address as the RAVE dump source.
+  </>}
+  source="Dune Analytics · BscScan"
+  aspect="square"
+>
+  <LabFlow />
+</ChartFrame>
+
+### Contract / vesting control signals
+
+Per ZachXBT's investigation, the public-sale lockup was allegedly extended unilaterally from 3 to 9 months. An operator being able to change token/vesting parameters after the fact suggests admin rights were never renounced — which maps to this site's `proxy-contract-risk` factor. (This part cites ZachXBT's analysis; we did not directly verify contract admin rights ourselves.)
+
+## Data
+
+### Withdrawal cadence — own measurement
+
+We measured, hour by hour, exactly when and how much LAB the Bitget hot wallet pulled into the fresh wallets. The pattern is clear: nine tiny transfers on May 8 (~270 LAB total — a deposit/withdrawal *test* to verify the route), then three dormant days, then ~91.4M LAB withdrawn in three waves on May 11-12 while the price sat near its ATH. The same *test → bulk* SOP seen in the RAVE case.
+
+<ChartFrame
+  kind="WITHDRAWAL CADENCE"
+  caption={<>
+    Bitget 6 (`0x1ab4…8f23`) → 9 fresh wallets, LAB withdrawn per hour (own measurement).
+    <br />
+    <br />
+    May 8 test transfers ×9 (~270 LAB) → 3-day dormancy → May 11-12 three waves of 28.9M · 21.1M · 41.4M.
+    <br />
+    <br />
+    The bulk total of 91.4M LAB overlaps the price ATH window.
+  </>}
+  source="Dune Analytics · BscScan"
+  aspect="video"
+>
+  <LabWithdrawal />
+</ChartFrame>
+
+### Price
+
+After ranging below $1 through April, the price pumped twice in May. A first pump on May 2-3 (into the $3s) was followed by a spike to the ATH over the same window as the withdrawal cadence above (May 11-12), then a retrace to less than half within days. The volume panel shows trading concentrated only in the pump/crash windows, thin everywhere else.
+
+<ChartFrame
+  kind="PRICE · 4H · BITGET SPOT"
+  caption={<>
+    LABUSDT spot 4H candles (Bitget), 2026.04 ~ 05.
+    <br />
+    <br />
+    May 11-13 ATH (wick ~$7.5, ~$6.66 on a close basis · FDV ~$6B), then more than halved over the following days.
+    <br />
+    <br />
+    Click to enlarge.
+  </>}
+  source="Bitget spot · TradingView capture"
+  aspect="auto"
+>
+  <ZoomableImage src={priceCandle4h} alt="LABUSDT spot 4H candles (Bitget), 2026.04-05 — May ATH then crash" />
+</ChartFrame>
+
+**Key ZachXBT quote:**
+
+> "Call to action for @bitgetglobal, @binance, @gate_io to freeze insider profits"
+
+## Lessons — signals to spot the next one
+
+LAB shares nearly every risk factor with RAVE. A single item is weak, but **several overlapping ones are a strong warning**. In this case the strongest signal was "are addresses from a prior incident showing up again."
+
+### Market-structure signals
+
+- No Binance spot + alpha/perp structure (price discovery depends on a thin external spot)
+- Rapid distribution across multiple exchange perps right after TGE
+- Market-making venues split across one spot + several perps
+
+### Supply-structure signals
+
+- A few top wallets hold 80%+ of total supply (LAB: top 6 = 84.3%)
+- The reported circulating supply itself is low — around 30% of total
+- Presence of round-number large holders (200M, 150M)
+- Lockup/vesting terms changeable unilaterally after the fact (admin rights not renounced)
+
+### On-chain signals (the crux here)
+
+- **Large layered withdrawal from an exchange hot wallet to fresh wallets right before the pump** (LAB: Bitget → 9 fresh wallets, May 8-12)
+- Fresh wallets receiving near-identical amounts simultaneously (coordination signal)
+- **Exchange / intermediary addresses from prior suspected-manipulation cases reappearing** — RAVE's Bitget 6/35, Gate.io, and a cross-token wallet all show up in LAB's top ranks
+
+### Price / derivatives signals
+
+- A short, catalyst-free +350% spike that reverses within hours
+- Multi-billion-dollar FDV while the actually tradable float is single-digit %
+- A credible trader/analyst posting a public sell warning beforehand (LAB: a prominent investor, May 10)
+
+### Trading judgment
+
+> "Shorting a manipulation-suspected token with concentrated supply isn't advisable either."
+
+Whether it is a short-squeeze setup like RAVE, or a withdraw-then-distribute pattern like LAB, a token with high insider concentration is dangerous to position in either direction. The safest choice is **not to trade it**.
+
+## Sources
+
+1. **ZachXBT** — [X (Twitter)](https://x.com/zachxbt) — May 14, 2026 comprehensive investigation thread + $10K bounty
+2. **The Block** — ["ZachXBT alleges 95% insider control of LAB token… $6 billion FDV project"](https://www.theblock.co/post/401290/zachxbt-alleges-95-insider-control-of-lab-token-in-investigation-into-ai-terminals-6-billion-fdv-project) — May 14, 2026
+3. **Bitcoin News** — ["10 Fresh Wallets Pull 100 Million LAB Tokens Worth $480M From Bitget"](https://news.bitcoin.com/lab-token-bitget-withdrawal-manipulation-2026/) — May 12, 2026
+4. **Bitcoin News** — ["ZachXBT Says 95% of LAB Token Is Insider-Controlled…"](https://news.bitcoin.com/zachxbt-lab-token-insider-control-bitget-investigation-2026/)
+5. **Crypto Times** — ["ZachXBT Alleges 95% LAB Token Are Controlled by Insiders"](https://www.cryptotimes.io/2026/05/14/zachxbt-alleges-95-lab-token-are-controlled-by-insiders/) — May 14, 2026
+6. **Phemex Academy** — ["What Is LAB and Why This Multi-Chain Trading Terminal Token Just Surged 364%"](https://phemex.com/academy/what-is-lab-token-and-why-it-surged)
+7. **Own on-chain measurement** — Dune Analytics: [Top holders](https://dune.com/queries/7606732) · [cluster funder](https://dune.com/queries/7606761) (BNB Chain `0x7ec43cf65f1663f820427c62a5780b8f2e25593a`)

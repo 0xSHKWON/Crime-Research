@@ -1,0 +1,274 @@
+---
+slug: "lab"
+title: "LAB (LABtrade)"
+tokenSymbol: "LAB"
+incidentDate: "2026-05-11"
+publishedDate: "2026-05-29"
+status: "alleged"
+severity: "high"
+patterns:
+  - "supply-concentration"
+  - "cross-exchange-coordination"
+  - "alpha-no-spot"
+  - "proxy-contract-risk"
+metrics:
+  startPrice: 0.70
+  peakPrice: 6.66
+  bottomPrice: 2.91
+  maxGain: 8.51
+  maxDrawdown: -0.65
+  marketCapPeak: 6000000000
+  pumpDurationDays: 9
+  crashDurationHours: 24
+exchanges:
+  binanceSpot: false
+  binanceAlpha: true
+  binanceFutures: true
+  others: ["bitget", "bybit", "okx", "gate", "kucoin"]
+allegations:
+  - source: "ZachXBT"
+    sourceUrl: "https://x.com/zachxbt"
+    date: "2026-05-14"
+    summary: "AI 트레이딩 터미널 LAB의 공급 95%+를 인사이더가 통제하며, 미상의 마켓메이커·Bitget과 협조해 $6B FDV로 펌프했다는 분석 발표. LAB 운영 주체 관련 증거에 $10K 바운티 제시 (X 핸들 @vsadkovv 지목)."
+  - source: "The Block"
+    sourceUrl: "https://www.theblock.co/post/401290/zachxbt-alleges-95-insider-control-of-lab-token-in-investigation-into-ai-terminals-6-billion-fdv-project"
+    date: "2026-05-14"
+    summary: "ZachXBT가 $6B FDV AI 터미널 LAB에 대해 인사이더 95% 공급 통제 의혹 조사를 공개했다고 보도."
+  - source: "Bitcoin News"
+    sourceUrl: "https://news.bitcoin.com/lab-token-bitget-withdrawal-manipulation-2026/"
+    date: "2026-05-12"
+    summary: "5/11~12 약 1억 LAB(~$480M)이 Bitget에서 신규 10개 지갑으로 이동 — 보고된 유통량 309.95M의 32.26%에 해당."
+relatedCases: ["rave", "siren", "aria"]
+---
+
+import { ChartFrame } from '@/components/chart-frame'
+import { LabFlow } from '@/components/lab-flow'
+import { LabWithdrawal } from '@/components/lab-withdrawal'
+import { SupplyBars } from '@/components/supply-bars'
+import { Timeline, TimelineEvent } from '@/components/case-timeline'
+import { ZoomableImage } from '@/components/zoomable-image'
+import priceCandle4h from '@/assets/cases/lab/price-candle-4h.png'
+
+export const labHolders = [
+  { rank: 1, address: "0xb4b74d63f30076870d54ab9e8e6a7d18293273c3", category: "unknown", pct: 20.00, balance: 200000000 },
+  { rank: 2, address: "0xffa8db7b38579e6a2d14f9b347a9ace4d044cd54", label: "Bitget · RAVE 동일주소", category: "exchange", pct: 15.34, balance: 153370464 },
+  { rank: 3, address: "0xb471837f03d01b628bff32a515baf679ccdfabb8", category: "unknown", pct: 15.00, balance: 150000000 },
+  { rank: 4, address: "0x7cfd8d2d8626b287bea569b5e65ab5cbb75e9265", category: "unknown", pct: 13.80, balance: 138000010 },
+  { rank: 5, address: "0x78a79d0fa0eaf58741f5bde7e05b5cc8f33d24d3", category: "unknown", pct: 10.80, balance: 108000000 },
+  { rank: 6, address: "0xf79ff8a5052e969a6d13e18c4e439fe5202b02fa", category: "unknown", pct: 9.36, balance: 93600000 },
+  { rank: 7, address: "0xc882b111a75c0c657fc507c04fbfcd2cc984f071", category: "unknown", pct: 1.23, balance: 12339985 },
+  { rank: 9, address: "0xbcf0771e983af09a67f10812fb336731e4c5d688", label: "신규 클러스터", category: "dispersed", pct: 1.08, balance: 10800033 },
+  { rank: 10, address: "0xef80a2b120925c3aa794c6dcfd999fdecbfec01e", label: "신규 클러스터", category: "dispersed", pct: 1.08, balance: 10800020 },
+  { rank: 11, address: "0x7db446e489b08f3f33354fc233e0022bc59c4032", label: "신규 클러스터", category: "dispersed", pct: 1.06, balance: 10600066 },
+  { rank: 18, address: "0x1ab4973a48dc892cd9971ece8e01dcc7688f8f23", label: "Bitget 6 · 클러스터 자금원", category: "exchange", pct: 0.86, balance: 8600620 },
+  { rank: 22, address: "0x73d8bd54f7cf5fab43fe4ef40a62d390644946db", label: "크로스토큰 지갑", category: "dispersed", pct: 0.25, balance: 2471104 },
+]
+
+## 개요
+
+72시간 만에 약 +350%, $6B FDV를 찍은 뒤 수시간 만에 -65%. RAVE 폭락(2026년 4월) 약 3주 뒤, 같은 거래소 인프라에서 반복된 사례다.
+
+LAB은 "AI 멀티체인 트레이딩 터미널"을 표방한 BNB 체인 토큰이다. 바이낸스 spot 미상장 + 알파/perp 구조였고, 공급이 극도로 집중된 상태에서 5월 초 단기 급등 후 폭락했다. ZachXBT는 인사이더가 공급의 95% 이상을 통제하며 미상의 마켓메이커·Bitget과 협조했다는 의혹을 제기하고 $10K 바운티를 걸었다.
+
+이 케이스의 토큰은 2021년의 부동산 NFT 프로젝트 "LABS Group"과는 무관한 별개 토큰이다(컨트랙트 `0x7ec4…593a`, BNB 체인).
+
+> "An unknown MM operating via Chinese exchanges" — ZachXBT는 RAVE·RIVER·SIREN과 동일한 플레이북이 LAB에서 반복됐다고 분석했다.
+
+우리는 이 컨트랙트를 직접 인덱싱해 ZachXBT가 제기한 핵심 수치를 자체 검증했다. 결과는 아래 각 섹션에 정리한다.
+
+## 타임라인
+
+<Timeline>
+  <TimelineEvent date="2025년 10월 14일">
+바이낸스 알파에서 LAB TGE(Token Generation Event). 총공급 10억, 가격은 1달러 미만에서 출발.
+  </TimelineEvent>
+  <TimelineEvent date="2026년 3~4월">
+ZachXBT 분석상, 인사이더가 약 2억 2,600만 LAB을 5개 지갑에 걸쳐 Bitget 입금 주소로 모아 휴면 상태로 보관.
+  </TimelineEvent>
+  <TimelineEvent date="2026년 5월 2~3일">
+1차 급등. 약 $0.70 → $3대로 하루 만에 +364%, 24시간 거래량 약 $147M. 직후 수시간 내 -60%대 급락.
+  </TimelineEvent>
+  <TimelineEvent date="2026년 5월 8~12일">
+Bitget 핫월렛 `0x1ab4…8f23`(RAVE 케이스의 "Bitget 6"와 동일 주소)이 18건에 걸쳐 약 9,140만 LAB을 신규 지갑 9곳으로 분배. 마지막 배치는 5/12 00:57 UTC. **(자체 측정)**
+  </TimelineEvent>
+  <TimelineEvent date="2026년 5월 10일">
+한 유명 투자자가 공개적으로 LAB 매도를 권고.
+  </TimelineEvent>
+  <TimelineEvent date="2026년 5월 11일">
+사상 최고가 약 $6.66 도달, FDV 약 $6B. 같은 기간 Bitget→신규 지갑 인출이 진행됨. 보고된 유통량 309.95M 기준 인출분 약 1억 LAB은 32.26%에 해당.
+  </TimelineEvent>
+  <TimelineEvent date="2026년 5월 11~12일 — 수 시간 후">
+피크에서 -65% 이상 급락. 약 $2.9대까지 하락.
+  </TimelineEvent>
+  <TimelineEvent date="2026년 5월 14일">
+ZachXBT가 종합 조사 스레드 발표. 인사이더 95%+ 통제 의혹, OTC 대출(월 7.5%)·일방적 vesting 연장·마켓메이킹 계약 등을 지목하고 Binance·Bitget·Gate에 인사이더 수익 동결을 요청. $10K 바운티 제시.
+  </TimelineEvent>
+  <TimelineEvent date="2026년 5월 16일 이후">
+모바일 앱 출시 기대감으로 일시 반등($4대 회복). 지속성은 불확실.
+  </TimelineEvent>
+</Timeline>
+
+## 공급 구조
+
+### 시장 구조 — RAVE와 동일한 "spot 부재" 결함
+
+| 거래소 | Spot | Perpetual | Alpha |
+|--------|------|-----------|-------|
+| **Binance** | ❌ | O | O |
+| Bitget | O | — | — |
+| Bybit | — | O | — |
+| OKX | — | O | — |
+| Gate.io | O | — | — |
+| KuCoin | O | — | — |
+
+바이낸스에는 LAB spot이 없다. perp의 mark price는 외부 거래소(Bitget, Gate, KuCoin)의 얕은 spot 인덱스를 참조하고, ZachXBT가 인용한 마켓메이킹 활동도 "Bitget spot · Bybit perp · Binance perp · OKX perp" 범위로 묘사됐다. 적은 자금으로 외부 spot을 흔들면 여러 거래소의 perp가 동시에 움직이는 구조다. RAVE에서 본 결함이 그대로 재현됐다.
+
+### 공급 분포 — 자체 측정 결과
+
+ZachXBT는 인사이더가 공급의 95% 이상을 통제한다고 주장했다. 우리는 BNB 체인 컨트랙트 `0x7ec4…593a`의 전체 transfer를 인덱싱해 2026-05-14 시점 net balance를 직접 계산했다.
+
+- 상위 6개 지갑이 총공급(10억)의 **84.3%**
+- 상위 20개 지갑이 약 **97.8%**
+- 1위 지갑 단독 20.0% (정확히 2억 LAB의 라운드 넘버)
+
+상위권은 2억·1.5억·1.38억·1.08억 같은 라운드 넘버 대량 보유 지갑과, Bitget 핫월렛이 섞여 있다. 시장에서 자유롭게 도는 물량은 한 자릿수 %대로 측정된다. 95%라는 외부 수치는 보고된 유통량(309.95M) 기준이고, 우리 측정은 총공급(1B) 기준이므로 분모가 다르다 — 다만 두 측정 모두 "극단적 집중"이라는 결론은 같다.
+
+<ChartFrame
+  kind="SUPPLY DISTRIBUTION"
+  caption="LAB 보유 분포 (BNB 체인, 2026-05-14 net balance, 자체 Dune 인덱싱). 라운드 넘버 대량 보유 지갑 + Bitget 핫월렛 라벨. 라벨은 RAVE 케이스 주소 대조 및 자금 추적 기반"
+  source="Dune Analytics · BscScan"
+  aspect="auto"
+>
+  <SupplyBars rows={labHolders} asOf="2026-05-14 00:00 UTC" symbol="LAB" />
+</ChartFrame>
+
+## 수법 분석 — Bitget 경유 분산 인출
+
+### 같은 주소가 또 등장한다
+
+가장 눈에 띄는 발견은 주소 재사용이다. 자체 측정에서 LAB 보유 상위권에 **RAVE 케이스와 동일한 거래소 주소들**이 그대로 나타났다.
+
+- `0xffa8db7b…cd54` — RAVE에서 "Bitget 35"로 라벨된 핫월렛. LAB에서는 15.34% 보유.
+- `0x1ab4973a…8f23` — RAVE에서 "Bitget 6". LAB에서는 신규 지갑 클러스터에 자금을 댄 **출처**.
+- `0x0d070796…92fe` — RAVE의 "Gate.io deposit", ARIA의 Gate.io 핫월렛과 동일 주소.
+- `0x73d8bd54…46db` — SIREN·ARIA 등에서도 반복 관측된 크로스토큰 지갑.
+
+이는 ZachXBT가 말한 "동일 마켓메이커가 중국계 거래소를 통해 운영하는 플레이북"이 LAB·RAVE·SIREN·ARIA에 걸쳐 같은 인프라를 공유한다는 정황과 부합한다.
+
+### 신규 지갑 클러스터 — 자체 측정
+
+ZachXBT는 5/11~12에 약 1억 LAB(~$480M)이 Bitget에서 신규 10개 지갑으로 나갔다고 했다. 우리 측정으로는, 단일 Bitget 핫월렛(`0x1ab4…8f23`)이 **2026-05-08 ~ 05-12 사이 18건에 걸쳐 약 9,140만 LAB을 신규 9개 지갑에 거의 균등 분배**했다(지갑당 ~9~11M). 마지막 배치는 5/12 00:57 UTC. 출처가 Bitget 핫월렛이라는 점, 시점이 피크와 겹친다는 점이 외부 주장과 일치한다.
+
+<ChartFrame
+  kind="FUND FLOW"
+  caption={<>
+    Bitget 6 → 신규 9개 지갑 자금 흐름 (자체 측정).
+    <br />
+    <br />
+    91.4M LAB, 18건, 2026-05-08 ~ 05-12 00:57 UTC.
+    <br />
+    <br />
+    자금원 `0x1ab4…8f23` 은 RAVE 덤프 출처와 동일 주소.
+  </>}
+  source="Dune Analytics · BscScan"
+  aspect="square"
+>
+  <LabFlow />
+</ChartFrame>
+
+### 컨트랙트·vesting 통제 정황
+
+ZachXBT 조사에 따르면 퍼블릭 세일 물량의 락업이 일방적으로 3개월에서 9개월로 연장됐다는 주장이 제기됐다. 토큰·vesting 파라미터를 운영 주체가 사후에 바꿀 수 있다는 것은 admin 권한이 포기되지 않았다는 정황으로, 본 사이트의 `proxy-contract-risk` 위험 요소에 해당한다. (해당 부분은 ZachXBT의 분석 인용이며 우리가 컨트랙트 admin 권한을 직접 검증하지는 않았다.)
+
+## 데이터
+
+### 인출 케이던스 — 자체 측정
+
+Bitget 핫월렛이 신규 지갑들로 LAB을 언제, 얼마나 빼냈는지를 시간 단위로 측정했다. 패턴이 또렷하다. 5/8에 9건의 미세 송금(합계 약 270 LAB — 거래소 입출금 검증용 *test*)으로 경로를 확인한 뒤 3일을 휴면하다가, 가격이 ATH 부근이던 5/11~12에 세 파에 걸쳐 약 9,140만 LAB을 한꺼번에 인출했다. RAVE 케이스에서 본 *test → bulk* 송금 SOP와 동일하다.
+
+<ChartFrame
+  kind="WITHDRAWAL CADENCE"
+  caption={<>
+    Bitget 6 (`0x1ab4…8f23`) → 신규 9개 지갑, 시간당 LAB 인출량 (자체 측정).
+    <br />
+    <br />
+    5/8 테스트 송금 9건(~270 LAB) → 3일 휴면 → 5/11~12 세 파에 28.9M · 21.1M · 41.4M.
+    <br />
+    <br />
+    대량 인출 합계 91.4M LAB 은 가격 ATH 구간과 겹친다.
+  </>}
+  source="Dune Analytics · BscScan"
+  aspect="video"
+>
+  <LabWithdrawal />
+</ChartFrame>
+
+### 가격
+
+4월 내내 $1 미만에서 횡보하던 가격은 5월 들어 두 차례 급등했다. 5/2~3 1차 펌프(~$3대)에 이어, 위 인출 케이던스(5/11~12)와 겹치는 구간에서 ATH로 치솟았다가 며칠 만에 절반 이하로 되돌렸다. 거래량 패널을 보면 급등·폭락 구간에만 거래가 집중됐고 그 외 기간은 얇았다.
+
+<ChartFrame
+  kind="PRICE · 4H · BITGET SPOT"
+  caption={<>
+    LABUSDT 현물 4시간봉 (Bitget), 2026.04 ~ 05.
+    <br />
+    <br />
+    5/11~13 ATH(위크 약 $7.5, 종가 기준 ~$6.66 · FDV ~$6B) 직후 수일에 걸쳐 절반 이하로 하락.
+    <br />
+    <br />
+    차트 클릭 시 확대.
+  </>}
+  source="Bitget 현물 · TradingView 캡처"
+  aspect="auto"
+>
+  <ZoomableImage src={priceCandle4h} alt="LABUSDT 현물 4시간봉 (Bitget), 2026.04~05 — 5월 ATH 후 폭락" />
+</ChartFrame>
+
+**ZachXBT 핵심 인용:**
+
+> "Call to action for @bitgetglobal, @binance, @gate_io to freeze insider profits"
+
+## 교훈 — 다음 비슷한 토큰을 식별하는 시그널
+
+LAB은 RAVE의 거의 모든 위험 요소를 공유한다. 단일 항목은 약하지만 **여러 개가 겹치면 강한 경고**다. 특히 이 케이스는 "이전 사건의 주소가 다시 보이는가"라는 신호가 강력했다.
+
+### 시장 구조 시그널
+
+- 바이낸스 spot 미상장 + 알파/perp 구조 (가격발견이 얕은 외부 spot에 의존)
+- TGE 직후 여러 거래소 perp에 빠르게 분산 상장
+- 마켓메이킹 venue가 spot 1곳 + 여러 perp로 분리된 구조
+
+### 공급 구조 시그널
+
+- 상위 소수 지갑이 총공급의 80%+ 보유 (LAB: 상위 6 지갑 84.3%)
+- 보고된 유통량 자체가 총공급의 30% 안팎으로 낮음
+- 2억·1.5억 같은 라운드 넘버 대량 보유 지갑의 존재
+- 락업/vesting 조건이 사후에 일방적으로 변경 가능 (admin 권한 미포기 정황)
+
+### 온체인 시그널 (이번 케이스의 핵심)
+
+- **펌프 직전 거래소 핫월렛 → 신규 지갑들로 대량 분산 인출** (LAB: Bitget→신규 9지갑, 5/8~12)
+- 신규 지갑들이 거의 균등한 금액으로 동시 자금 수령 (조율 정황)
+- **이전 manipulation 의혹 케이스에서 본 거래소·중개 주소가 재등장** — RAVE의 Bitget 6/35, Gate.io, 크로스토큰 지갑이 LAB 상위권에 그대로 나타남
+
+### 가격·파생 시그널
+
+- 명확한 catalyst 없는 단기 +350% 급등 후 수시간 내 반락
+- FDV는 수십억 달러인데 실제 유통·거래 가능 물량은 한 자릿수 %
+- 신뢰할 만한 트레이더/분석가의 공개 매도 경고 선행 (LAB: 5/10 유명 투자자 경고)
+
+### 거래 판단
+
+> "공급이 집중된 manipulation 의심 토큰은 롱이든 숏이든 위험하다."
+
+RAVE에서 본 short squeeze 셋업이든, LAB처럼 분산 인출 후 분배든, 인사이더 집중도가 높은 토큰은 어느 방향으로도 포지션이 위험하다. 가장 안전한 선택은 **거래하지 않는 것**이다.
+
+## 출처
+
+1. **ZachXBT** — [X (Twitter)](https://x.com/zachxbt) — 2026.05.14 종합 조사 스레드 + $10K 바운티
+2. **The Block** — ["ZachXBT alleges 95% insider control of LAB token… $6 billion FDV project"](https://www.theblock.co/post/401290/zachxbt-alleges-95-insider-control-of-lab-token-in-investigation-into-ai-terminals-6-billion-fdv-project) — 2026.05.14
+3. **Bitcoin News** — ["10 Fresh Wallets Pull 100 Million LAB Tokens Worth $480M From Bitget"](https://news.bitcoin.com/lab-token-bitget-withdrawal-manipulation-2026/) — 2026.05.12
+4. **Bitcoin News** — ["ZachXBT Says 95% of LAB Token Is Insider-Controlled…"](https://news.bitcoin.com/zachxbt-lab-token-insider-control-bitget-investigation-2026/)
+5. **Crypto Times** — ["ZachXBT Alleges 95% LAB Token Are Controlled by Insiders"](https://www.cryptotimes.io/2026/05/14/zachxbt-alleges-95-lab-token-are-controlled-by-insiders/) — 2026.05.14
+6. **Phemex Academy** — ["What Is LAB and Why This Multi-Chain Trading Terminal Token Just Surged 364%"](https://phemex.com/academy/what-is-lab-token-and-why-it-surged)
+7. **자체 온체인 측정** — Dune Analytics: [Top holders](https://dune.com/queries/7606732) · [클러스터 자금원](https://dune.com/queries/7606761) (BNB 체인 `0x7ec43cf65f1663f820427c62a5780b8f2e25593a`)
