@@ -1,0 +1,301 @@
+---
+slug: "edgex"
+title: "edgeX (EDGE)"
+tokenSymbol: "EDGE"
+incidentDate: "2026-06-01"
+publishedDate: "2026-06-12"
+status: "alleged"
+severity: "high"
+patterns:
+  - "low-float"
+  - "supply-concentration"
+  - "derivatives-frenzy"
+  - "proxy-contract-risk"
+  - "cross-exchange-coordination"
+metrics:
+  peakPrice: 1.54
+  bottomPrice: 0.315
+  maxDrawdown: -0.80
+  marketCapPeak: 440000000
+  marketCapEvaporated: 224000000
+  crashDurationHours: 1
+  liquidationVolume24h: 6200000
+exchanges:
+  binanceSpot: false
+  binanceFutures: true
+  others: ["okx", "bybit", "coinbase", "kraken", "bitget", "gate", "mexc"]
+allegations:
+  - source: "ZachXBT"
+    sourceUrl: "https://x.com/zachxbt"
+    date: "2026-06-02"
+    summary: "폭락 직후 edgeX의 '외부 manipulation 피해자' 주장에 회의를 표하며, EDGE 공급이 낮은 float로 소수 인사이더에 통제됐다고 지적. '정말 투명성을 신경 쓴다면 이 사태를 부른 카운터파티·마켓메이커 계약을 공개하라'고 요구. 거래소 무혐의 예비조사에는 '우리 스스로 조사했고 거의 전 공급을 통제하지만 유죄를 찾지 못했다'고 비꼼."
+  - source: "CryptoTimes"
+    sourceUrl: "https://www.cryptotimes.io/2026/06/02/edge-crashes-77-as-edgex-blames-manipulation-zachxbt-demands-transparency/"
+    date: "2026-06-02"
+    summary: "EDGE가 약 $1.26에서 세션 저점 $0.315로 약 77% 폭락(시총 $440M+ → $215.83M). edgeX 팀은 '해킹·익스플로잇 아닌 외부 세력의 의도적 시세 manipulation'이라 주장. 분석가 givenoxbt는 Bybit·OKX·Bitget·Gate 동시 인출 + SpotVault ~$1.6M 회수를 'market maker farewell'로 지목."
+  - source: "The Block"
+    sourceUrl: "https://www.theblock.co/post/403567/edgex-offers-refunds-200000-usdc-bounty-71-token-flash-crash"
+    date: "2026-06-03"
+    summary: "edgeX가 플래시 크래시 이후 200,000 USDC 온체인 바운티(공격 주체 식별)와 롱 청산 피해 유저 보상(유저당 최대 100,000 USDC)을 발표. OKX·Bybit·Bitget·Bithumb 예비조사는 organized manipulation이 아닌 thin liquidity·청산 캐스케이드로 결론(거래소 메시지 일부 redacted, 독립 검증 불가)."
+  - source: "Arkham (Gate 보도)"
+    sourceUrl: "https://www.gate.com/news/detail/arkham-edgex-airdrops-195-million-with-nearly-half-of-the-tokens-flowing-to-19951908"
+    date: "2026-04-01"
+    summary: "edgeX가 광고한 약 $195M 에어드랍 중 14%(약 141.6M EDGE, ~$94.6M)가 파트너·LP에게 흘러가 OpenZeppelin VestingWallet(1년 락)으로 이동했고, 온체인 분포상 개발자 관련 지갑 ~69.5% / 실제 유통 ~9.5%라는 Arkham 분석을 보도."
+relatedCases: ["lab", "rave", "coai"]
+---
+
+import { ChartFrame } from '@/components/chart-frame'
+import { EdgexCexFlow } from '@/components/edgex-cex-flow'
+import { SupplyBars } from '@/components/supply-bars'
+import { Timeline, TimelineEvent } from '@/components/case-timeline'
+import { ZoomableImage } from '@/components/zoomable-image'
+import pricePerp1d from '@/assets/cases/edgex/price-perp-1d.png'
+
+export const edgexHolders = [
+  { rank: 1, address: "0xf0da8b0071270e25ce7e63276f1f0ad2d5a09d1d", label: "30% · vesting 컨트랙트 (3/25 배포)", category: "team", pct: 30.00, balance: 300000000 },
+  { rank: 2, address: "0xb3118e9a5b68413f85a2fe66a36237362f9d16e0", label: "25% · vesting 컨트랙트 (3/25 배포)", category: "team", pct: 25.00, balance: 250000000 },
+  { rank: 3, address: "0x7f861a7db997b4f6e5ef9954a3b5d5b29c463cb2", label: "컨트랙트 (1/16, 별도 배포자)", category: "unknown", pct: 5.53, balance: 55331590 },
+  { rank: 4, address: "0xa13cc6db0a4eca6a9c099e0d12c7369b9fec89a9", label: "5% · vesting 컨트랙트", category: "team", pct: 5.00, balance: 50000000 },
+  { rank: 5, address: "0x6973b640a1d6a1f57640db4084c6c4b45c8a0698", label: "5% · vesting 컨트랙트", category: "team", pct: 5.00, balance: 50000000 },
+  { rank: 6, address: "0x000000000000000000000000000000000000dead", label: "소각 · burn", category: "unknown", pct: 4.01, balance: 40062446 },
+  { rank: 7, address: "0x5cbe2dda520e744c87a080b01394f57f7d29cc3c", label: "컨트랙트 (동일 배포자)", category: "team", pct: 3.08, balance: 30802662 },
+  { rank: 8, address: "0xf89d7b9c864f589bbf53a82105107622b35eaa40", label: "Bybit 5 핫월렛", category: "exchange", pct: 1.27, balance: 12729628 },
+  { rank: 9, address: "0xba5b36edcc242d4b21dc0d6080c3c92a596754cb", label: "컨트랙트 (3/31 배포)", category: "unknown", pct: 0.87, balance: 8690455 },
+  { rank: 10, address: "0x8ca4a178e0c45ea257ad278890a3a1fc4cdf481d", label: "컨트랙트 (3/31 배포)", category: "unknown", pct: 0.77, balance: 7726488 },
+  { rank: 32, address: "0xffa8db7b38579e6a2d14f9b347a9ace4d044cd54", label: "Bitget 35 · RAVE/LAB 동일주소", category: "exchange", pct: 0.42, balance: 4156027 },
+]
+
+## 개요
+
+2026년 6월 1일, Amber Group이 인큐베이팅한 perpetual DEX **edgeX**의 네이티브 토큰 EDGE가 약 1시간 만에 $1.26에서 $0.315로 약 77% 폭락했다. 시총은 하루 전 $440M+에서 $215.83M로 내려앉았고, 24시간 강제청산은 약 $6.2M, 영향받은 트레이더는 3,840명을 넘었다.
+
+이 케이스가 RAVE·LAB과 결정적으로 다른 점은 **방향과 주체**다. 그 사건들은 가격이 *치솟은* 펌프였고 분석가들이 팀의 manipulation 의혹을 제기했다. EDGE는 가격이 *무너진* 폭락이고, **팀 스스로가 "외부 세력의 manipulation 피해자"라고 주장**했다. 같은 사건을 두고 세 갈래 설명이 충돌한다.
+
+> "이것은 해킹·익스플로잇·보안 침해가 아니다. 지금까지 확인한 바로는 특정 외부 세력이 EDGE 시세를 조작하려 한 의도적 시도로 보인다." — edgeX 공식 성명 (인용)
+
+> "edgeX 공급이 낮은 float로 소수 인사이더에 통제돼 있었다는 걸 우리 모두 안다." — ZachXBT (인용)
+
+누가 옳은지 사후에 단정하기는 어렵다. 거래소 예비조사는 "thin liquidity"로 기울었고, edgeX의 manipulation 주장도 거래소의 무혐의 결론도 모두 독립 검증이 끝나지 않았다. 그래서 이 케이스의 가치는 *범인 지목*이 아니라 **"이 토큰의 구조적 위험 신호는 폭락 *이전*에 이미 다 드러나 있었다"**는 데 있다. 낮은 유통 비율, 라운드 넘버 대량 지갑, 파생상품 쏠림 — 우리는 이 중 공급 집중을 컨트랙트를 직접 인덱싱해 자체 측정했다.
+
+EDGE는 Ethereum 메인넷의 ERC-20(`0xB007…a241`)이며, 동명의 "Edge Network"·"EDGE-X" 등과는 무관한 별개 토큰이다.
+
+## 타임라인
+
+<Timeline>
+  <TimelineEvent date="2024년 11월">
+edgeX 런칭. Amber Group 인큐베이션, orderbook 기반 perpetual DEX.
+  </TimelineEvent>
+  <TimelineEvent date="2026년 2월">
+Circle Ventures 전략적 투자 완료(금액 미공개) + 네이티브 USDC 통합 발표.
+  </TimelineEvent>
+  <TimelineEvent date="2026년 3월 19일 14:00 UTC">
+Binance Futures가 EDGEUSDT USDⓈ-margined perpetual을 **프리마켓**(최대 5x)으로 출시. Binance spot 상장은 아님.
+  </TimelineEvent>
+  <TimelineEvent date="2026년 3월 31일">
+TGE(20:30 베이징 = 12:30 UTC). 총공급 10억, 에어드랍 25% 즉시 언락. Ethereum L1 배포.
+  </TimelineEvent>
+  <TimelineEvent date="2026년 4월 1일">
+에어드랍 집중 논란. odaily·복수 분석가는 신규/연결 지갑 80곳+이 약 180M EDGE를 청구했다고 주장. Arkham은 광고된 $195M 에어드랍 중 14%(141.6M)가 파트너·LP로 흘러갔고 실제 유통은 ~9.5%라고 분석.
+  </TimelineEvent>
+  <TimelineEvent date="2026년 5월 22일">
+사상 최고가 $1.54 도달.
+  </TimelineEvent>
+  <TimelineEvent date="2026년 6월 1일 ~21:00 UTC">
+약 1시간 만에 ~$1.26 → $0.315 (~77%) 폭락. 보도에 따르면 174개 주소가 1분 내 매도 주문을 냈고, 1시간 동안 Binance·OKX·Bybit·edgeX perp 합산 매도가 $140M을 넘었다. 청산 약 $6.2M(롱 $4.84M), 3,840+ 트레이더 영향.
+  </TimelineEvent>
+  <TimelineEvent date="2026년 6월 1~2일">
+edgeX 공식 성명: "해킹·익스플로잇 아님, 외부 세력의 의도적 manipulation." 팀은 자기 물량을 매도하지 않았다고 부인.
+  </TimelineEvent>
+  <TimelineEvent date="2026년 6월 2일">
+ZachXBT가 팀 주장에 회의를 표하며 카운터파티·MM 계약 공개를 요구. 분석가 givenoxbt는 Bybit·OKX·Bitget·Gate 동시 인출 + SpotVault ~$1.6M 회수를 "market maker farewell"로 지목.
+  </TimelineEvent>
+  <TimelineEvent date="2026년 6월 3~4일">
+edgeX가 200,000 USDC 바운티(공격 주체 식별)와 롱 청산 피해 보상(유저당 최대 100,000 USDC)을 발표. OKX·Bybit·Bitget·Bithumb 예비조사는 "thin liquidity + 청산 캐스케이드"로 결론(거래소 메시지 일부 redacted). ZachXBT는 "우리 스스로 조사했는데 유죄를 못 찾았다"며 비꼼.
+  </TimelineEvent>
+  <TimelineEvent date="2026년 6월 11일">
+사상 최저가 약 $0.385 부근까지 하락.
+  </TimelineEvent>
+</Timeline>
+
+## 공급 구조
+
+### 시장 구조 — RAVE/LAB과 다른 점
+
+| 거래소 | Spot | Perpetual |
+|--------|------|-----------|
+| **Binance** | ❌ | O (프리마켓) |
+| OKX | O | O |
+| Bybit | — | O |
+| Coinbase | O | — |
+| Kraken | O | — |
+| Bitget | O | O |
+| Gate.io | O | O |
+| edgeX (자체 DEX) | — | O (네이티브) |
+
+주의할 차이가 있다. RAVE·LAB은 "메이저 spot이 어디에도 없다"는 결함이 핵심이었지만, EDGE는 OKX·Coinbase·Kraken·Bitget·Gate 등 **메이저 spot이 다수 존재**한다. 빠진 건 *Binance* spot 하나다. 그래서 이 케이스를 단순한 `alpha-no-spot`으로 보면 오해다.
+
+대신 문제는 **상장 개수 대비 얕은 합산 깊이**다. 시장이 여러 거래소와 edgeX 자체 perp로 잘게 쪼개져 있고, 파생상품(OI·거래량)이 현물 깊이에 비해 과도하게 컸다. 사후 보고에서 거래소들이 지목한 "thin liquidity"가 바로 이 구조다 — 한 venue의 얕은 구간이 흔들리면 여러 거래소 perp의 mark price가 함께 출렁인다.
+
+### 토큰 분배
+
+총공급 10억 EDGE, 유통 약 3.5억(35%), **MC/FDV ≈ 0.35**(즉 FDV가 시총의 약 2.86배)인 low-float·high-FDV 구조다. 공개 토크노믹스는 대략 다음과 같다.
+
+| 트랜치 | 비중 | 락업 |
+|--------|------|------|
+| Genesis 에어드랍(초기 유저) | 25% | TGE 즉시 언락 |
+| Pre-TGE 시즌 | 최대 5% | TGE +24h |
+| Future Reserve | 30% | 18개월 락 후 선형 |
+| Core Contributors | 25% | 24개월 락 후 선형 |
+| Ecosystem & Community | 5% | 12개월 cliff |
+| Foundation | 5% | 12개월 cliff |
+| Liquidity | 5% | 유동성 공급용 |
+
+즉 발행량의 약 65%가 처음부터 락업/예치 상태였다. Arkham은 한발 더 나아가 온체인 분포상 개발자 관련 지갑이 약 69.5%, 파트너·LP가 14%, 실제 유통은 약 9.5%라고 분석했다.
+
+### 공급 분포 — 자체 측정
+
+우리는 Ethereum 컨트랙트 `0xB007…a241`의 전체 transfer를 인덱싱해 보유 지갑별 net balance를 직접 계산하고(2026-06-12 시점, 잔액 보유 지갑 13,559곳, 합계 ≈ 전량), 상위 지갑의 정체를 `ethereum.creation_traces`·`cex.addresses`로 한 번 더 확인했다.
+
+- 1·2·4·5·7위 지갑(3억·2.5억·5천만·5천만·3,080만 = **합 68.1%**)은 모두 **동일 배포자 `0x4e1d…ec67`이 2026-03-25(TGE 6일 전) 약 10분 안에 배포한 컨트랙트**다. 라운드 넘버는 우연이 아니라 공개 토크노믹스의 Future Reserve(30%)·Core Contributors(25%)·5% 트랜치 락업 물량이다.
+- 상위 2개 = **55.00%**, 상위 5개(소각 제외) = **70.53%**
+- 8위는 **Bybit 핫월렛("Bybit 5")**, 32위는 **Bitget 핫월렛("Bitget 35")** — 둘 다 `cex.addresses` 라벨로 확인. 32위는 RAVE·LAB 케이스에 등장한 바로 그 주소다.
+- 6위는 소각 주소(`0x…dead`)로 약 4%(40M)가 영구 소각됨
+- 그 아래 진짜 분산 float은 빠르게 얇아진다: 9위부터 1% 미만
+
+규모 일치를 넘어 컨트랙트 배포 사실까지 확인되면서, "발행량의 ~65%가 락업 / 실제 유통 ~9.5%"라는 Arkham 분석과 우리 측정은 정확히 같은 방향을 가리킨다(우리: 상위 컨트랙트 클러스터 68.1%).
+
+<ChartFrame
+  kind="SUPPLY DISTRIBUTION"
+  caption="EDGE 보유 분포 (Ethereum, 2026-06-12 net balance, 자체 Dune 인덱싱). 1·2·4·5·7위는 동일 배포자가 TGE 6일 전 배포한 락업 컨트랙트(creation_traces 확인), 8위 Bybit·32위 Bitget 핫월렛(cex.addresses 라벨). 32위는 RAVE/LAB 동일주소, rank 6은 소각 주소"
+  source="Dune Analytics · Etherscan"
+  aspect="auto"
+>
+  <SupplyBars rows={edgexHolders} asOf="2026-06-12 net balance" symbol="EDGE" />
+</ChartFrame>
+
+## 수법 분석 — 충돌하는 세 가지 설명
+
+이 폭락이 흥미로운 이유는 *무슨 일이 있었나*가 아니라 *왜 일어났나*를 두고 당사자들의 설명이 정면으로 갈리기 때문이다.
+
+### 1. edgeX 팀 — "외부 manipulation 피해"
+
+팀은 폭락을 외부 세력의 의도적 시세 조작으로 규정하고, 프로토콜은 침해되지 않았으며 자기 물량을 매도하지도 않았다고 밝혔다. 이후 공격 주체 식별을 위한 200,000 USDC 바운티와 롱 청산 피해 유저 보상안(유저당 최대 100,000 USDC)을 내놨다.
+
+### 2. ZachXBT — "낮은 float, 인사이더 통제"
+
+ZachXBT는 팀의 "피해자" 프레임에 회의적이었다. 그는 EDGE 공급이 낮은 float로 소수 인사이더에 통제돼 있었다고 보고, "정말 투명성을 신경 쓴다면 이 사태를 부른 카운터파티·마켓메이커 계약을 공개하라"고 요구했다. 거래소들이 무혐의 예비조사를 내놓자 이렇게 받아쳤다.
+
+> "We investigated ourselves and did not find ourselves guilty even though we control nearly the entire supply." — ZachXBT (인용)
+
+그는 특정 인물이나 마켓메이커를 실명으로 지목하지는 않았다.
+
+### 3. 거래소 예비조사 — "thin liquidity"
+
+edgeX가 전달한 바에 따르면 OKX·Bybit·Bitget·Bithumb의 예비 검토는 조직적 manipulation이 아니라 얇은 유동성과 청산 캐스케이드가 원인이라는 취지였다. 다만 한 매체는 거래소 메시지 일부가 가려져 있었고 내용을 독립적으로 검증할 수 없었다고 단서를 달았으며, 어떤 거래소도 1차 공식 성명을 직접 내지는 않았다(모두 edgeX를 거쳐 전달).
+
+### givenoxbt 의혹 — 그리고 온체인 자체 검증
+
+온체인 분석가 givenoxbt(니치 계정)는 폭락 전후 Bybit·OKX·Bitget·Gate에서 동시 인출이 있었고 edgeX SpotVault에서 약 $1.6M 유동성이 빠졌다며 이를 "classic market maker farewell move"로 묘사했다. 우리는 이 "사전 모의 덤프" 프레임을 온체인에서 직접 검증해 봤다 — Ethereum L1의 EDGE 거래소 입출금을 일 단위로 측정했다. 결과는 한쪽으로만 기울지 않는다.
+
+**1) 락업 컨트랙트는 움직이지 않았다.** 위에서 확인한 상위 5개 락업 컨트랙트(68.1%)는 폭락 구간에 거래소로 단 한 토큰도 보내지 않았다. 팀의 "우리는 보유 물량을 매도하지 않았다"는 주장과 온체인 사실이 부합한다.
+
+**2) 폭락 *전* 거래소 사전 적재는 없었다.** 거래소로의 매도성 입금(Inflow)은 5/31까지 하루 13만~58만 EDGE로 평탄했다. 그러다 폭락 당일(6/1) 약 **398만**, 다음 날(6/2) 약 **965만 EDGE**로 **약 25배 급증**했다. 즉 입금 폭증은 폭락을 *예고*한 게 아니라 폭락과 *함께/뒤따라* 터졌다. RAVE·LAB에서 본 "펌프 직전 거래소 대량 입금" 패턴과 정반대다.
+
+<ChartFrame
+  kind="CEX INFLOW · DAILY"
+  caption={<>
+    EDGE 거래소 일일 입금(매도성 유입), 2026.05.20 ~ 06.11 (자체 Dune 측정).
+    <br />
+    <br />
+    5/31까지 13만~58만 EDGE/일로 평탄 → 6/1 ~398만 · 6/2 ~965만으로 약 25배 급증.
+    <br />
+    <br />
+    입금 폭증은 폭락 *전*이 아니라 폭락과 *함께* 발생.
+  </>}
+  source="Dune Analytics · cex.flows · Etherscan"
+  aspect="wide"
+>
+  <EdgexCexFlow />
+</ChartFrame>
+
+**3) 단일 주체 덤프가 아니라 소수 대형 + 긴 꼬리.** 6/1~2 입금 상위는 한 EOA가 Bybit으로 250만, 다른 EOA가 Bitget으로 약 164만, 또 다른 EOA가 OKX로 100만 EDGE를 보낸 식이다. 상위 3개가 약 38%지만, 나머지는 수백 개 주소(이틀간 890+357건)로 흩어져 있고 그중 락업 컨트랙트는 하나도 없다. 게다가 같은 날 **거래소 출금(Outflow)도 동시에 폭증**(6/1 ~664만, 6/2 ~782만 EDGE)해 흐름이 양방향이었다.
+
+**4) 다시 등장한 주소.** 그 32위 Bitget 핫월렛(`0xffa8db7b…cd54`)은 RAVE·LAB 케이스의 "Bitget 35"와 동일하다. 동일 거래소 인프라가 여러 케이스에 반복 등장한다는 정황이다.
+
+종합하면, 온체인 ERC-20 흐름은 **"외부 세력이 거래소에 물량을 미리 깔아두고 친 사전 모의 덤프"보다 "thin liquidity + 청산·패닉 캐스케이드"에 더 부합**한다 — 소수 대형 매도자는 있었지만 단일 주체의 일방적 사전 적재는 보이지 않는다. 다만 CEX 내부 오더북, edgeX 자체 perp/SpotVault, 오프체인 마켓메이킹은 온체인에 보이지 않으므로 이 측정만으로 manipulation 여부를 완전히 판정할 수는 없다. 우리가 말할 수 있는 건 "온체인에서 보이는 한, 사전 모의 덤프의 흔적은 약하다"는 것이다.
+
+### 구조적으로 왜 가능했나
+
+세 설명 중 무엇이 맞든, 공통 전제는 같다. **유통 물량이 적고(low float), 가격발견이 파생상품에 쏠려 있으며, 현물 깊이가 얇다**는 것. 이런 토큰은 적은 매물로도 한 venue의 얕은 구간을 무너뜨릴 수 있고, 흔들린 mark price가 여러 거래소 perp의 롱 포지션을 연쇄 청산시킨다. 폭락 직전 대형 트레이더의 롱 비중이 68.2%였다는 edgeX 사후 데이터는 청산 캐스케이드가 발화하기 쉬운 상태였음을 보여준다. manipulation이든 단순 thin liquidity든, 캐스케이드가 가격을 끌어내리는 메커니즘 자체는 동일하다.
+
+## 데이터
+
+<ChartFrame
+  kind="PRICE · 1D · BINANCE PERP"
+  caption={<>
+    EDGE/USDT 무기한 선물 일봉 (Binance Futures), 2026.03 ~ 06.
+    <br />
+    <br />
+    5/22 ATH $1.54 → 6/1 장중 $0.315까지 폭락(긴 아래꼬리) → 6월 중순 $0.38대.
+    <br />
+    <br />
+    중단 패널 거래량, 하단 패널 미결제약정(OI) — OI는 5월 초 ~22.5M에서 폭락과 함께 급감. 차트 클릭 시 확대.
+  </>}
+  source="Binance Futures · TradingView 캡처"
+  aspect="auto"
+>
+  <ZoomableImage src={pricePerp1d} alt="EDGE/USDT 무기한 선물 일봉 (Binance Futures) — 5월 ATH 후 6/1 폭락, 거래량·OI 패널 포함" />
+</ChartFrame>
+
+파생상품 쪽 지표도 폭락에 앞서 비정상 신호를 보냈다. odaily는 TVL 약 $2억의 perp DEX가 미결제약정(OI) $10억+를 유지하고 평균 레버리지가 5배를 넘었으며, SNS상 화제는 거의 없는데 일일 거래량이 $50억 이상으로 Hyperliquid에 이어 2위 수준이었다고 지적했다(거래량 inflation·wash trading 의혹은 단일 매체 주장으로, 단정하지 않는다). TVL 대비 과도한 OI, 한쪽으로 쏠린 롱 비중(68.2%)은 모두 청산 캐스케이드에 취약한 파생상품 과열의 전형이다.
+
+**자체 측정 요약:**
+
+> 공급: 1·2·4·5·7위 = 동일 배포자 락업 컨트랙트 68.1% (폭락 중 무이동) · 흐름: 거래소 매도성 입금이 폭락 *당일* 25배 급증(6/2 ~965만 EDGE)했으나 양방향·분산이며 사전 적재 없음 (Dune, Ethereum `0xB007…a241`)
+
+## 교훈 — 다음 비슷한 토큰을 식별하는 시그널
+
+EDGE는 "범인이 명확한" 케이스가 아니다. 오히려 그래서 교훈이 분명하다. manipulation이었는지 thin liquidity였는지는 사후에도 다투지만, **구조적 위험 신호는 폭락 전에 이미 모두 관측 가능했다.** 단일 항목은 약해도 여러 개가 겹치면 강한 경고다.
+
+### 공급 구조 시그널
+
+- 유통 비율이 총공급의 35% 이하(MC/FDV ≈ 0.35) — low-float·high-FDV
+- 소수 지갑이 정확한 라운드 넘버로 대량 보유(EDGE: 상위 2개 55%, 상위 5개 70%+)
+- 락업/예치 비중이 큰데 사후 변경 가능성을 배제할 수 없는 구조(EDGE: 업그레이더블 ERC1967Proxy — admin 포기 여부 확인 필요)
+- 에어드랍이 신규/연결 지갑 클러스터에 집중됐다는 분석가 지적
+
+### 시장·파생 시그널
+
+- 상장 거래소는 많은데 venue별 현물 깊이가 얇음(상장 개수 ≠ 유동성)
+- TVL 대비 미결제약정이 과도(EDGE: ~$2억 TVL에 $10억+ OI 주장)
+- 롱/숏이 한쪽으로 70% 가까이 쏠림(EDGE: 폭락 직전 롱 68.2%)
+- 거래량이 화제·내러티브 없이 비정상적으로 큼
+
+### 온체인·거버넌스 시그널
+
+- 토큰 컨트랙트가 업그레이더블 프록시(admin·timelock 상태 미확인이면 위험 가점)
+- 사전 커뮤니티 소통 차단(EDGE: TGE 게시물 댓글 비활성화로 vesting·MM 질문 제한)
+- 이전 의혹 케이스에서 본 거래소·중개 주소가 재등장(EDGE: RAVE/LAB의 Bitget 핫월렛이 EDGE에도)
+
+### 사후 내러티브를 읽는 법
+
+- 팀이 폭락을 "외부 manipulation"으로 규정할 때, **공급 통제권이 어디에 있는지**를 먼저 본다. 거의 전 공급을 통제하는 주체의 "피해자" 주장은 검증 전까지 그대로 받아들이기 어렵다.
+- "거래소가 조사했고 문제없었다"는 전언은 **누가, 검증 가능한 형태로** 말했는지 확인한다(EDGE: 거래소 1차 공식 성명 부재, 메시지 일부 가려짐).
+- "외부 덤프"든 "내부자 사전 적재"든, **온체인 거래소 입금 타이밍을 직접 확인**한다. 폭락 *전*에 물량이 거래소로 쌓였는지, *중·후*에 캐스케이드로 터졌는지가 구분된다(EDGE: 후자 — 입금 25배 급증이 폭락 *당일*에 시작, 사전 적재 흔적 약함).
+- 보상·바운티는 신뢰 회복 신호일 수 있으나, 그 자체가 원인 규명을 대체하지는 않는다.
+
+> 공급이 소수에 집중되고 파생상품에 쏠린 토큰은, 펌프든 폭락이든 어느 방향으로도 포지션이 위험하다. 가장 안전한 선택은 **거래하지 않는 것**이다.
+
+## 출처
+
+1. **Binance 공식 공지** — ["edgeX (EDGE) USDⓈ-Margined Perpetual…"](https://www.binance.com/en/support/announcement/detail/f4038a3dbd6d49318c2ee201051fe43e) — 2026.03.19, EDGEUSDT perp 프리마켓
+2. **CryptoTimes** — ["EDGE Crashes 77% as edgeX Blames Manipulation, ZachXBT Demands Transparency"](https://www.cryptotimes.io/2026/06/02/edge-crashes-77-as-edgex-blames-manipulation-zachxbt-demands-transparency/) — 2026.06.02
+3. **crypto.news** — ["EDGE token crashes as ZachXBT questions insider control"](https://crypto.news/edge-token-crashes-as-zachxbt-questions-insider-control/) — 2026.06.02
+4. **CryptoPotato** — ["'We Investigated Ourselves': ZachXBT Slams edgeX After Sudden Token Collapse"](https://cryptopotato.com/we-investigated-ourselves-zachxbt-slams-edgex-after-sudden-token-collapse/) — 2026.06
+5. **The Block** — ["edgeX offers refunds, $200,000 USDC bounty after token flash crash"](https://www.theblock.co/post/403567/edgex-offers-refunds-200000-usdc-bounty-71-token-flash-crash) — 2026.06.03
+6. **incrypted** — ["EDGE token crashes 70% in an hour; team denies hack, ZachXBT points to insiders"](https://incrypted.com/en/edge-token-crashes-70-in-an-hour-team-denies-hack-zachxbt-points-to-insiders/) — 2026.06
+7. **The Defiant** — ["Amber Group-backed perp DEX edgeX to launch token on March 31"](https://thedefiant.io/news/defi/amber-group-backed-perp-dex-edgex-to-launch-token-on-march-31) — 토크노믹스·Circle Ventures
+8. **Gate / Arkham** — ["edgeX airdrops $195M, nearly half flowing to partners/LPs"](https://www.gate.com/news/detail/arkham-edgex-airdrops-195-million-with-nearly-half-of-the-tokens-flowing-to-19951908) — 2026.04.01, 14% 파트너·LP / 9.5% 유통
+9. **odaily** — ["edgeX airdrop concentration & volume analysis"](https://www.odaily.news/en/post/5210044) — 2026.04.01, TVL·OI mismatch
+10. **CoinGecko** — [EDGE (edgeX) — price, ATH/ATL, contract](https://www.coingecko.com/en/coins/edgex)
+11. **자체 온체인 측정** — Dune Analytics: [보유 분포](https://dune.com/queries/7703591) · [상위 지갑 정체(컨트랙트/CEX)](https://dune.com/queries/7703708) · [거래소 입출금 일별](https://dune.com/queries/7703705) · [크래시 입금 추적](https://dune.com/queries/7703715) (Ethereum `0xB0076DE78Dc50581770BBa1D211dDc0aD4F2a241`)

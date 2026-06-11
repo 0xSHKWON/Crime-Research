@@ -1,0 +1,301 @@
+---
+slug: "edgex"
+title: "edgeX (EDGE)"
+tokenSymbol: "EDGE"
+incidentDate: "2026-06-01"
+publishedDate: "2026-06-12"
+status: "alleged"
+severity: "high"
+patterns:
+  - "low-float"
+  - "supply-concentration"
+  - "derivatives-frenzy"
+  - "proxy-contract-risk"
+  - "cross-exchange-coordination"
+metrics:
+  peakPrice: 1.54
+  bottomPrice: 0.315
+  maxDrawdown: -0.80
+  marketCapPeak: 440000000
+  marketCapEvaporated: 224000000
+  crashDurationHours: 1
+  liquidationVolume24h: 6200000
+exchanges:
+  binanceSpot: false
+  binanceFutures: true
+  others: ["okx", "bybit", "coinbase", "kraken", "bitget", "gate", "mexc"]
+allegations:
+  - source: "ZachXBT"
+    sourceUrl: "https://x.com/zachxbt"
+    date: "2026-06-02"
+    summary: "Questioned edgeX's 'victim of external manipulation' framing, arguing EDGE's supply was controlled by a few insiders on a low float. Demanded the team disclose 'the counterparties / MM agreements which lead to these events,' and mocked the exchanges' no-fault preliminary reviews: 'We investigated ourselves and did not find ourselves guilty even though we control nearly the entire supply.'"
+  - source: "CryptoTimes"
+    sourceUrl: "https://www.cryptotimes.io/2026/06/02/edge-crashes-77-as-edgex-blames-manipulation-zachxbt-demands-transparency/"
+    date: "2026-06-02"
+    summary: "EDGE collapsed ~77% from about $1.26 to a session low of $0.315 (market cap $440M+ → $215.83M). The edgeX team blamed 'deliberate attempts by an external party to manipulate the market price,' not a hack. Analyst givenoxbt flagged coordinated withdrawals across Bybit, OKX, Bitget and Gate plus a ~$1.6M SpotVault pull as a 'market maker farewell.'"
+  - source: "The Block"
+    sourceUrl: "https://www.theblock.co/post/403567/edgex-offers-refunds-200000-usdc-bounty-71-token-flash-crash"
+    date: "2026-06-03"
+    summary: "After the flash crash edgeX announced a 200,000 USDC on-chain bounty to identify the attackers and goodwill refunds for liquidated long holders (capped at 100,000 USDC per user). Preliminary reviews from OKX, Bybit, Bitget and Bithumb attributed the event to thin liquidity and liquidation cascades rather than organized manipulation (exchange messages partly redacted, not independently verifiable)."
+  - source: "Arkham (via Gate)"
+    sourceUrl: "https://www.gate.com/news/detail/arkham-edgex-airdrops-195-million-with-nearly-half-of-the-tokens-flowing-to-19951908"
+    date: "2026-04-01"
+    summary: "Reported Arkham's analysis that of edgeX's advertised ~$195M airdrop, 14% (~141.6M EDGE, ~$94.6M) flowed to partners/LPs into an OpenZeppelin VestingWallet (1-year lock), with on-chain distribution showing ~69.5% in developer-related wallets and only ~9.5% actually circulating."
+relatedCases: ["lab", "rave", "coai"]
+---
+
+import { ChartFrame } from '@/components/chart-frame'
+import { EdgexCexFlow } from '@/components/edgex-cex-flow'
+import { SupplyBars } from '@/components/supply-bars'
+import { Timeline, TimelineEvent } from '@/components/case-timeline'
+import { ZoomableImage } from '@/components/zoomable-image'
+import pricePerp1d from '@/assets/cases/edgex/price-perp-1d.png'
+
+export const edgexHolders = [
+  { rank: 1, address: "0xf0da8b0071270e25ce7e63276f1f0ad2d5a09d1d", label: "30% · vesting contract (deployed 3/25)", category: "team", pct: 30.00, balance: 300000000 },
+  { rank: 2, address: "0xb3118e9a5b68413f85a2fe66a36237362f9d16e0", label: "25% · vesting contract (deployed 3/25)", category: "team", pct: 25.00, balance: 250000000 },
+  { rank: 3, address: "0x7f861a7db997b4f6e5ef9954a3b5d5b29c463cb2", label: "contract (1/16, separate deployer)", category: "unknown", pct: 5.53, balance: 55331590 },
+  { rank: 4, address: "0xa13cc6db0a4eca6a9c099e0d12c7369b9fec89a9", label: "5% · vesting contract", category: "team", pct: 5.00, balance: 50000000 },
+  { rank: 5, address: "0x6973b640a1d6a1f57640db4084c6c4b45c8a0698", label: "5% · vesting contract", category: "team", pct: 5.00, balance: 50000000 },
+  { rank: 6, address: "0x000000000000000000000000000000000000dead", label: "burn", category: "unknown", pct: 4.01, balance: 40062446 },
+  { rank: 7, address: "0x5cbe2dda520e744c87a080b01394f57f7d29cc3c", label: "contract (same deployer)", category: "team", pct: 3.08, balance: 30802662 },
+  { rank: 8, address: "0xf89d7b9c864f589bbf53a82105107622b35eaa40", label: "Bybit 5 hot wallet", category: "exchange", pct: 1.27, balance: 12729628 },
+  { rank: 9, address: "0xba5b36edcc242d4b21dc0d6080c3c92a596754cb", label: "contract (deployed 3/31)", category: "unknown", pct: 0.87, balance: 8690455 },
+  { rank: 10, address: "0x8ca4a178e0c45ea257ad278890a3a1fc4cdf481d", label: "contract (deployed 3/31)", category: "unknown", pct: 0.77, balance: 7726488 },
+  { rank: 32, address: "0xffa8db7b38579e6a2d14f9b347a9ace4d044cd54", label: "Bitget 35 · same as RAVE/LAB", category: "exchange", pct: 0.42, balance: 4156027 },
+]
+
+## Overview
+
+On June 1, 2026, EDGE — the native token of **edgeX**, an Amber Group-incubated perpetual DEX — collapsed roughly 77% in about an hour, from $1.26 to $0.315. Market cap fell from over $440M the day prior to $215.83M, 24h liquidations ran ~$6.2M, and more than 3,840 traders were affected.
+
+What sets this case apart from RAVE and LAB is the **direction and the accused**. Those were *pumps*, and analysts alleged manipulation *by the team*. EDGE was a *crash*, and the **team itself claimed to be the victim** of external manipulation. Three explanations of the same event collide.
+
+> "This was not a hack, exploit, or security breach. What we have identified so far suggests deliberate attempts by an external party to manipulate the market price of EDGE." — edgeX official statement (quoted)
+
+> "We all know edgeX supply was being controlled by a few insiders with a low float." — ZachXBT (quoted)
+
+Who is right is hard to settle after the fact. Exchange preliminary reviews leaned toward "thin liquidity," and neither edgeX's manipulation claim nor the exchanges' no-fault conclusion has been independently verified. So the value of this case is not in *naming a culprit* but in this: **every structural risk signal was already visible *before* the crash** — a low circulating ratio, round-number whale wallets, derivatives crowding. We measured the supply concentration ourselves by indexing the contract directly.
+
+EDGE is an ERC-20 on Ethereum mainnet (`0xB007…a241`), unrelated to the similarly named "Edge Network" or "EDGE-X" tokens.
+
+## Timeline
+
+<Timeline>
+  <TimelineEvent date="Nov 2024">
+edgeX launches — an Amber Group-incubated, orderbook-based perpetual DEX.
+  </TimelineEvent>
+  <TimelineEvent date="Feb 2026">
+Circle Ventures completes a strategic investment (amount undisclosed) and native USDC integration is announced.
+  </TimelineEvent>
+  <TimelineEvent date="Mar 19, 2026 · 14:00 UTC">
+Binance Futures launches the EDGEUSDT USDⓈ-margined perpetual as a **pre-market** (up to 5x). This is not a Binance spot listing.
+  </TimelineEvent>
+  <TimelineEvent date="Mar 31, 2026">
+TGE (20:30 Beijing = 12:30 UTC). 1B total supply, 25% airdrop unlocked at launch. Deployed on Ethereum L1.
+  </TimelineEvent>
+  <TimelineEvent date="Apr 1, 2026">
+Airdrop-concentration controversy. odaily and several analysts alleged 80+ newly created / interconnected wallets claimed ~180M EDGE. Arkham found that of the advertised $195M airdrop, 14% (141.6M) flowed to partners/LPs and only ~9.5% was actually circulating.
+  </TimelineEvent>
+  <TimelineEvent date="May 22, 2026">
+All-time high of $1.54.
+  </TimelineEvent>
+  <TimelineEvent date="Jun 1, 2026 · ~21:00 UTC">
+~77% crash in about an hour, from ~$1.26 to $0.315. Per reporting, 174 addresses submitted sell orders within one minute, and combined sell volume across Binance, OKX, Bybit and edgeX perp markets topped $140M in an hour. Liquidations ~$6.2M (longs $4.84M), 3,840+ traders affected.
+  </TimelineEvent>
+  <TimelineEvent date="Jun 1-2, 2026">
+edgeX statement: "not a hack, exploit, or security breach" but "deliberate attempts by an external party to manipulate." The team denied selling its own allocations.
+  </TimelineEvent>
+  <TimelineEvent date="Jun 2, 2026">
+ZachXBT questioned the team's framing and demanded disclosure of counterparties / MM agreements. Analyst givenoxbt flagged simultaneous withdrawals across Bybit, OKX, Bitget and Gate plus a ~$1.6M SpotVault pull as a "market maker farewell."
+  </TimelineEvent>
+  <TimelineEvent date="Jun 3-4, 2026">
+edgeX announced a 200,000 USDC bounty (to identify attackers) and refunds for liquidated longs (capped at 100,000 USDC per user). Preliminary reviews from OKX, Bybit, Bitget and Bithumb concluded "thin liquidity + liquidation cascade" (exchange messages partly redacted). ZachXBT mocked it: "we investigated ourselves and did not find ourselves guilty."
+  </TimelineEvent>
+  <TimelineEvent date="Jun 11, 2026">
+All-time low around $0.385.
+  </TimelineEvent>
+</Timeline>
+
+## Supply structure
+
+### Market structure — how it differs from RAVE/LAB
+
+| Exchange | Spot | Perpetual |
+|----------|------|-----------|
+| **Binance** | ❌ | O (pre-market) |
+| OKX | O | O |
+| Bybit | — | O |
+| Coinbase | O | — |
+| Kraken | O | — |
+| Bitget | O | O |
+| Gate.io | O | O |
+| edgeX (own DEX) | — | O (native) |
+
+There is an important difference. For RAVE and LAB, the core flaw was "no major spot anywhere." EDGE, by contrast, **does have major spot** on OKX, Coinbase, Kraken, Bitget and Gate. The one missing is *Binance* spot. So reading this as a simple `alpha-no-spot` case would be misleading.
+
+The real issue is **shallow aggregate depth relative to the number of listings**. The market is fragmented across many exchanges plus edgeX's own perp, and derivatives (OI, volume) ran far ahead of spot depth. The "thin liquidity" the exchanges pointed to is exactly this structure — shake a thin pocket on one venue and the mark price on several exchanges' perps moves together.
+
+### Token distribution
+
+1B total supply, ~350M circulating (35%), **MC/FDV ≈ 0.35** (FDV ≈ 2.86× market cap) — a low-float, high-FDV structure. The published tokenomics are roughly:
+
+| Tranche | Share | Lockup |
+|---------|-------|--------|
+| Genesis airdrop (early users) | 25% | unlocked at TGE |
+| Pre-TGE Season | up to 5% | TGE +24h |
+| Future Reserve | 30% | 18-mo lock, then linear |
+| Core Contributors | 25% | 24-mo lock, then linear |
+| Ecosystem & Community | 5% | 12-mo cliff |
+| Foundation | 5% | 12-mo cliff |
+| Liquidity | 5% | for market liquidity |
+
+So roughly 65% of supply was locked or reserved from day one. Arkham went further, finding on-chain that developer-related wallets held ~69.5%, partners/LPs 14%, and only ~9.5% was actually circulating.
+
+### Supply distribution — our own measurement
+
+We indexed every transfer of the Ethereum contract `0xB007…a241` to compute net balances per wallet (as of 2026-06-12; 13,559 wallets with a positive balance, summing to ≈ the full supply), then double-checked the top wallets' identities via `ethereum.creation_traces` and `cex.addresses`.
+
+- Wallets #1, 2, 4, 5, 7 (300M · 250M · 50M · 50M · 30.8M = **68.1% combined**) are all **contracts deployed by the same address `0x4e1d…ec67` within ~10 minutes on 2026-03-25** (6 days pre-TGE). The round numbers aren't coincidence — they are the published Future Reserve (30%), Core Contributors (25%) and 5% tranche lockups.
+- The top 2 = **55.00%**, the top 5 (excluding burn) = **70.53%**
+- Rank 8 is a **Bybit hot wallet ("Bybit 5")** and rank 32 a **Bitget hot wallet ("Bitget 35")** — both confirmed via `cex.addresses`. Rank 32 is the very address seen in the RAVE and LAB cases.
+- Rank 6 is the burn address (`0x…dead`) — ~4% (40M) permanently burned
+- The genuinely dispersed float thins out fast below that: under 1% from rank 9
+
+Beyond the size match, the contract-deployment fact confirms it: our measurement (top contract cluster = 68.1%) points exactly the same way as Arkham's "~65% locked / ~9.5% actually circulating."
+
+<ChartFrame
+  kind="SUPPLY DISTRIBUTION"
+  caption="EDGE holder distribution (Ethereum, net balance as of 2026-06-12, own Dune indexing). Ranks 1/2/4/5/7 are lockup contracts deployed by one address 6 days pre-TGE (verified via creation_traces); rank 8 is a Bybit and rank 32 a Bitget hot wallet (cex.addresses labels). Rank 32 is the same address as in RAVE/LAB; rank 6 is the burn address"
+  source="Dune Analytics · Etherscan"
+  aspect="auto"
+>
+  <SupplyBars rows={edgexHolders} asOf="2026-06-12 net balance" symbol="EDGE" />
+</ChartFrame>
+
+## Method analysis — three conflicting explanations
+
+What makes this crash interesting is not *what happened* but that the parties flatly disagree on *why*.
+
+### 1. The edgeX team — "victim of external manipulation"
+
+The team framed the crash as a deliberate external price-manipulation attempt, said the protocol was never compromised, and denied selling its own allocations. It then offered a 200,000 USDC bounty to identify the attackers and a refund plan for liquidated longs (capped at 100,000 USDC per user).
+
+### 2. ZachXBT — "low float, insider-controlled"
+
+ZachXBT was skeptical of the "victim" frame. He argued EDGE's supply was controlled by a few insiders on a low float and demanded the team "name the counterparties / MM agreements which lead to these events." When the exchanges produced no-fault preliminary reviews, he shot back:
+
+> "We investigated ourselves and did not find ourselves guilty even though we control nearly the entire supply." — ZachXBT (quoted)
+
+He did not name any specific individual or market maker.
+
+### 3. Exchange preliminary reviews — "thin liquidity"
+
+Per what edgeX relayed, preliminary reviews from OKX, Bybit, Bitget and Bithumb pointed to thin liquidity and a liquidation cascade rather than organized manipulation. One outlet, however, noted the exchange messages were partly redacted and could not be independently verified, and no exchange issued a first-party statement directly (all came through edgeX).
+
+### givenoxbt's allegation — and our own on-chain check
+
+On-chain analyst givenoxbt (a niche account) said there were simultaneous withdrawals across Bybit, OKX, Bitget and Gate around the crash, and ~$1.6M pulled from edgeX's SpotVault — a "classic market maker farewell move." We tested this "premeditated dump" frame directly on-chain, measuring EDGE's exchange deposits and withdrawals on Ethereum L1 day by day. The answer doesn't tilt cleanly one way.
+
+**1) The lockup contracts never moved.** The five lockup contracts identified above (68.1%) sent not a single token to an exchange during the crash window. The team's "we did not sell our allocations" claim is consistent with the on-chain record.
+
+**2) There was no pre-crash loading of exchanges.** Sell-side deposits into exchanges (Inflow) were flat through May 31 at 130K–580K EDGE/day. Then on the crash day (6/1) they jumped to ~**3.98M**, and the next day (6/2) to ~**9.65M EDGE** — a **~25x surge**. The deposit spike didn't *precede* the crash; it broke out *with and after* it. That's the opposite of the "large exchange deposits right before the pump" pattern seen in RAVE and LAB.
+
+<ChartFrame
+  kind="CEX INFLOW · DAILY"
+  caption={<>
+    Daily EDGE deposits into exchanges (sell-side inflow), 2026.05.20 ~ 06.11 (own Dune measurement).
+    <br />
+    <br />
+    Flat at 130K–580K EDGE/day through 5/31 → ~3.98M on 6/1, ~9.65M on 6/2 — a ~25x surge.
+    <br />
+    <br />
+    The deposit spike came *with* the crash, not *before* it.
+  </>}
+  source="Dune Analytics · cex.flows · Etherscan"
+  aspect="wide"
+>
+  <EdgexCexFlow />
+</ChartFrame>
+
+**3) Not a single dumper, but a few large sellers + a long tail.** The biggest depositors on 6/1–2 were one EOA sending 2.5M EDGE to Bybit, another ~1.64M to Bitget, another 1M to OKX. The top 3 are ~38%, but the rest is spread across hundreds of addresses (890 + 357 transfers over two days), none of them lockup contracts. And **exchange withdrawals (Outflow) spiked the same days** (6/1 ~6.64M, 6/2 ~7.82M EDGE) — the flow was bidirectional.
+
+**4) A familiar address.** That rank-32 Bitget hot wallet (`0xffa8db7b…cd54`) is the same "Bitget 35" from the RAVE and LAB cases — the same exchange infrastructure recurring across cases.
+
+Taken together, the on-chain ERC-20 flows fit **"thin liquidity + a liquidation/panic cascade" better than "an external party pre-loaded exchanges for a premeditated dump"** — there were a few large sellers, but no sign of one-sided pre-positioning by a single entity. The caveat: CEX-internal order books, edgeX's own perp/SpotVault, and off-chain market-making are invisible on-chain, so this measurement alone can't fully settle whether manipulation occurred. What we can say is: as far as the chain shows, the evidence for a premeditated dump is weak.
+
+### Why it was structurally possible
+
+Whichever explanation holds, the premise is the same: **a small free float, price discovery concentrated in derivatives, and thin spot depth.** Such a token can have a thin pocket on one venue broken with little capital, and the shaken mark price then cascade-liquidates long positions across several exchanges' perps. edgeX's own post-mortem put the large-trader long share at 68.2% just before the collapse — a state primed for a cascade. Manipulation or plain thin liquidity, the mechanism that drags price down is identical.
+
+## Data
+
+<ChartFrame
+  kind="PRICE · 1D · BINANCE PERP"
+  caption={<>
+    EDGE/USDT perpetual daily candles (Binance Futures), 2026.03 ~ 06.
+    <br />
+    <br />
+    5/22 ATH $1.54 → 6/1 crash to $0.315 (long lower wick) → ~$0.38 by mid-June.
+    <br />
+    <br />
+    Middle panel volume, bottom panel open interest (OI) — OI peaked ~22.5M in early May and collapsed with the crash. Click to enlarge.
+  </>}
+  source="Binance Futures · TradingView capture"
+  aspect="auto"
+>
+  <ZoomableImage src={pricePerp1d} alt="EDGE/USDT perpetual daily candles (Binance Futures) — May ATH then June 1 crash, with volume and OI panels" />
+</ChartFrame>
+
+The derivatives side flashed warnings ahead of the crash too. odaily noted a perp DEX with ~$200M TVL sustaining $1B+ in open interest at average leverage above 5x, with daily volume above $5B (second only to Hyperliquid) despite almost no corresponding social hype (the volume-inflation / wash-trading suspicion is a single-outlet claim, which we do not assert). Excess OI relative to TVL and a one-sided long share (68.2%) are textbook signs of derivatives overheating vulnerable to a liquidation cascade.
+
+**Own-measurement summary:**
+
+> Supply: ranks 1/2/4/5/7 = lockup contracts from one deployer, 68.1% (unmoved during the crash) · Flow: sell-side exchange deposits surged 25x *on the crash day* (6/2 ~9.65M EDGE) but were bidirectional, dispersed, with no pre-loading (Dune, Ethereum `0xB007…a241`)
+
+## Lessons — signals to spot the next one
+
+EDGE is not a case with an obvious culprit. That is precisely why the lesson is clear. Whether it was manipulation or thin liquidity is disputed even after the fact — but **every structural risk signal was observable before the crash.** A single item is weak; several overlapping ones are a strong warning.
+
+### Supply-structure signals
+
+- Circulating ratio under 35% of total supply (MC/FDV ≈ 0.35) — low-float, high-FDV
+- A few wallets holding large round numbers (EDGE: top 2 = 55%, top 5 = 70%+)
+- A large locked/reserved share whose terms can't be ruled out as post-hoc changeable (EDGE: upgradeable ERC1967Proxy — check whether admin is renounced)
+- Analyst findings that the airdrop concentrated into clusters of fresh / linked wallets
+
+### Market / derivatives signals
+
+- Many listings but thin per-venue spot depth (listing count ≠ liquidity)
+- Open interest excessive relative to TVL (EDGE: $1B+ OI alleged against ~$200M TVL)
+- Long/short skewed ~70% to one side (EDGE: 68.2% long just before the crash)
+- Trading volume abnormally large without narrative or hype
+
+### On-chain / governance signals
+
+- An upgradeable proxy token contract (extra risk if admin/timelock status is unverified)
+- Pre-launch community channels closed off (EDGE: TGE post comments disabled, limiting vesting/MM questions)
+- Exchange/intermediary addresses from prior suspected cases reappearing (EDGE: RAVE/LAB's Bitget hot wallet shows up in EDGE)
+
+### How to read the post-crash narrative
+
+- When a team frames a crash as "external manipulation," look first at **where supply control sits.** A "victim" claim from an entity controlling nearly all the supply is hard to take at face value before verification.
+- "The exchanges investigated and found nothing" — check **who said it, in a verifiable form** (EDGE: no first-party exchange statement; messages partly redacted).
+- Whether the claim is "external dump" or "insider pre-positioning," **check the on-chain exchange-deposit timing yourself.** Did supply pile into exchanges *before* the crash, or cascade in *during/after* it? (EDGE: the latter — deposits surged 25x starting *on* the crash day, with weak signs of pre-loading.)
+- Refunds and bounties can be trust-rebuilding signals, but they do not substitute for establishing the cause.
+
+> A token with concentrated supply and derivatives crowding is dangerous to position in either direction — pump or crash. The safest choice is **not to trade it.**
+
+## Sources
+
+1. **Binance announcement** — ["edgeX (EDGE) USDⓈ-Margined Perpetual…"](https://www.binance.com/en/support/announcement/detail/f4038a3dbd6d49318c2ee201051fe43e) — 2026.03.19, EDGEUSDT perp pre-market
+2. **CryptoTimes** — ["EDGE Crashes 77% as edgeX Blames Manipulation, ZachXBT Demands Transparency"](https://www.cryptotimes.io/2026/06/02/edge-crashes-77-as-edgex-blames-manipulation-zachxbt-demands-transparency/) — 2026.06.02
+3. **crypto.news** — ["EDGE token crashes as ZachXBT questions insider control"](https://crypto.news/edge-token-crashes-as-zachxbt-questions-insider-control/) — 2026.06.02
+4. **CryptoPotato** — ["'We Investigated Ourselves': ZachXBT Slams edgeX After Sudden Token Collapse"](https://cryptopotato.com/we-investigated-ourselves-zachxbt-slams-edgex-after-sudden-token-collapse/) — 2026.06
+5. **The Block** — ["edgeX offers refunds, $200,000 USDC bounty after token flash crash"](https://www.theblock.co/post/403567/edgex-offers-refunds-200000-usdc-bounty-71-token-flash-crash) — 2026.06.03
+6. **incrypted** — ["EDGE token crashes 70% in an hour; team denies hack, ZachXBT points to insiders"](https://incrypted.com/en/edge-token-crashes-70-in-an-hour-team-denies-hack-zachxbt-points-to-insiders/) — 2026.06
+7. **The Defiant** — ["Amber Group-backed perp DEX edgeX to launch token on March 31"](https://thedefiant.io/news/defi/amber-group-backed-perp-dex-edgex-to-launch-token-on-march-31) — tokenomics, Circle Ventures
+8. **Gate / Arkham** — ["edgeX airdrops $195M, nearly half flowing to partners/LPs"](https://www.gate.com/news/detail/arkham-edgex-airdrops-195-million-with-nearly-half-of-the-tokens-flowing-to-19951908) — 2026.04.01, 14% partners/LPs / 9.5% circulating
+9. **odaily** — ["edgeX airdrop concentration & volume analysis"](https://www.odaily.news/en/post/5210044) — 2026.04.01, TVL/OI mismatch
+10. **CoinGecko** — [EDGE (edgeX) — price, ATH/ATL, contract](https://www.coingecko.com/en/coins/edgex)
+11. **Own on-chain measurement** — Dune Analytics: [holder distribution](https://dune.com/queries/7703591) · [top-wallet identities (contract/CEX)](https://dune.com/queries/7703708) · [CEX deposits/withdrawals by day](https://dune.com/queries/7703705) · [crash-window depositors](https://dune.com/queries/7703715) (Ethereum `0xB0076DE78Dc50581770BBa1D211dDc0aD4F2a241`)
