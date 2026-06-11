@@ -20,7 +20,7 @@ export function Layout({ children }: { children: ReactNode }) {
             <LangToggle />
             <ThemeToggle />
             <a
-              href="https://github.com/SangHyeonKwon"
+              href="https://github.com/0xshkwon/crime-research"
               target="_blank"
               rel="noreferrer"
               aria-label={t('github.profileLabel')}
