@@ -1,0 +1,199 @@
+---
+slug: "esports"
+title: "Yooldo (ESPORTS)"
+tokenSymbol: "ESPORTS"
+incidentDate: "2026-05-25"
+publishedDate: "2026-06-12"
+status: "alleged"
+severity: "high"
+patterns:
+  - "direct-dump"
+  - "alpha-no-spot"
+metrics:
+  peakPrice: 0.834
+  bottomPrice: 0.0325
+  maxDrawdown: -0.92
+  crashDurationHours: 24
+exchanges:
+  binanceSpot: false
+  binanceAlpha: true
+  binanceFutures: false
+  others: ["mexc", "gate", "kraken"]
+allegations:
+  - source: "온체인 분석가 (@ai_9684xtpa)"
+    sourceUrl: "https://www.weex.com/news/detail/analyst-dwf-labs-is-suspected-to-be-a-market-maker-for-esports-with-associated-addresses-having-deposited-approximately-139-million-dollars-worth-of-tokens-to-kraken-r0eca07wsyla4buwleu5eyiz"
+    date: "2026-05-25"
+    summary: "DWF Labs가 ESPORTS의 마켓메이커로 의심된다고 제기. 덤프 약 5일 전 연관 주소가 ~19.9M ESPORTS(~$13.9M)를 DWF 연관으로 분류된 Kraken 주소에 입금했다고 분석."
+  - source: "Coincu"
+    sourceUrl: "https://coincu.com/analyst-links-dwf-labs-esports-market-making-after-13-9-million-token-deposit-to-kraken/"
+    date: "2026-05-25"
+    summary: "온체인 분석가가 $13.9M 규모 토큰의 Kraken 입금을 근거로 DWF Labs를 ESPORTS 마켓메이킹에 연결. DWF Labs·Kraken 모두 공식 입장 없음 — 확정된 관계는 아니라고 명시."
+  - source: "Crypto Times"
+    sourceUrl: "https://www.cryptotimes.io/2026/05/25/esports-crashes-92-after-43-supply-dump-worth-13-68m/"
+    date: "2026-05-25"
+    summary: "Arkham 'ESPORTS Dumper' 지갑이 유통량의 약 43%(~197.8M)를 20,401 BNB(~$13.68M)에 매도, 24시간 -91.97% 폭락이라고 보도."
+  - source: "ZachXBT (via Bitcoinsistemi)"
+    sourceUrl: "https://en.bitcoinsistemi.com/link-between-four-altcoins-uncovered-all-four-are-alleged-to-be-scams/"
+    date: "2026-05-25"
+    summary: "동일 주체가 ESPORTS·RIVER·LIGHT·LAB을 Sablier vesting 컨트랙트로 연결했다는 의혹 제기. LAB은 본 사이트 기존 케이스."
+relatedCases: ["lab", "rave"]
+---
+
+import { ChartFrame } from '@/components/chart-frame'
+import { EsportsFlow } from '@/components/esports-flow'
+import { Timeline, TimelineEvent } from '@/components/case-timeline'
+import { ZoomableImage } from '@/components/zoomable-image'
+import priceCandle1d from '@/assets/cases/esports/price-candle-1d.png'
+
+## 개요
+
+2026년 5월 25일, 24시간 만에 약 -92%. 펌프 후 되돌림이 아니라, 단일 행위자 클러스터가 유통 물량의 큰 부분을 한 번에 시장에 던진 **직접 덤프** 사례다.
+
+ESPORTS는 게이밍·이스포츠 플랫폼 Yooldo(개발사 Catze Labs)의 토큰이다. BNB 체인에 있고, 바이낸스 spot 없이 알파에만 상장된 구조였다. 보도에 따르면 Arkham이 "ESPORTS Dumper"로 라벨한 지갑이 유통량의 약 43%를 2~4시간에 걸쳐 매도했고, 회수액은 20,401 BNB로 환산 약 $13.65M였다(crypto.news는 약 178M 토큰·$12.76M으로, 거래소·집계 기준에 따라 수치가 갈린다).
+
+폭락 직후 온체인 분석가들은 마켓메이커 **DWF Labs 연루 의혹**을 제기했다. 핵심 근거는 덤프 약 5일 전 한 지갑이 약 19.9M ESPORTS(~$13.9M)를 "DWF와 연관된 것으로 분류된 Kraken 주소"로 옮긴 정황이다. 다만 **DWF Labs와 Kraken 모두 공식 입장을 내지 않았고, 이 연결은 분석가의 attribution 도구에 기반한 주장이지 확정된 관계가 아니다.**
+
+> "DWF Labs is suspected to be a market maker for ESPORTS." — 온체인 분석가 @ai_9684xtpa (의혹 제기, DWF·Kraken 측 무응답)
+
+별개로 ZachXBT는 동일 주체가 ESPORTS·RIVER·LIGHT·LAB을 Sablier vesting 컨트랙트로 연결했다는 의혹을 제기했다. 이 가운데 LAB은 본 사이트의 기존 케이스다.
+
+우리는 이 컨트랙트(`0xf39e…8e48`)를 직접 인덱싱해, 검증 가능한 부분만 자체 측정했다 — (1) 5일 전 19.9M 사전 이동, (2) 매도가 집결한 PancakeSwap 풀, (3) 과거 케이스에서 본 거래소·중개 주소의 재등장. DWF 귀속 같은 검증 불가 항목은 분석가 주장으로만 인용한다.
+
+## 타임라인
+
+<Timeline>
+  <TimelineEvent date="2026년 1월">
+ESPORTS가 바이낸스 알파에 상장되고 Yooldo 트레이딩 대회와 함께 토큰 보상이 배포됨. 바이낸스 spot 상장은 없음.
+  </TimelineEvent>
+  <TimelineEvent date="2026년 5월 20일 — 덤프 D-5">
+지갑 `0x7ef9…10dd`가 **19,900,102 ESPORTS**를 `0xb7f6…1d61`로 4건에 걸쳐 이동(첫 송금 11:11 UTC). **(자체 측정)** 분석가들은 이 목적지를 "DWF 연관 Kraken 주소"로 지목했으나, 우리 인덱싱에서 해당 주소에 Kraken/DWF 라벨은 확인되지 않았다.
+  </TimelineEvent>
+  <TimelineEvent date="2026년 5월 25일 — 12:00~14:00 UTC">
+덤프. 소스 지갑 클러스터(예: `0x8089…d33b`가 16분 만에 ~113M을 5개 지갑으로 팬아웃)가 단기 중계 지갑을 거쳐 **PancakeSwap V3 풀** `0x5bb5…4462`에 수백 건의 swap으로 매도. 같은 `0x7ef9…10dd` EOA는 이 시점에 약 19.8M을 **Gate.io** 핫월렛으로도 추가 이동. **(자체 측정)**
+  </TimelineEvent>
+  <TimelineEvent date="2026년 5월 25일 — 24시간">
+보도 기준 -91.97% 폭락. 가격은 사상 최고가 약 $0.834에서 최저 약 $0.0325까지 하락(MEXC 기준 ATH/ATL).
+  </TimelineEvent>
+  <TimelineEvent date="사건 직후">
+온체인 분석가(@ai_9684xtpa 등)가 DWF Labs 마켓메이커 의혹을 제기. DWF Labs·Kraken 모두 공식 입장 없음.
+  </TimelineEvent>
+  <TimelineEvent date="이후">
+보도에 따르면 Catze Labs CEO는 처음 "회사는 이번 폭락과 무관"이라고 했다가 "팀의 의도가 아니었으며 조사 중"으로 입장을 바꿈.
+  </TimelineEvent>
+</Timeline>
+
+## 공급 구조
+
+### 시장 구조 — RAVE·LAB과 같은 "spot 부재"
+
+| 거래소 | Spot | Perpetual | Alpha |
+|--------|------|-----------|-------|
+| **Binance** | ❌ | — | O |
+| MEXC | O | — | — |
+| Gate.io | O | — | — |
+| PancakeSwap (DEX) | O | — | — |
+
+바이낸스에 ESPORTS spot이 없다. 가격 발견이 외부 거래소 spot과 DEX 풀(PancakeSwap)에 의존하는 구조로, 얕은 유동성을 적은 자금으로 흔들 수 있다는 점은 RAVE·LAB에서 본 결함과 같은 계열이다.
+
+### 공급 수치
+
+MEXC tokenomics 기준 총공급 9억(900M), 유통 약 5.88억(588M), 사상 최고가 약 $0.834 / 최저 약 $0.0325. 보도된 덤프 물량 약 197.8M은 당시 유통량의 약 43%에 해당한다 — 즉, **유통 물량의 40%를 넘는 분량이 단일 행위자 클러스터의 통제 아래 한 번에 매도**됐다는 것이 외부 분석과 우리 측정이 공통으로 가리키는 그림이다. (상위 지갑 net balance 스냅샷은 공개 balances 테이블 접근 제약으로 본 케이스에서는 직접 측정하지 않았다.)
+
+## 수법 분석 — PancakeSwap 직접 덤프 + 사전 분산
+
+### 자체 측정한 자금 흐름
+
+외부 보도의 "단일 고래가 유통의 43%를 던졌다"는 서술을, 우리는 컨트랙트 전체 transfer를 인덱싱해 *구조·시점·집결처* 수준에서 재현했다. 두 단계가 또렷하다.
+
+- **사전 분산(D-5).** 5월 20일, `0x7ef9…10dd`가 19.9M ESPORTS를 `0xb7f6…1d61`로 옮겼다. 덤프(5월 25일)의 정확히 5일 전이고, 금액도 분석가들이 말한 19.9M과 일치한다. 같은 EOA는 5월 25일 약 19.8M을 Gate.io 핫월렛으로, 약 22.6M을 PancakeSwap 풀로도 분산했다.
+- **덤프(05-25).** 여러 소스 지갑이 단기 중계 지갑들을 거쳐 PancakeSwap V3 풀로 매도를 집결시켰다. 대표적으로 `0x8089…d33b` 한 곳이 12:14~12:30 UTC 사이 약 113M을 5개 지갑으로 나눠 보냈고, 각 지갑은 다시 수백 건의 swap으로 풀에 매도했다. 매도 유입이 몰린 구간은 11:57~14:00 UTC로, 보도된 "2~4시간 창구"와 겹친다.
+
+<ChartFrame
+  kind="FUND FLOW"
+  caption={<>
+    사전 분산 → 덤프 클러스터 → 중계 지갑 → PancakeSwap V3 풀 (자체 측정).
+    <br />
+    <br />
+    5/20 19.9M 사전 이동(분석가 "Kraken/DWF" 지목, 자체 라벨 미확인) → 5/25 12~14h 매도 집결.
+    <br />
+    <br />
+    집결처 `0x5bb5…4462` 는 PancakeSwap V3 Pool 로 라벨 확인.
+  </>}
+  source="Dune Analytics · BscScan"
+  aspect="square"
+>
+  <EsportsFlow />
+</ChartFrame>
+
+### 같은 인프라가 또 보인다
+
+LAB 케이스에서 강조한 신호 — "이전 사건의 주소가 다시 보이는가" — 가 ESPORTS에서도 나타났다. 우리 인덱싱에서 ESPORTS 흐름에 다음 두 주소가 재등장한다.
+
+- `0x0d0707…b492fe` — RAVE·LAB·ARIA에서 본 **Gate.io 핫월렛**과 동일 주소. ESPORTS에서도 5월 25일 약 19.8M을 수신.
+- `0x73d8bd54…46db` — SIREN·ARIA·LAB에서 반복 관측된 **크로스토큰 지갑**과 동일 주소.
+
+이는 ZachXBT가 RAVE·RIVER·SIREN·LAB을 두고 말한 "같은 마켓메이커 인프라가 여러 토큰에 걸쳐 공유된다"는 정황과 부합한다. (DWF Labs를 마켓메이커로 지목하는 부분은 분석가 의혹이며, 우리가 컨트랙트 상의 마켓메이킹 계약을 직접 검증한 것은 아니다.)
+
+## 데이터
+
+### 가격
+
+일봉으로 보면 골격이 분명하다. 2025년 12월부터 2026년 4월까지 약 $0.40~0.50 박스권에서 횡보하던 가격은, 5월 들어 약 $0.83(ATH)까지 짧게 치솟은 직후 **단 하나의 일봉에서 $0.05대까지 무너졌다.** 하단 거래량은 폭락 구간에만 집중됐고, 그 외 기간은 얇았다. 보도·tokenomics 기준 수치: 5월 25일 24시간 -91.97%, 사상 최고가 약 $0.834, 폭락 후 최저 약 $0.0325(MEXC), 덤프 회수액 약 $12.7M~$13.68M.
+
+<ChartFrame
+  kind="PRICE · 1D · KRAKEN"
+  caption={<>
+    ESPORTS/USD 일봉 (Kraken), 2025.12 ~ 2026.06.
+    <br />
+    <br />
+    5월 ATH 약 $0.83 직후 단일 일봉에서 $0.05대로 붕괴. 거래량은 폭락 구간에 집중.
+    <br />
+    <br />
+    차트 클릭 시 확대.
+  </>}
+  source="Kraken 현물 · TradingView 캡처"
+  aspect="auto"
+>
+  <ZoomableImage src={priceCandle1d} alt="ESPORTS/USD 일봉 (Kraken), 2025.12~2026.06 — 5월 ATH 후 폭락" />
+</ChartFrame>
+
+### 덤프 창구 — 자체 측정 요약
+
+매도 집결이 몰린 시점은 5월 25일 11:57~14:00 UTC(약 2시간)였다. 소스 지갑들이 거의 동시에 단기 중계 지갑을 만들어 PancakeSwap 풀로 분할 매도하는 패턴은, ARIA(8 지갑 동시 매도)·LAB(test → bulk 분산 인출)에서 본 "조율된 분산 후 일괄 처분" SOP와 같은 계열이다.
+
+## 교훈 — 다음 비슷한 토큰을 식별하는 시그널
+
+ESPORTS는 화려한 펌프 서사가 없다. 그래서 오히려 **"조용한 사전 분산 → 짧은 창구의 일괄 덤프"** 라는 골격이 선명하게 드러난다. 트레이더 입장에서 미리 잡을 수 있는 신호를 정리한다.
+
+### 시장 구조 시그널
+
+- 바이낸스 spot 미상장 + 알파 상장 구조 (가격 발견이 얕은 외부 spot·DEX에 의존)
+- 유통 물량 대비 단일 행위자 통제 비중이 큼 (ESPORTS: 보도 기준 유통의 ~43%가 한 번에 매도)
+
+### 온체인 시그널 (이번 케이스의 핵심)
+
+- **덤프 며칠 전, 거래소(또는 거래소로 분류된) 주소로 향하는 대형 사전 이동** (ESPORTS: D-5에 19.9M)
+- 소스 지갑 → 다수 단기 중계 지갑 → 단일 DEX 풀로의 분할 매도 (동시·균등 분산은 조율 정황)
+- **이전 manipulation 의혹 케이스에서 본 거래소·중개 주소의 재등장** (ESPORTS: Gate.io 핫월렛, 크로스토큰 지갑이 RAVE·LAB·SIREN·ARIA에 이어 재등장)
+
+### 거버넌스·대응 시그널
+
+- 마켓메이커가 토큰 물량을 수탁하거나 수익 공유 구조일 때, 그 물량이 거래소로 이동하는 정황 (분석가들이 DWF Labs를 지목한 지점)
+- 사건 후 발행사가 "우리는 단순 개발사"라며 거리를 두는 대응 (ESPORTS: Catze Labs CEO 입장 선회)
+
+### 거래 판단
+
+> 공급이 한 행위자에 집중된 토큰은 방향과 무관하게 위험하다. 가장 안전한 선택은 거래하지 않는 것이다.
+
+직접 덤프든 short squeeze든, 소수가 유통 물량을 통제하는 구조에서는 어느 방향의 포지션도 안전하지 않다.
+
+## 출처
+
+1. **온체인 분석가 @ai_9684xtpa (via WEEX 보도)** — ["Analyst: DWF Labs is suspected to be a market maker for ESPORTS…"](https://www.weex.com/news/detail/analyst-dwf-labs-is-suspected-to-be-a-market-maker-for-esports-with-associated-addresses-having-deposited-approximately-139-million-dollars-worth-of-tokens-to-kraken-r0eca07wsyla4buwleu5eyiz) — 2026.05.25
+2. **Coincu** — ["Analyst Links DWF Labs to ESPORTS Market Making After $13.9 Million Token Deposit to Kraken"](https://coincu.com/analyst-links-dwf-labs-esports-market-making-after-13-9-million-token-deposit-to-kraken/) — DWF·Kraken 무응답 명시
+3. **Crypto Times** — ["ESPORTS Crashes 92% After 43% Supply Dump Worth $13.68M"](https://www.cryptotimes.io/2026/05/25/esports-crashes-92-after-43-supply-dump-worth-13-68m/) — 2026.05.25
+4. **crypto.news** — ["ESPORTS flash crash wipes out over 90% after DWF-linked dump"](https://crypto.news/esports-flash-crash-wipes-out-over-90-after-dwf-linked-dump/) — 178M·$12.76M 대안 수치
+5. **Bitcoinsistemi (ZachXBT 인용)** — ["Link Between Four Altcoins Uncovered (ESPORTS·RIVER·LIGHT·LAB, Sablier vesting)"](https://en.bitcoinsistemi.com/link-between-four-altcoins-uncovered-all-four-are-alleged-to-be-scams/)
+6. **Bitcoin World** — ["ESPORTS / Catze Labs 대응 보도"](https://bitcoinworld.co.in/esports-catze-labs-office-empty-rug-pull-fears/) — CEO 입장 선회 부분만 인용
+7. **MEXC** — [ESPORTS Tokenomics](https://www.mexc.com/price/ESPORTS/tokenomics) — 공급·ATH/ATL
+8. **자체 온체인 측정** — Dune Analytics: [사건 구간 전송 엣지](https://dune.com/queries/7703600) · [주소 라벨](https://dune.com/queries/7703620) (BNB 체인 `0xf39e4b21c84e737df08e2c3b32541d856f508e48`)

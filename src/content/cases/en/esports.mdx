@@ -1,0 +1,199 @@
+---
+slug: "esports"
+title: "Yooldo (ESPORTS)"
+tokenSymbol: "ESPORTS"
+incidentDate: "2026-05-25"
+publishedDate: "2026-06-12"
+status: "alleged"
+severity: "high"
+patterns:
+  - "direct-dump"
+  - "alpha-no-spot"
+metrics:
+  peakPrice: 0.834
+  bottomPrice: 0.0325
+  maxDrawdown: -0.92
+  crashDurationHours: 24
+exchanges:
+  binanceSpot: false
+  binanceAlpha: true
+  binanceFutures: false
+  others: ["mexc", "gate", "kraken"]
+allegations:
+  - source: "On-chain analyst (@ai_9684xtpa)"
+    sourceUrl: "https://www.weex.com/news/detail/analyst-dwf-labs-is-suspected-to-be-a-market-maker-for-esports-with-associated-addresses-having-deposited-approximately-139-million-dollars-worth-of-tokens-to-kraken-r0eca07wsyla4buwleu5eyiz"
+    date: "2026-05-25"
+    summary: "Alleged DWF Labs is suspected to be the market maker for ESPORTS, citing that ~5 days before the dump an associated address deposited ~19.9M ESPORTS (~$13.9M) into a Kraken address classified as DWF-linked."
+  - source: "Coincu"
+    sourceUrl: "https://coincu.com/analyst-links-dwf-labs-esports-market-making-after-13-9-million-token-deposit-to-kraken/"
+    date: "2026-05-25"
+    summary: "An on-chain analyst linked DWF Labs to ESPORTS market making after a $13.9M token deposit to Kraken. Notes neither DWF Labs nor Kraken commented — not a confirmed relationship."
+  - source: "Crypto Times"
+    sourceUrl: "https://www.cryptotimes.io/2026/05/25/esports-crashes-92-after-43-supply-dump-worth-13-68m/"
+    date: "2026-05-25"
+    summary: "Reported that an Arkham-labeled 'ESPORTS Dumper' wallet sold ~43% of circulating supply (~197.8M) for 20,401 BNB (~$13.68M), a 24h decline of 91.97%."
+  - source: "ZachXBT (via Bitcoinsistemi)"
+    sourceUrl: "https://en.bitcoinsistemi.com/link-between-four-altcoins-uncovered-all-four-are-alleged-to-be-scams/"
+    date: "2026-05-25"
+    summary: "Alleged the same entity connects ESPORTS, RIVER, LIGHT and LAB through Sablier vesting contracts. LAB is an existing case on this site."
+relatedCases: ["lab", "rave"]
+---
+
+import { ChartFrame } from '@/components/chart-frame'
+import { EsportsFlow } from '@/components/esports-flow'
+import { Timeline, TimelineEvent } from '@/components/case-timeline'
+import { ZoomableImage } from '@/components/zoomable-image'
+import priceCandle1d from '@/assets/cases/esports/price-candle-1d.png'
+
+## Overview
+
+About −92% in 24 hours on May 25, 2026. Not a pump-and-retrace — a **direct dump**, where a single actor cluster pushed a large slice of the float onto the market at once.
+
+ESPORTS is the token of Yooldo, a gaming/esports platform (developer Catze Labs). It is on BNB Chain, with the no-Binance-spot, alpha-only structure. Per reporting, a wallet that Arkham labeled "ESPORTS Dumper" sold roughly 43% of circulating supply over a 2-to-4-hour window, recovering 20,401 BNB worth about $13.65M (crypto.news puts it at ~178M tokens / $12.76M — the figures split by exchange and accounting basis).
+
+Right after the crash, on-chain analysts raised an allegation of **DWF Labs involvement** as market maker. The core basis: about five days before the dump, a wallet moved ~19.9M ESPORTS (~$13.9M) into "a Kraken address classified as DWF-linked." But **neither DWF Labs nor Kraken made any public statement, and this connection is an analyst attribution-tooling claim, not a confirmed relationship.**
+
+> "DWF Labs is suspected to be a market maker for ESPORTS." — on-chain analyst @ai_9684xtpa (allegation; DWF and Kraken did not respond)
+
+Separately, ZachXBT alleged that the same entity connects ESPORTS, RIVER, LIGHT and LAB through Sablier vesting contracts. Of those, LAB is an existing case on this site.
+
+We indexed this contract (`0xf39e…8e48`) ourselves and measured only what is verifiable — (1) the 19.9M pre-positioning five days out, (2) the PancakeSwap pool where the sells aggregated, and (3) the reappearance of exchange/intermediary addresses seen in prior cases. Unverifiable items such as the DWF attribution are cited strictly as allegations.
+
+## Timeline
+
+<Timeline>
+  <TimelineEvent date="Jan 2026">
+ESPORTS listed on Binance Alpha, with token rewards distributed alongside a Yooldo trading competition. No Binance spot listing.
+  </TimelineEvent>
+  <TimelineEvent date="May 20, 2026 — dump D-5">
+Wallet `0x7ef9…10dd` moved **19,900,102 ESPORTS** to `0xb7f6…1d61` across 4 transfers (first at 11:11 UTC). **(own measurement)** Analysts pointed to this destination as a "DWF-linked Kraken address," but in our indexing that address carries no Kraken/DWF label.
+  </TimelineEvent>
+  <TimelineEvent date="May 25, 2026 — 12:00-14:00 UTC">
+The dump. A source-wallet cluster (e.g. `0x8089…d33b` fanned ~113M to 5 wallets in 16 minutes) routed sells through short-lived relay wallets into the **PancakeSwap V3 pool** `0x5bb5…4462` across hundreds of swaps. The same `0x7ef9…10dd` EOA also moved ~19.8M into a **Gate.io** hot wallet around this time. **(own measurement)**
+  </TimelineEvent>
+  <TimelineEvent date="May 25, 2026 — 24 hours">
+A reported −91.97% crash. Price fell from an all-time high of ~$0.834 to a low of ~$0.0325 (ATH/ATL per MEXC).
+  </TimelineEvent>
+  <TimelineEvent date="Immediately after">
+On-chain analysts (@ai_9684xtpa and others) raised the DWF Labs market-maker allegation. Neither DWF Labs nor Kraken issued a public statement.
+  </TimelineEvent>
+  <TimelineEvent date="Subsequently">
+Per reporting, the Catze Labs CEO first said the company was "unrelated to the crash," then shifted to "it was not the team's intention, and we are investigating."
+  </TimelineEvent>
+</Timeline>
+
+## Supply structure
+
+### Market structure — the same "no spot" flaw as RAVE / LAB
+
+| Exchange | Spot | Perpetual | Alpha |
+|----------|------|-----------|-------|
+| **Binance** | ❌ | — | O |
+| MEXC | O | — | — |
+| Gate.io | O | — | — |
+| PancakeSwap (DEX) | O | — | — |
+
+There is no ESPORTS spot on Binance. Price discovery leans on outside-exchange spot and a DEX pool (PancakeSwap), so thin liquidity can be moved with little capital — the same family of flaw seen in RAVE and LAB.
+
+### Supply figures
+
+Per MEXC tokenomics: 900M total supply, ~588M circulating, all-time high ~$0.834 / all-time low ~$0.0325. The reported dump of ~197.8M equals about 43% of circulating supply at the time — i.e., **more than 40% of the float, under one actor cluster's control, sold in a single pass**, which is what both the external analysis and our measurement point to. (A top-holder net-balance snapshot was not measured directly here due to access limits on the public balances table.)
+
+## Method analysis — direct PancakeSwap dump + pre-positioning
+
+### The fund flow we measured ourselves
+
+We reproduced the external "single whale dumped 43% of the float" narrative at the level of *structure, timing and destination* by indexing every transfer of the contract. Two stages stand out.
+
+- **Pre-positioning (D-5).** On May 20, `0x7ef9…10dd` moved 19.9M ESPORTS to `0xb7f6…1d61` — exactly five days before the May 25 dump, and matching the 19.9M figure analysts cited. The same EOA also dispersed ~19.8M to a Gate.io hot wallet and ~22.6M to the PancakeSwap pool on May 25.
+- **The dump (05-25).** Multiple source wallets routed sells into the PancakeSwap V3 pool through short-lived relay wallets. Notably `0x8089…d33b` alone split ~113M across 5 wallets between 12:14-12:30 UTC, each of which then sold into the pool over hundreds of swaps. The sell inflows concentrated in 11:57-14:00 UTC, overlapping the reported "2-to-4-hour window."
+
+<ChartFrame
+  kind="FUND FLOW"
+  caption={<>
+    Pre-positioning → dump cluster → relay wallets → PancakeSwap V3 pool (own measurement).
+    <br />
+    <br />
+    5/20 19.9M moved out (analysts' "Kraken/DWF" — label unverified by us) → 5/25 12-14h sells aggregate.
+    <br />
+    <br />
+    Destination `0x5bb5…4462` is label-confirmed as a PancakeSwap V3 Pool.
+  </>}
+  source="Dune Analytics · BscScan"
+  aspect="square"
+>
+  <EsportsFlow />
+</ChartFrame>
+
+### The same infrastructure shows up again
+
+The signal emphasized in the LAB case — "are addresses from a prior incident reappearing" — also shows up in ESPORTS. Our indexing finds two addresses recurring in the ESPORTS flow.
+
+- `0x0d0707…b492fe` — the same **Gate.io hot wallet** seen in RAVE, LAB and ARIA. In ESPORTS it received ~19.8M on May 25.
+- `0x73d8bd54…46db` — the same **cross-token wallet** repeatedly observed in SIREN, ARIA and LAB.
+
+This is consistent with ZachXBT's description, around RAVE / RIVER / SIREN / LAB, of "the same market-maker infrastructure shared across several tokens." (The part naming DWF Labs as the market maker is an analyst allegation; we did not directly verify any on-chain market-making agreement.)
+
+## Data
+
+### Price
+
+On a daily chart the skeleton is clear. After ranging in roughly $0.40-0.50 from December 2025 through April 2026, the price spiked briefly to ~$0.83 (ATH) in May and then **collapsed to the $0.05 range in a single daily candle.** Volume concentrated only in the crash window, thin everywhere else. The reported / tokenomics figures: −91.97% over 24h on May 25, all-time high ~$0.834, post-crash low ~$0.0325 (MEXC), dump proceeds ~$12.7M-$13.68M.
+
+<ChartFrame
+  kind="PRICE · 1D · KRAKEN"
+  caption={<>
+    ESPORTS/USD daily candles (Kraken), 2025.12 ~ 2026.06.
+    <br />
+    <br />
+    Brief ATH ~$0.83 in May, then a collapse to the $0.05 range in a single daily candle. Volume concentrated in the crash window.
+    <br />
+    <br />
+    Click to enlarge.
+  </>}
+  source="Kraken spot · TradingView capture"
+  aspect="auto"
+>
+  <ZoomableImage src={priceCandle1d} alt="ESPORTS/USD daily candles (Kraken), 2025.12-2026.06 — May ATH then crash" />
+</ChartFrame>
+
+### Dump window — own-measurement summary
+
+The sell inflows concentrated on May 25, 11:57-14:00 UTC (about two hours). Source wallets spinning up short-lived relay wallets almost simultaneously and splitting sells into a single PancakeSwap pool is the same "coordinated dispersal, then bulk disposal" SOP seen in ARIA (8 wallets selling at once) and LAB (test → bulk withdrawal).
+
+## Lessons — signals to spot the next one
+
+ESPORTS has no flashy pump narrative. That actually makes the skeleton — **"quiet pre-positioning → bulk dump in a short window"** — easier to see. Here are the signals a trader could catch in advance.
+
+### Market-structure signals
+
+- No Binance spot + alpha listing (price discovery depends on a thin external spot / DEX)
+- A large share of the float under a single actor's control (ESPORTS: ~43% of the float sold in one pass, per reporting)
+
+### On-chain signals (the crux here)
+
+- **A large pre-positioning transfer toward an exchange (or exchange-classified) address days before the dump** (ESPORTS: 19.9M at D-5)
+- Source wallet → many short-lived relay wallets → split sells into a single DEX pool (simultaneous, even dispersal is a coordination signal)
+- **Exchange / intermediary addresses from prior suspected-manipulation cases reappearing** (ESPORTS: the Gate.io hot wallet and the cross-token wallet, after RAVE / LAB / SIREN / ARIA)
+
+### Governance / response signals
+
+- A market maker that custodies token supply or has a revenue-share deal — and that supply moving toward an exchange (the point where analysts named DWF Labs)
+- The issuer distancing itself as "just a developer" after the event (ESPORTS: the Catze Labs CEO's shift)
+
+### Trading judgment
+
+> A token whose supply is concentrated in one actor is dangerous regardless of direction. The safest choice is not to trade it.
+
+Whether a direct dump or a short squeeze, no position is safe when a few control the float.
+
+## Sources
+
+1. **On-chain analyst @ai_9684xtpa (via WEEX)** — ["Analyst: DWF Labs is suspected to be a market maker for ESPORTS…"](https://www.weex.com/news/detail/analyst-dwf-labs-is-suspected-to-be-a-market-maker-for-esports-with-associated-addresses-having-deposited-approximately-139-million-dollars-worth-of-tokens-to-kraken-r0eca07wsyla4buwleu5eyiz) — 2026.05.25
+2. **Coincu** — ["Analyst Links DWF Labs to ESPORTS Market Making After $13.9 Million Token Deposit to Kraken"](https://coincu.com/analyst-links-dwf-labs-esports-market-making-after-13-9-million-token-deposit-to-kraken/) — notes DWF & Kraken did not comment
+3. **Crypto Times** — ["ESPORTS Crashes 92% After 43% Supply Dump Worth $13.68M"](https://www.cryptotimes.io/2026/05/25/esports-crashes-92-after-43-supply-dump-worth-13-68m/) — 2026.05.25
+4. **crypto.news** — ["ESPORTS flash crash wipes out over 90% after DWF-linked dump"](https://crypto.news/esports-flash-crash-wipes-out-over-90-after-dwf-linked-dump/) — 178M / $12.76M alternate figures
+5. **Bitcoinsistemi (citing ZachXBT)** — ["Link Between Four Altcoins Uncovered (ESPORTS·RIVER·LIGHT·LAB, Sablier vesting)"](https://en.bitcoinsistemi.com/link-between-four-altcoins-uncovered-all-four-are-alleged-to-be-scams/)
+6. **Bitcoin World** — ["ESPORTS / Catze Labs response"](https://bitcoinworld.co.in/esports-catze-labs-office-empty-rug-pull-fears/) — only the CEO's shifting statement is cited
+7. **MEXC** — [ESPORTS Tokenomics](https://www.mexc.com/price/ESPORTS/tokenomics) — supply, ATH/ATL
+8. **Own on-chain measurement** — Dune Analytics: [incident-window transfer edges](https://dune.com/queries/7703600) · [address labels](https://dune.com/queries/7703620) (BNB Chain `0xf39e4b21c84e737df08e2c3b32541d856f508e48`)
