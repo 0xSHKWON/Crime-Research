@@ -1,0 +1,245 @@
+---
+slug: "beat"
+title: "Audiera (BEAT)"
+tokenSymbol: "BEAT"
+incidentDate: "2026-06-11"
+publishedDate: "2026-06-12"
+status: "pattern-match"
+severity: "high"
+patterns:
+  - "alpha-no-spot"
+  - "low-float"
+  - "derivatives-frenzy"
+  - "short-squeeze"
+  - "supply-concentration"
+metrics:
+  startPrice: 0.06792
+  peakPrice: 10.14
+  maxGain: 148.29
+  pumpDurationDays: 30
+exchanges:
+  binanceSpot: false
+  binanceAlpha: true
+  binanceFutures: true
+  others: ["gate", "kucoin", "mexc", "htx", "bingx", "weex"]
+allegations:
+  - source: "CoinGecko news feed / Elfa AI"
+    sourceUrl: "https://www.coingecko.com/en/coins/audiera"
+    date: "2026-06-11"
+    summary: "CoinGecko's own Audiera page surfaces the feed headline 'BEAT Faces Allegations Of Coordinated \"Crime Pump\" And Inflated FDV'. Commentators (Luke Cannon et al.) allege coordinated manipulation citing '84%+ of supply controlled by the team', '$7B FDV', '+1,200%/month' — all cited strictly as third-party allegations."
+  - source: "Cointelegraph"
+    sourceUrl: "https://cointelegraph.com/markets/audieras-ai-token-beat-beats-bitcoin-ethereum-as-price-surges-1500-in-a-month"
+    date: "2026-06-10"
+    summary: "Characterizes the rally as a 'classic short squeeze' — $28.72M in short liquidations vs $13.74M in long liquidations since May (~2:1). Reports derivatives volume +190% (~$1.9B) against feeble on-chain activity (Santiment negative Price DAA Divergence)."
+  - source: "BanklessTimes"
+    sourceUrl: "https://www.banklesstimes.com/articles/2026/06/10/audiera-price-is-pumping-top-reasons-to-avoid-the-beat-crypto-token/"
+    date: "2026-06-10"
+    summary: "Ran 'Top Reasons to Avoid the BEAT Crypto Token', flagging a daily RSI of 98 (most overbought on record) as a correction-risk signal."
+  - source: "Binance (official how-to page)"
+    sourceUrl: "https://www.binance.com/en/how-to-buy/audiera"
+    date: "2026-06-09"
+    summary: "Binance states BEAT is 'purchasable through the Binance Alpha section… not listed on the Binance Exchange' and 'This coin is not listed on Binance for trade and service' — confirming, as a primary source, the absence of a Binance spot listing alongside Alpha + 50x perps."
+  - source: "Own on-chain measurement (Dune)"
+    sourceUrl: "https://dune.com/queries/7706351"
+    date: "2026-06-12"
+    summary: "Direct indexing of the BNB Chain contract (0xcf32…3E36). At the 2025-11-01 launch distribution, the cross-token wallet 0x73d8…46db — already documented across our SIREN, M and ARIA cases — received ~10M BEAT (own measurement). Also confirmed that large on-chain transfers were effectively absent during the June run-up."
+relatedCases: ["siren", "memecore", "aria", "coai"]
+---
+
+import { ChartFrame } from '@/components/chart-frame'
+import { Timeline, TimelineEvent } from '@/components/case-timeline'
+import { BeatCrossToken } from '@/components/beat-cross-token'
+import { BeatPrice } from '@/components/beat-price'
+
+## Overview
+
+Audiera (BEAT) is a Web3 rhythm-and-dance game and AI-music project on BNB Chain. It frames itself on the legacy of the old "Audition" dance-game IP and fronts AI virtual idols Kira and Ray. The token contract was deployed on May 5, 2025, but sat effectively dormant for roughly six months until trading began around November 1 with a Binance Alpha listing.
+
+One thing sets this case decisively apart from the others on this site: **it has not crashed yet.** As of June 12, 2026, BEAT sits near the top of its pump — 30-day +1,267%, 7-day +366%, roughly +12,000% from its November ATL ($0.068), and about -25% off the all-time high of $10.14 set on June 11, now trading at $7.54. The daily RSI has been reported at 96-98, "the most overbought on record."
+
+So we write this page **not as a post-mortem of "what happened," but as a real-time reading of "what setup is visible right now."** We do not predict a crash — that is neither this site's identity nor something anyone can do. Instead we lay out how heavily the structural conditions that, in our post-mortem cases (RAVE, SIREN, ARIA), were observed *ahead of* the crash overlap on BEAT, and which of them we can confirm directly on-chain.
+
+> "BEAT Faces Allegations Of Coordinated 'Crime Pump' And Inflated FDV"
+> — a headline CoinGecko surfaces on its own Audiera page feed (2026-06-11, via the Elfa AI aggregator). The headline itself is hedged — "Faces Allegations." This page likewise asserts no manipulation; allegations are quoted as raised, and we measure only what is verifiable.
+
+One key finding up front. During BEAT's 2025-11-01 launch distribution, the **cross-token wallet `0x73d8…46db` — recurring across our SIREN, MemeCore (M), ARIA, COAI and LAB cases — received ~10M BEAT**, confirmed by our own indexing. BEAT is the sixth flagged token tied to this single wallet.
+
+## Timeline
+
+<Timeline>
+  <TimelineEvent date="May 5, 2025 — contract deployed">
+The BEAT token contract (`0xcf32…3E36`) is deployed on BNB Chain (deployer `0x2e2b…a04e`). It then sits effectively dormant — no large transfers — for ~6 months.
+  </TimelineEvent>
+  <TimelineEvent date="Oct 28-30, 2025 — launch distribution">
+Just before trading opens, a large on-chain distribution begins: one-way blocks of 40M and 30M, multiple clean 10M chunks into freshly created wallets, plus relay/layering flows hopping a fixed amount through sequential wallets (own measurement).
+  </TimelineEvent>
+  <TimelineEvent date="Nov 1, 2025 — Binance Alpha listing / trading opens">
+Trading begins on Binance Alpha and several exchange spot markets. The same day, the cross-token wallet `0x73d8…46db` receives ~10M BEAT via a 2-hop relay (own measurement).
+  </TimelineEvent>
+  <TimelineEvent date="Nov 2, 2025 — all-time low">
+ATL of ~$0.06792.
+  </TimelineEvent>
+  <TimelineEvent date="May-Jun 2026 — parabolic surge">
+A vertical move from ~$0.55 in mid-May. 30-day +1,267%, 7-day +366%. Cointelegraph characterizes it as a 'classic short squeeze', citing $28.72M in short vs $13.74M in long liquidations.
+  </TimelineEvent>
+  <TimelineEvent date="Jun 11, 2026 — all-time high + allegations surface">
+ATH of ~$10.14. At the same time, CoinGecko's feed surfaces the 'coordinated crime pump' allegation headline, and BanklessTimes runs an 'avoid' piece citing RSI 98.
+  </TimelineEvent>
+  <TimelineEvent date="Jun 12, 2026 — present (this page)">
+$7.54, ~-25% off the ATH, -9% on the day. **No major crash yet.** Market cap ~$2.18B, FDV ~$7.56B.
+  </TimelineEvent>
+  <TimelineEvent date="Jul 1, 2026 — scheduled unlock (single source)">
+~21.24M BEAT unlock scheduled (single source, WEEX/CryptoRank, unconfirmed) — additional supply overhang relative to current float.
+  </TimelineEvent>
+</Timeline>
+
+## Supply Structure
+
+### Market structure — the same 'alpha-no-spot' as RAVE/LAB
+
+| Exchange | Spot | Perpetual |
+|----------|------|-----------|
+| **Binance** | X (Alpha only) | O (50x) |
+| Gate.io | O | some |
+| KuCoin / MEXC / HTX / BingX / WEEX | O | — |
+
+The first structure to flag is **alpha-no-spot**. Binance did not list BEAT on its main spot market — its own how-to page states verbatim "purchasable through the Binance Alpha section (not listed on the Binance Exchange)" and "This coin is not listed on Binance for trade and service." And yet **it offers 50x perpetual futures.** This is the same core defect as the RAVE/LAB cases: *leverage and a perp price with no deep, regulated spot price discovery underneath.*
+
+### Low float and the FDV gap
+
+| Metric | Value (2026-06-12) |
+|--------|-----|
+| Total / max supply | 1,000,000,000 BEAT |
+| Circulating | 288,016,666 (~28.8%) |
+| Market cap (MC) | ~$2.18B |
+| Fully diluted valuation (FDV) | ~$7.56B |
+| MC / FDV | **0.29** |
+| Holders | ~142,797 (BscScan) |
+| Contract (BNB Chain) | `0xcf3232B85b43BCa90E51D38cc06Cc8bB8C8A3E36` |
+
+Only ~29% of supply circulates; the rest is locked under vesting (reported as Community 40% over 48 months; Team/Advisors 12-month cliff + 36 months). **MC/FDV 0.29** means the unissued overhang above the market is more than 3x the floated supply. It is a textbook low-float structure, with an estimated July 1 unlock (~21.24M, single source) ahead.
+
+### Supply concentration — the line between allegation and measurement
+
+The commentator claim that "84-85% of supply is controlled by the team / top-10 wallets" is **an allegation, and this research did not independently re-derive the current per-wallet distribution from scratch to verify it.** (Recomputing full-history BNB balances exceeds the 2-minute free-tier limit on our Dune plan — we note this honestly as a limitation.) What we *could* index directly, with tight windows, was the *launch-time distribution* — and that is where the sharpest signal appeared.
+
+<ChartFrame
+  kind="CROSS-TOKEN WALLET · own measurement"
+  caption={<>
+    The cross-token accumulation wallet 0x73d8…46db and six flagged tokens.
+    <br />
+    <br />
+    Large positions in SIREN (13.97%) · M (7.47%) · ARIA (2.30%) · COAI (0.97%) · LAB (0.25%) — measured in prior cases.
+    <br />
+    <br />
+    BEAT: ~10M received at the 2025-11-01 launch distribution (own measurement) = the 6th token tied to the same wallet.
+  </>}
+  source="Dune Analytics · measured values from our SIREN/M/ARIA/COAI/LAB cases"
+  aspect="square"
+>
+  <BeatCrossToken />
+</ChartFrame>
+
+This wallet (`0x73d8bd54f7cf5fab43fe4ef40a62d390644946db`) is the exact address this site has already recorded as a large holder in SIREN (Top 3, 13.97%), MemeCore (Top 3, 7.47%), ARIA (Top 6, 2.30%), COAI (0.97%) and LAB (0.25%). On BEAT's launch day, ~10M BEAT flowed into it through a 2-hop relay `0x89dc…4c71` → `0x9f11…b074` → `0x73d8…46db` (tx `0x05bb9e94…`). This page does not assert *intentional coordinated cross-holding*. But the repeated overlap of the same entity's holdings across the same class of low-float tokens in the same period is itself a structural signal.
+
+## Mechanism — "why this structure is vulnerable to a crash"
+
+Since BEAT has not crashed, what we analyze here is the *setup*, not the *outcome*. Three things overlap.
+
+**(1) Derivatives-led, no real spot.** The rise happened mainly on 50x perps and Binance Alpha (internal matching), and Cointelegraph characterized short liquidations as roughly double long liquidations ($28.72M vs $13.74M) — a 'classic short squeeze.' When leverage drives price without deep regulated spot price discovery, the same leverage unwinding returns as a liquidation cascade.
+
+**(2) On-chain demand is feeble.** We directly scanned BEAT's large on-chain transfers during the June run-up (Jun 5-12). There was **exactly one transfer ≥ 500K BEAT (~$3.7M)** — and even that was a 770K burn to the dead address. In other words, during a +366%/7-day surge, large on-chain distribution or accumulation was effectively absent. This matches the reported Santiment negative Price DAA Divergence (no new on-chain users): price moves on derivatives/Alpha, while the on-chain footprint of real demand is thin.
+
+**(3) The shape of the launch distribution.** The on-chain distribution just before trading opened (Oct 28-30) was more complex than simple LP seeding: one-way blocks of 40M and 30M, multiple clean 10M chunks into freshly created wallets, plus a fixed amount (e.g., 3.3M) relayed through sequential wallets. One branch of that distribution flowed into the cross-token wallet above.
+
+The three conditions — low float + imminent unlock + high-leverage perps + no regulated spot + thin on-chain demand — substantially overlap the combination that *preceded* crashes in this site's post-mortem cases (RAVE, SIREN, ARIA). To be clear again: this is not a prediction about BEAT's outcome, but an observation about an *overlap of conditions.*
+
+## Data
+
+### Price chart — candles (to be added)
+
+<ChartFrame
+  kind="PRICE · BEAT / USDT · CANDLE"
+  caption="Reserved slot for the BEAT/USDT candle chart — to be filled later with a local TradingView capture. The log-scale trajectory below summarizes the same move."
+  source="TradingView capture pending (local-hosted)"
+  aspect="video"
+/>
+
+### Price trajectory — dormant, then parabolic
+
+<ChartFrame
+  kind="PRICE · BEAT / USD · log scale"
+  caption={<>
+    BEAT/USD price trajectory (log scale, CoinGecko anchors), Nov 2025 - Jun 2026.
+    <br />
+    <br />
+    After an ~11-month drift from $0.068 (ATL) to ~$0.55 (dashed = sparse base), a vertical spike within June to $10.14 (ATH, Jun 11).
+    <br />
+    <br />
+    $7.54 as of Jun 12, ~-25% off the ATH. 30d +1,267% · 7d +366%.
+  </>}
+  source="CoinGecko (Audiera) — price anchors"
+  aspect="video"
+>
+  <BeatPrice />
+</ChartFrame>
+
+| Point | Price | Note |
+|-------|-------|------|
+| 2025-11-02 | $0.06792 | all-time low (just after listing) |
+| 2026-05-13 | ~$0.55 | pre-parabola base (30 days prior) |
+| 2026-06-05 | ~$1.62 | acceleration (7 days prior) |
+| 2026-06-11 | $10.14 | all-time high |
+| 2026-06-12 | $7.54 | now · ~-25% off ATH |
+
+ATL→ATH is ~149x (+14,829%). Outlets reported "+1,500% in a month"; CoinMarketCap showed "+12,135% from ATL" at a snapshot — all the same parabola seen through different windows. The chart shape (a long dormant base + a short vertical spike) lines up with the on-chain observation that the contract was deployed in May and sat dormant for six months before activating in November.
+
+### Derivatives / liquidations
+
+| Metric | Value (as reported, cumulative since May) |
+|--------|-----|
+| Short liquidations | $28.72M |
+| Long liquidations | $13.74M |
+| Short:long ratio | ~2 : 1 (short-squeeze signature) |
+| Derivatives volume | +190% (~$1.9B) |
+| New on-chain users | feeble (negative Price DAA Divergence) |
+
+> Figures: Cointelegraph (single primary source + corroborating context from KuCoin, CoinJournal). Passed adversarial verification 2-1 — treat the absolute liquidation figures as single-source and the OI numbers as snapshot-dependent (directional).
+
+## Lessons — signals to identify a similar setup *in advance*
+
+The lesson from BEAT is not "who dumped." It is: *before* a crash, which overlapping conditions should be read as a risk setup? This case shows those conditions in real time.
+
+### Market-structure signals
+
+- **No Binance spot + Alpha/perp (especially 50x) available** — leverage makes the price without regulated spot price discovery (same as RAVE/LAB)
+- **Low MC/FDV (here 0.29)** — large unissued overhang relative to float; sell pressure gets pre-priced as unlocks approach
+- **An imminent unlock on the calendar** — flag supply events like the estimated July 1 unlock (even single-sourced)
+
+### Derivatives / leverage signals
+
+- **Derivatives volume dwarfs spot/on-chain demand** — if the rise is explained by perps and liquidations, the risk of that leverage unwinding rises with it
+- **Short liquidations far exceed long liquidations (short squeeze)** — the classic "bait shorts, then lift" pattern; near the top, crowded longs set up a symmetric long-liquidation cascade
+- **Daily RSI 95+** — "most overbought on record" is not a direction, but a signal of *retracement fragility*
+
+### On-chain verification signals (this case's edge)
+
+- **Price surge ↔ on-chain activity divergence** — if price is +366% but large on-chain transfers are nearly absent, that rise was made on exchange-internal/derivatives venues, not on-chain demand
+- **Cross-token wallet overlap** — when one wallet holds/receives large positions across multiple flagged tokens, suspect *accumulation infrastructure* independent of any single token's fundamentals (`0x73d8…46db` now spans SIREN, M, ARIA, COAI, LAB and BEAT — six)
+- **The shape of the launch distribution** — relays/layering and equal-amount multi-hop flows, rather than simple LP seeding, warrant a closer look at the distribution structure
+
+### Trading takeaway
+
+> A token that is structurally vulnerable to a crash does not become safe just because the crash has not arrived yet.
+
+In a setup combining low float, an imminent unlock, no regulated spot, derivatives froth and thin on-chain demand, any position — a long near the top, or a short catching the falling knife — carries large volatility risk. "Manipulation has not been proven" does not mean "safe." This page does not predict BEAT's outcome, and the price/supply figures at the time you read this may already have changed (written 2026-06-12).
+
+## Sources
+
+1. **CoinGecko** — [Audiera (BEAT) price, supply, contract, news feed](https://www.coingecko.com/en/coins/audiera) — incl. the 'crime pump' allegation headline
+2. **CoinMarketCap** — [Audiera (BEAT)](https://coinmarketcap.com/currencies/audiera/) — ATH/ATL, MC/FDV
+3. **Binance** — [How to Buy Audiera](https://www.binance.com/en/how-to-buy/audiera) — "not listed on Binance for trade and service" (alpha-no-spot primary source)
+4. **Cointelegraph** — ["Audiera's AI token BEAT beats Bitcoin, Ethereum as price surges 1,500% in a month"](https://cointelegraph.com/markets/audieras-ai-token-beat-beats-bitcoin-ethereum-as-price-surges-1500-in-a-month) — short squeeze, liquidation figures
+5. **BanklessTimes** — ["Audiera price is pumping — top reasons to avoid the BEAT crypto token"](https://www.banklesstimes.com/articles/2026/06/10/audiera-price-is-pumping-top-reasons-to-avoid-the-beat-crypto-token/) — RSI 98 overheating warning
+6. **tokenomics.com** — [Audiera tokenomics](https://app.tokenomics.com/tokenomics/audiera) · **WEEX** — [What is Audiera (BEAT)](https://www.weex.com/wiki/article/what-is-audiera-beat-coin-latest-price-tokenomics-and-how-it-works-ob6mivlj5lryvpv4ox9vmn2c) — supply/vesting/unlock
+7. **Own on-chain measurement** — Dune Analytics (BNB Chain, `0xcf3232B85b43BCa90E51D38cc06Cc8bB8C8A3E36`): [contract creation](https://dune.com/queries/7706387) · [launch/pump-window large transfers](https://dune.com/queries/7706351) · [pump-window large transfers](https://dune.com/queries/7706292) — cross-token wallet receipt + absence of on-chain activity. BscScan: [holders/contract](https://bscscan.com/token/0xcf3232B85b43BCa90E51D38cc06Cc8bB8C8A3E36)
