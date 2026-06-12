@@ -1,0 +1,266 @@
+---
+slug: "sahara"
+title: "Sahara AI (SAHARA)"
+tokenSymbol: "SAHARA"
+incidentDate: "2026-06-09"
+publishedDate: "2026-06-12"
+status: "pattern-match"
+severity: "high"
+patterns:
+  - "low-float"
+  - "derivatives-frenzy"
+metrics:
+  peakPrice: 0.1605
+  bottomPrice: 0.0145
+  maxDrawdown: -0.91
+  crashDurationHours: 24
+  liquidationVolume24h: 22650000
+exchanges:
+  binanceSpot: true
+  binanceAlpha: false
+  binanceFutures: true
+  others: ["upbit", "okx", "bybit", "gate", "bitget"]
+allegations:
+  - source: "CryptoTimes"
+    sourceUrl: "https://www.cryptotimes.io/2026/06/09/saharas-60-crash-x-claims-team-dumped-before-massive-token-unlock/"
+    date: "2026-06-09"
+    summary: "X 분석가들(Ryker·Lucas·0xNoxxx)이 6/9 급락을 두고 팀이 vesting/KOL unlock 직전 인사이더 덤프를 했다는 의혹 제기. Lucas는 '500M SAHARA가 Upbit으로 이동', 0xNoxxx는 '유통량의 약 20%가 unlock 예정'이라고 주장."
+  - source: "crypto.news"
+    sourceUrl: "https://crypto.news/sahara-ai-price-crashes-55-as-team-denies-600m-token-dump/"
+    date: "2026-06-09"
+    summary: "Sahara AI가 600M 덤프 의혹을 부인. 문제의 전송은 Chainlink CCIP 브릿지 컨트랙트로의 사전 예정 유동성 충전(추가 150M 대기)이며 '팀·투자자 토큰은 매도·이동되지 않았다'고 발표, 내부 조사 개시."
+  - source: "BeInCrypto"
+    sourceUrl: "https://beincrypto.com/binance-backed-sahara-ai-token-crashes/"
+    date: "2026-06-09"
+    summary: "Binance Labs 투자 토큰 SAHARA가 24시간 약 56% 급락해 사상 최저가 부근 도달. 팀은 컨트랙트·제품에 보안 이슈가 없다고 밝히고 내부 조사를 개시."
+  - source: "AMBCrypto"
+    sourceUrl: "https://ambcrypto.com/sahara-ai-denies-triggering-60-price-crash-no-team-tokens-have-been-sold/"
+    date: "2026-06-09"
+    summary: "팀이 약 60% 급락 유발을 부인('팀 토큰 매도 없음'). 2025년 11월에도 유사한 약 60% 단일일 급락이 있었고 당시엔 마켓메이커 unwind로 설명됐다고 언급."
+relatedCases: ["lab", "rave", "coai"]
+---
+
+import { ChartFrame } from '@/components/chart-frame'
+import { Timeline, TimelineEvent } from '@/components/case-timeline'
+import { SaharaFlow } from '@/components/sahara-flow'
+import { SaharaPoolCadence } from '@/components/sahara-pool-cadence'
+import { ZoomableImage } from '@/components/zoomable-image'
+import priceSpot1d from '@/assets/cases/sahara/price-spot-1d.png'
+import pricePerp4h from '@/assets/cases/sahara/price-perp-4h.png'
+
+## 개요
+
+Sahara AI는 Pantera·Binance Labs·Polychain이 참여한 $43M 라운드의 지원을 받은 탈중앙 AI 블록체인이다. 2025년 6월 Binance와 Upbit에 상장됐고, 한 달 뒤인 7월 24일 사상 최고가 $0.1605를 찍었다. 그 뒤 약 1년에 걸쳐 -90%를 반납했고, 2026년 6월 9일에는 단 하루 만에 약 55~60%가 더 빠지며($0.0396 → $0.0145) 약 $22.65M의 롱 포지션이 청산됐다.
+
+이 케이스는 본 사이트의 다른 사건들과 결이 다르다. RAVE·LAB이 ZachXBT급 분석가의 폭로 + 거래소 조사로 이어진 것과 달리, SAHARA에는 (1) 그런 분석가의 폭로가 없고, (2) 거래소의 조사 발표도 없으며(팀 자체 내부 조사뿐), (3) 팀이 구체적이고 검증 가능한 반박을 내놓았다 — 문제의 대형 전송은 인사이더 덤프가 아니라 **Chainlink CCIP 크로스체인 브릿지로의 유동성 충전**이라는 것이다. 게다가 거의 같은 규모의 단일일 급락이 2025년 11월 29일에도 있었고, 그때는 미상의 마켓메이커 unwind로 설명됐다.
+
+그래서 우리는 이 페이지를 manipulation 단정으로 쓰지 않는다. 대신 두 가지를 다룬다 — **모호한 대형 온체인 전송을 어떻게 읽는가**, 그리고 **무엇이 이 토큰을 반복적으로 급락에 취약하게 만들었는가**라는 구조적 조건. 핵심 질문 하나(6/9의 대형 전송은 어디로 갔나)는 Ethereum 컨트랙트를 직접 인덱싱해 자체 검증했다.
+
+> "No team or investor tokens have been sold or moved."
+> — Sahara AI (6/9 반박). 반대편에서는 분석가들이 "unlock 직전 인사이더 덤프"를 주장했다. 본 페이지는 어느 쪽도 단정하지 않고, 온체인에서 확인 가능한 부분만 측정한다.
+
+## 타임라인
+
+<Timeline>
+  <TimelineEvent date="2024년 — 시드/시리즈">
+$43M 펀딩 (Pantera·Binance Labs·Polychain 주도, Samsung NEXT 등 참여). 창업자는 Sean Ren(USC 교수)과 Tyler Zhou(전 Binance Labs 투자 디렉터).
+  </TimelineEvent>
+  <TimelineEvent date="2025년 6월">
+TGE 및 Binance·Upbit 상장. 총공급 100억(10B) SAHARA.
+  </TimelineEvent>
+  <TimelineEvent date="2025년 7월 24일">
+사상 최고가 약 $0.1605 도달. 이후 알트 약세와 함께 장기 하락 시작.
+  </TimelineEvent>
+  <TimelineEvent date="2025년 11월 29일 — 1차 급락">
+하루 만에 약 57% 급락 ($0.081 → $0.0346). 미상의 마켓메이커가 포지션을 unwind하며 거래소 리스크 컨트롤이 발동된 유동성 스트레스로 설명됨. 팀은 컨트랙트 안전을 확인하고 "core/early-backer unlock은 2026년 6월까지 없다"고 밝힘.
+  </TimelineEvent>
+  <TimelineEvent date="2026년 2월 6일">
+사상 최저가 부근(약 $0.0136) 기록.
+  </TimelineEvent>
+  <TimelineEvent date="2026년 6월 9일 — 2차 급락">
+다시 하루 만에 약 55~60% 급락 ($0.0396 → $0.0145). 24시간 거래량 +340%(>$300M), 약 $22.65M 롱 청산. ATH 대비 약 -90%.
+  </TimelineEvent>
+  <TimelineEvent date="2026년 6월 9일 — 의혹 vs 반박">
+X 분석가들이 약 600M 전송을 근거로 "unlock 직전 인사이더 덤프" 의혹 제기(Lucas: 500M Upbit 이동 주장). 팀은 이를 부인하고 해당 전송을 Chainlink CCIP 브릿지 충전으로 설명, 내부 조사 + 보상 거버넌스 투표를 개시.
+  </TimelineEvent>
+  <TimelineEvent date="2026년 6월 26일 — 예정 unlock">
+다음 토큰 unlock 예정(Community Incentives 분).
+  </TimelineEvent>
+</Timeline>
+
+## 공급 구조
+
+### 시장 구조 — RAVE/LAB과 정반대 지점
+
+| 거래소 | Spot | Perpetual |
+|--------|------|-----------|
+| **Binance** | O | O |
+| Upbit | O | — |
+| OKX | O | O |
+| Bybit | O | O |
+| Gate.io | O | — |
+| Bitget | O | — |
+
+여기서 먼저 짚을 것은, SAHARA가 **정식 Binance spot 상장을 가진** 토큰이라는 점이다. RAVE·LAB의 핵심 결함이었던 "Binance spot 부재 + 알파/perp만" 구조가 *아니다*. Binance·Upbit이라는 두 메이저 spot 시장과 깊은 오더북을 갖춘, 펀딩이 탄탄한 프로젝트다. 그럼에도 1년 새 -90%, 그리고 두 번의 단일일 ~60% 급락이 발생했다 — 그래서 이 케이스의 위험은 상장 구조가 아니라 *공급·레버리지·수요*의 구조에 있다.
+
+### 토큰 분배와 unlock overhang
+
+| 항목 | 값 |
+|------|-----|
+| 총 / 최대 공급 | 10,000,000,000 SAHARA |
+| 유통 (2026.06) | 약 3.41B (34.07%) |
+| 잠금 | 65.93% (cliff 메커니즘, 2029까지 분산) |
+| Ecosystem Development | 33.93% |
+| Community Incentives | 20.75% |
+| Early Backers | 19.75% |
+| Core Team & Contributors | 15.00% |
+| Airdrops / Buidlpad / Liquidity | 8.15% / 1.42% / 1.00% |
+| 토큰 컨트랙트 (Ethereum) | `0xFDFfB411C4A70AA7C95D5C981a6Fb4Da867e1111` |
+| FDV / 시총 (2026.06) | 약 $161M / 약 $55M |
+
+구조의 핵심은 두 가지다. 첫째, 유통은 전체의 34%뿐이고 **66%가 잠겨 있다** — 그리고 cliff형으로 풀린다. 인사이더(Core Team 15% + Early Backers 19.75% = 34.75%)의 첫 대형 unlock 시점이 TGE 1년 후인 2026년 6월 부근으로, 두 급락 모두 이 unlock cliff를 향해가는 구간에서 발생했다. 둘째, FDV는 $161M인데 시총은 $55M — MC/FDV 0.34. 거대한 미유통 물량이 머리 위에 떠 있는(overhang) 전형적 low-float 구조다.
+
+단, RAVE처럼 "소수 지갑이 유통량의 90%를 쥐고 있다"는 식의 집중과는 다르다. 인사이더 물량 대부분은 vesting 컨트랙트에 잠겨 있다. 위험의 성격은 *현재의 지갑 집중*이 아니라 *예고된 공급 증가 + 얇은 실유통*이다. 이 구분은 중요하다.
+
+## 수법 분석 — "대형 전송은 덤프인가 브릿지인가"
+
+6/9 급락의 쟁점은 단 하나로 압축된다. 분석가들은 약 600M SAHARA 전송(그리고 "500M이 Upbit으로")을 인사이더 덤프의 증거로 봤고, 팀은 같은 전송을 자사 Chainlink CCIP 브릿지 풀로의 유동성 충전이라고 반박했다. 둘 중 무엇인지는 *추측이 아니라 온체인에서 확인할 수 있는 문제*다. 우리는 Ethereum 토큰 컨트랙트(`0xFDFf…1111`)의 transfer를 인덱싱해 6/7~6/11 대형 흐름의 출처와 종착을 직접 추적했다.
+
+<ChartFrame
+  kind="FUND FLOW · 자체 측정"
+  caption={<>
+    6/9 급락 당시 대형 전송의 행선지 (자체 Dune 인덱싱).
+    <br />
+    <br />
+    Sahara 운영 릴레이 → 6/2 생성된 0x194e 풀(일일 lock/release 순환) → 수십 개 non-CEX 사용자 지갑.
+    <br />
+    <br />
+    Ethereum·BNB 양 체인 모두 Upbit 흐름 0건 — "500M Upbit 덤프" 의혹은 재현되지 않음.
+  </>}
+  source="Dune Analytics · Etherscan"
+  aspect="square"
+>
+  <SaharaFlow />
+</ChartFrame>
+
+측정 결과는 팀의 설명 쪽으로 기운다. 윈도우 내 최대 흐름은 `0xb9d9…9c66` → `0xd3b8…0f22` → `0x194e…62b4`로 이어지는 2-hop 릴레이로, 150M·300M 청크가 hop 간 약 2분 간격으로 약 900M 이동했다. 이때 **종착인 `0x194e`는 EOA가 아니라 컨트랙트**이며, 급락 7일 전인 2026-06-02에 배포됐다. Upbit을 비롯한 거래소 deposit 주소는 EOA다 — 즉 이 900M은 "Upbit으로 덤프"된 것이 아니다. 출처인 `0xb9d9`·`0xd3b8`도 모두 컨트랙트이고, `0xb9d9`는 SAHARA TGE 무렵(2025-06-25)에 같은 deployer가 만든 Sahara 운영 인프라로 보인다.
+
+`0x194e`가 정적인 보관 지갑이 아니라 **일 단위로 수억 토큰을 lock/release하며 순환**한다는 점도 브릿지 풀 거동과 부합한다. 그리고 이 풀의 유출은 단일 거래소가 아니라 *수십 개의 서로 다른 non-CEX 지갑*으로 14~52M씩 흩어진다 — CCIP LockReleaseTokenPool이 크로스체인 인출 사용자에게 토큰을 release하는 모습이다.
+
+**양 체인 교차 확인.** "Upbit 흐름이 다른 체인에 있었던 것 아니냐"는 반론을 닫기 위해 BNB Chain도 같은 방식으로 인덱싱했다. 두 체인 모두에서 동일한 릴레이 컨트랙트(`0x194e`·`0xd3b8`·`0xb9d9`)가 150M 단위로 토큰을 옮겼고, **방향은 서로 반대였다** — Ethereum에서는 풀로 *유입*, BNB에서는 풀에서 *유출*. 한 운영 주체가 두 체인에 같은 컨트랙트를 두고 인벤토리를 주고받는, 전형적 크로스체인 브릿지 모습이다. 그리고 **어느 체인에서도 Upbit 라벨 흐름은 나타나지 않았다.** BNB 쪽 최대 거래소 흐름도 Binance 내부 이동, Bitget 경유(`0x26209`↔Bitget 6) 왕복, 다수 지갑의 Binance 소액 분산 입금(한 핫월렛으로 58·70·41·35건)이었다.
+
+정직하게 한계도 적는다. (1) `cex.addresses`의 Upbit deposit 라벨이 불완전할 가능성은 있다 — 다만 두 체인 어디에도 *단일 ~500M 블록*이 한 거래소 입금 주소로 간 기록은 없다(가장 큰 CEX 흐름도 Binance 내부거나 Bitget 왕복, 또는 소액 분산 입금이다). (2) `0x194e`가 문자 그대로 Chainlink CCIP 컨트랙트인지는 Dune 디코딩 부재로 ABI 수준에서 단정하지 않았다 — 생성 시점·양 체인 순환 거동이 그 설명과 *부합한다*고만 말한다. 결론적으로 "팀이 500M을 Upbit에 덤프했다"는 구체적 의혹은 Ethereum·BNB **양 체인** 온체인에서 재현되지 않았고, 대형 전송 패턴은 브릿지 설명에 부합한다.
+
+## 데이터
+
+### 브릿지 풀 케이던스 — 자체 측정
+
+`0x194e` 풀이 토큰을 *쥐고만 있는지*, 아니면 *순환시키는지*를 시간 단위로 봤다. 패턴이 또렷하다. 6/8~9 유출이 유입을 초과해 풀이 순 드레인됐다가, 6/9~10에 300M씩 재충전됐다. 이는 팀이 밝힌 "6/9 Ethereum 인출 급증으로 브릿지 풀이 드레인 → 이후 재충전"과 시점·방향이 일치한다.
+
+<ChartFrame
+  kind="BRIDGE POOL CADENCE · 자체 측정"
+  caption={<>
+    0x194e 풀의 일일 유입(lock)/유출(release), 2026-06-03 ~ 06-11 (자체 Dune 인덱싱).
+    <br />
+    <br />
+    6/8~9 순 드레인 → 6/9~10 300M씩 재충전. 정적 보관이 아니라 활발한 순환.
+    <br />
+    <br />
+    팀의 "CCIP 풀 드레인 후 재충전" 진술과 부합.
+  </>}
+  source="Dune Analytics · BscScan/Etherscan"
+  aspect="video"
+>
+  <SaharaPoolCadence />
+</ChartFrame>
+
+### 가격 행동
+
+<ChartFrame
+  kind="PRICE · SAHARA / USDT · BINANCE SPOT · 1D"
+  caption={<>
+    SAHARA/USDT 현물 일봉 (Binance), 2025.07 ~ 2026.06.
+    <br />
+    <br />
+    7월 ATH 약 $0.16 이후 약 -90% 장기 하락. 그 사이 11월 말과 6월 초, 두 차례 단일일 급락.
+    <br />
+    <br />
+    우측 끝 거래량 급증 캔들이 6/9 (-55~60%). 차트 클릭 시 확대.
+  </>}
+  source="Binance 현물 · TradingView 캡처 (로컬 호스팅)"
+  aspect="auto"
+>
+  <ZoomableImage src={priceSpot1d} alt="SAHARA/USDT 현물 일봉 (Binance), 2025.07~2026.06 — ATH 후 약 -90% 하락과 두 차례 단일일 급락" />
+</ChartFrame>
+
+<ChartFrame
+  kind="PRICE · SAHARA / USDT · BINANCE PERP · 4H + OI"
+  caption={<>
+    SAHARA/USDT 무기한 4시간봉 + 미결제약정(OI, 하단 패널), 2026.05 ~ 06 (Binance).
+    <br />
+    <br />
+    6/9 우측 끝에서 약 $0.038 → $0.0145 수직 급락 + 거래량 급증.
+    <br />
+    <br />
+    같은 시점 OI가 약 1B에서 급감 = 레버리지 청산 cascade (24시간 약 $22.65M 롱 청산). 차트 클릭 시 확대.
+  </>}
+  source="Binance 무기한 · TradingView 캡처 (로컬 호스팅)"
+  aspect="auto"
+>
+  <ZoomableImage src={pricePerp4h} alt="SAHARA/USDT 무기한 4시간봉 + OI (Binance), 2026.05~06 — 6/9 수직 급락과 OI 급감" />
+</ChartFrame>
+
+| 시점 | 가격 | 비고 |
+|------|------|------|
+| 2025-07-24 | $0.1605 | 사상 최고가 (상장 약 1개월 후) |
+| 2025-11-29 | $0.081 → $0.0346 | 1차 ~57% 단일일 급락 (MM unwind 설명) |
+| 2026-02-06 | 약 $0.0136 | 사상 최저가 부근 |
+| 2026-06-09 | $0.0396 → $0.0145 | 2차 ~55–60% 급락, $22.65M 롱 청산 |
+| 2026-06 현재 | 약 $0.016–0.017 | ATH 대비 약 -90% |
+
+그렇다면 6/9에 실제로 가격을 누른 매도는 어디서 왔나. 온체인상 거래소로 향한 흐름을 보면, 단일 인사이더의 대량 입금이 아니라 **다수의 서로 다른 지갑이 Binance로 소액을 분산 입금**한 형태였다(한 핫월렛으로 147·38·40건 등, BNB 쪽도 58·70·41건으로 같은 패턴). 즉, unlock cliff·과도한 레버리지·얇은 실수요라는 셋업 위에서 *여러 보유자가 동시에 패닉 매도*한 그림에 가깝다. 같은 윈도우에서 RAVE·LAB 케이스에 등장했던 Bitget 핫월렛 `0x1ab4…8f23`(Bitget 6)이 약 3.5억 토큰 throughput으로 다시 관측된 점도 기록해 둔다 — 같은 거래소 인프라가 여러 케이스에 걸쳐 반복 등장한다는 정황이다.
+
+## 교훈 — 다음 비슷한 케이스를 식별하는 시그널
+
+SAHARA가 주는 교훈은 RAVE·LAB과 다르다. "누가 덤프했나"를 단정하는 게 아니라, **모호한 신호를 어떻게 검증하고, 어떤 구조가 반복적으로 급락을 부르는가**다.
+
+### 온체인 검증 시그널 (이 케이스의 차별점)
+
+- 대형 전송을 보면 먼저 **목적지가 컨트랙트인지 EOA인지** 확인한다 — 거래소 deposit은 EOA, 브릿지/스테이킹 풀은 컨트랙트
+- 목적지에 **거래소 deposit 라벨**이 붙는지 (Etherscan/Dune)
+- 그 주소가 토큰을 **쥐고 있는지(hold) 흘려보내는지(forward)** — 풀이 순환하면 브릿지·MM 거동일 수 있음
+- "X로 500M 이동" 같은 트윗은 *목적지를 직접 확인*하기 전까지 보류한다 — 의혹을 그대로 사실로 옮기지 않는다
+
+### 공급 / unlock 시그널
+
+- 유통이 총공급의 30%대인데 **나머지가 cliff형으로 잠겨 있으면** 예고된 공급 overhang
+- 인사이더(팀+백커) 첫 대형 unlock 시점이 가까워질수록 sell-pressure 기대가 선반영
+- MC/FDV가 낮을수록(여기선 0.34) 미유통 물량 대비 시장이 얇음
+
+### 파생 / 레버리지 시그널
+
+- 단일일 급락에 **대규모 롱 청산**($22.65M)이 동반되면 레버리지 cascade
+- 낮은 float + 높은 perp 미결제약정은 작은 매도에도 청산 연쇄가 터지는 환경
+
+### 반복성 시그널 (가장 중요)
+
+- 같은 토큰이 **단기간에 비슷한 규모의 단일일 급락을 두 번 이상**(여기선 2025-11, 2026-06 각 ~60%)
+- 매번 *외부 요인*(마켓메이커 unwind → 브릿지 충전)으로 설명되고, 설명이 회차마다 바뀐다
+- 개별 설명이 사실이든 아니든, *반복적으로 급락에 취약하다는 구조 자체*가 경고다
+
+### 거래 판단
+
+> 구조적으로 급락에 취약한 토큰은 의혹의 진위와 무관하게 위험하다.
+
+낮은 float, 임박한 unlock, 높은 레버리지, 단일 마켓메이커 의존이 겹치면 — 인사이더가 실제로 덤프했든, 브릿지 충전이었든 — 어느 방향의 포지션도 위험하다. 의혹이 사실로 *입증되지 않았다*는 것이 곧 *안전하다*는 뜻은 아니다.
+
+## 출처
+
+1. **CryptoTimes** — ["Sahara's 60% Crash: X Claims Team Dumped Before Massive Token Unlock"](https://www.cryptotimes.io/2026/06/09/saharas-60-crash-x-claims-team-dumped-before-massive-token-unlock/) — 2026.06.09 (의혹 측)
+2. **crypto.news** — ["Sahara AI price crashes 55% as team denies 600M token dump"](https://crypto.news/sahara-ai-price-crashes-55-as-team-denies-600m-token-dump/) — 2026.06.09 (팀 반박 + CCIP 설명)
+3. **BeInCrypto** — ["Binance-backed Sahara AI token crashes"](https://beincrypto.com/binance-backed-sahara-ai-token-crashes/) — 2026.06.09
+4. **AMBCrypto** — ["Sahara AI denies triggering 60% price crash: 'No team tokens have been sold'"](https://ambcrypto.com/sahara-ai-denies-triggering-60-price-crash-no-team-tokens-have-been-sold/) — 2026.06.09
+5. **Cryptopolitan** — ["Market maker blamed for Sahara token crash"](https://www.cryptopolitan.com/market-maker-blamed-for-sahara-token-crash/) — 2025.11 (1차 급락)
+6. **CoinGecko** — [Sahara AI 가격·공급·컨트랙트](https://www.coingecko.com/en/coins/sahara-ai) · **CoinMarketCap** — [SAHARA](https://coinmarketcap.com/currencies/sahara-ai/)
+7. **PR Newswire** — ["Sahara AI Raises $43M to Build a Collaborative AI Economy"](https://www.prnewswire.com/news-releases/sahara-ai-raises-43m-to-build-a-collaborative-ai-economy-302222316.html) · **Pantera Capital** — [Investing in Sahara AI](https://panteracapital.com/blog-investing-in-sahara-ai/)
+8. **자체 온체인 측정** — Dune Analytics (Ethereum + BNB Chain, `0xFDFfB411C4A70AA7C95D5C981a6Fb4Da867e1111`): [ETH 대형 전송](https://dune.com/queries/7703583) · [컨트랙트 생성자](https://dune.com/queries/7703599) · [ETH CEX 흐름](https://dune.com/queries/7703610) · [풀 케이던스](https://dune.com/queries/7703614) · [풀 유출 목적지](https://dune.com/queries/7703624) · [BNB 대형 전송](https://dune.com/queries/7703745) · [BNB CEX 흐름](https://dune.com/queries/7703760)

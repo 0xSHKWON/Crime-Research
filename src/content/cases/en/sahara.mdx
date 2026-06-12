@@ -1,0 +1,266 @@
+---
+slug: "sahara"
+title: "Sahara AI (SAHARA)"
+tokenSymbol: "SAHARA"
+incidentDate: "2026-06-09"
+publishedDate: "2026-06-12"
+status: "pattern-match"
+severity: "high"
+patterns:
+  - "low-float"
+  - "derivatives-frenzy"
+metrics:
+  peakPrice: 0.1605
+  bottomPrice: 0.0145
+  maxDrawdown: -0.91
+  crashDurationHours: 24
+  liquidationVolume24h: 22650000
+exchanges:
+  binanceSpot: true
+  binanceAlpha: false
+  binanceFutures: true
+  others: ["upbit", "okx", "bybit", "gate", "bitget"]
+allegations:
+  - source: "CryptoTimes"
+    sourceUrl: "https://www.cryptotimes.io/2026/06/09/saharas-60-crash-x-claims-team-dumped-before-massive-token-unlock/"
+    date: "2026-06-09"
+    summary: "X analysts (Ryker, Lucas, 0xNoxxx) alleged the team dumped insider tokens ahead of a vesting/KOL unlock during the June 9 crash. Lucas claimed 500M SAHARA was moved to Upbit; 0xNoxxx said an amount equal to ~20% of circulating supply was set to unlock."
+  - source: "crypto.news"
+    sourceUrl: "https://crypto.news/sahara-ai-price-crashes-55-as-team-denies-600m-token-dump/"
+    date: "2026-06-09"
+    summary: "Sahara AI denied the 600M dump allegation, attributing the flagged transfer to a pre-scheduled liquidity fill of its Chainlink CCIP bridge contract (another 150M pending) and stating 'no team or investor tokens have been sold or moved'; opened an internal investigation."
+  - source: "BeInCrypto"
+    sourceUrl: "https://beincrypto.com/binance-backed-sahara-ai-token-crashes/"
+    date: "2026-06-09"
+    summary: "The Binance Labs–backed SAHARA token crashed ~56% in 24h to near its all-time low. The team said it found no security issues in its contracts or products and opened an internal investigation."
+  - source: "AMBCrypto"
+    sourceUrl: "https://ambcrypto.com/sahara-ai-denies-triggering-60-price-crash-no-team-tokens-have-been-sold/"
+    date: "2026-06-09"
+    summary: "The team denied triggering the ~60% crash ('no team tokens have been sold'). A similar ~60% single-day crash had also occurred in November 2025, explained at the time as a market-maker unwind."
+relatedCases: ["lab", "rave", "coai"]
+---
+
+import { ChartFrame } from '@/components/chart-frame'
+import { Timeline, TimelineEvent } from '@/components/case-timeline'
+import { SaharaFlow } from '@/components/sahara-flow'
+import { SaharaPoolCadence } from '@/components/sahara-pool-cadence'
+import { ZoomableImage } from '@/components/zoomable-image'
+import priceSpot1d from '@/assets/cases/sahara/price-spot-1d.png'
+import pricePerp4h from '@/assets/cases/sahara/price-perp-4h.png'
+
+## Overview
+
+Sahara AI is a decentralized AI blockchain backed by a $43M round from Pantera, Binance Labs, and Polychain. SAHARA listed on Binance and Upbit in June 2025 and peaked at an all-time high of $0.1605 a month later, on July 24, 2025. It then gave back ~90% over the following year, and on June 9, 2026 fell a further ~55–60% in a single day ($0.0396 → $0.0145), liquidating roughly $22.65M of long positions.
+
+This case reads differently from the others on this site. Unlike RAVE and LAB — which came with a ZachXBT-grade exposé and exchange investigations — SAHARA has (1) no such analyst exposé, (2) no exchange investigation (only the team's own internal one), and (3) a specific, falsifiable rebuttal from the team: the large flagged transfer was not an insider dump but a **liquidity fill into a Chainlink CCIP cross-chain bridge**. And a nearly identical single-day crash had already happened on November 29, 2025 — explained then as an unnamed market maker unwinding.
+
+So we do not write this page as an assertion of manipulation. Instead it covers two things — **how to read an ambiguous large on-chain transfer**, and **what structural conditions made this token repeatedly crash-prone**. The one question that matters most (where did the June 9 transfer actually go?) we verified ourselves by indexing the Ethereum contract.
+
+> "No team or investor tokens have been sold or moved."
+> — Sahara AI (June 9 rebuttal). On the other side, analysts alleged an "insider dump ahead of the unlock." This page asserts neither, and measures only what is verifiable on-chain.
+
+## Timeline
+
+<Timeline>
+  <TimelineEvent date="2024 — seed/series">
+$43M raised (led by Pantera, Binance Labs, Polychain; Samsung NEXT and others participating). Founders: Sean Ren (USC professor) and Tyler Zhou (former Binance Labs investment director).
+  </TimelineEvent>
+  <TimelineEvent date="June 2025">
+TGE and listing on Binance and Upbit. Total supply 10 billion (10B) SAHARA.
+  </TimelineEvent>
+  <TimelineEvent date="July 24, 2025">
+All-time high of ~$0.1605. A long decline begins thereafter alongside altcoin weakness.
+  </TimelineEvent>
+  <TimelineEvent date="November 29, 2025 — first crash">
+~57% drop in a day ($0.081 → $0.0346), described as a liquidity-stress event as an unnamed market maker unwound positions and exchange risk controls fired. The team confirmed its contracts were secure and noted "core/early-backer unlocks are not scheduled until June 2026."
+  </TimelineEvent>
+  <TimelineEvent date="February 6, 2026">
+Records its all-time low area (~$0.0136).
+  </TimelineEvent>
+  <TimelineEvent date="June 9, 2026 — second crash">
+Another ~55–60% drop in a day ($0.0396 → $0.0145). 24h volume +340% (>$300M), ~$22.65M in long liquidations. ~90% below the ATH.
+  </TimelineEvent>
+  <TimelineEvent date="June 9, 2026 — allegation vs rebuttal">
+X analysts cite a ~600M transfer as evidence of an "insider dump ahead of the unlock" (Lucas: 500M moved to Upbit). The team denies it, attributes the transfer to a Chainlink CCIP bridge fill, and opens an internal investigation plus a community governance vote on restitution.
+  </TimelineEvent>
+  <TimelineEvent date="June 26, 2026 — scheduled unlock">
+Next token unlock scheduled (Community Incentives tranche).
+  </TimelineEvent>
+</Timeline>
+
+## Supply Structure
+
+### Market structure — the opposite of RAVE/LAB
+
+| Exchange | Spot | Perpetual |
+|----------|------|-----------|
+| **Binance** | O | O |
+| Upbit | O | — |
+| OKX | O | O |
+| Bybit | O | O |
+| Gate.io | O | — |
+| Bitget | O | — |
+
+The first thing to note is that SAHARA **has a full Binance spot listing**. It is *not* the "no Binance spot, only Alpha/perp" structure that defined RAVE and LAB. It is a well-funded project with two major spot venues (Binance, Upbit) and deep order books. And yet it fell ~90% in a year and crashed ~60% in a single day twice — so the risk here lives not in the listing structure but in the structure of *supply, leverage, and demand*.
+
+### Allocation and unlock overhang
+
+| Item | Value |
+|------|-------|
+| Total / max supply | 10,000,000,000 SAHARA |
+| Circulating (Jun 2026) | ~3.41B (34.07%) |
+| Locked | 65.93% (cliff mechanism, vesting into 2029) |
+| Ecosystem Development | 33.93% |
+| Community Incentives | 20.75% |
+| Early Backers | 19.75% |
+| Core Team & Contributors | 15.00% |
+| Airdrops / Buidlpad / Liquidity | 8.15% / 1.42% / 1.00% |
+| Token contract (Ethereum) | `0xFDFfB411C4A70AA7C95D5C981a6Fb4Da867e1111` |
+| FDV / market cap (Jun 2026) | ~$161M / ~$55M |
+
+Two things define the structure. First, only 34% circulates and **66% is locked** — released on cliffs. The first major insider unlock (Core Team 15% + Early Backers 19.75% = 34.75%) falls around June 2026, ~12 months after TGE, and both crashes happened on the approach to that unlock cliff. Second, FDV is $161M against a $55M market cap — an MC/FDV of 0.34. A large un-circulating supply hangs over a thin float: a textbook low-float overhang.
+
+That said, this is not RAVE-style concentration where "a few wallets hold 90% of the float." Most insider supply sits locked in vesting contracts. The nature of the risk is not *present wallet concentration* but *pre-announced supply growth against a thin real float*. The distinction matters.
+
+## Method Analysis — "dump or bridge?"
+
+The June 9 dispute reduces to a single question. Analysts read the ~600M SAHARA transfer (and "500M to Upbit") as evidence of an insider dump; the team called the same transfer a liquidity fill into its Chainlink CCIP bridge pool. Which one it is *is not a matter of opinion — it is verifiable on-chain*. We indexed transfers of the Ethereum token contract (`0xFDFf…1111`) and traced the source and destination of the large June 7–11 flows ourselves.
+
+<ChartFrame
+  kind="FUND FLOW · own measurement"
+  caption={<>
+    Where the large transfers went during the June 9 crash (own Dune indexing).
+    <br />
+    <br />
+    Sahara-operated relay → the 0x194e pool created June 2 (daily lock/release cycling) → dozens of distinct non-CEX user wallets.
+    <br />
+    <br />
+    Zero Upbit flow on Ethereum or BNB Chain in the window — the "500M to Upbit dump" allegation is not reproduced.
+  </>}
+  source="Dune Analytics · Etherscan"
+  aspect="square"
+>
+  <SaharaFlow />
+</ChartFrame>
+
+The measurement leans toward the team's account. The largest flow in the window is a 2-hop relay, `0xb9d9…9c66` → `0xd3b8…0f22` → `0x194e…62b4`, moving ~900M in 150M/300M chunks ~2 minutes apart per hop. The **destination `0x194e` is a contract, not an EOA**, deployed on 2026-06-02 — 7 days before the crash. Exchange deposit addresses, Upbit's included, are EOAs — so this 900M was *not* "dumped to Upbit." The sources `0xb9d9` and `0xd3b8` are also contracts, and `0xb9d9` was created by the same deployer around SAHARA's TGE (2025-06-25), consistent with Sahara-operated infrastructure.
+
+That `0x194e` is not a static holding wallet but **cycles hundreds of millions of tokens per day, locking and releasing**, also fits bridge-pool behavior. And its outflows scatter to *dozens of distinct non-CEX wallets* at 14–52M each — what a CCIP LockReleaseTokenPool looks like when it releases tokens to users withdrawing cross-chain.
+
+**Cross-chain check.** To close the "maybe the Upbit flow was on another chain" objection, we indexed BNB Chain the same way. On *both* chains the same relay contracts (`0x194e`, `0xd3b8`, `0xb9d9`) moved tokens in 150M chunks — but in **opposite directions**: *into* the pool on Ethereum, *out of* it on BNB. That is one operator holding the same contracts on two chains and shuffling inventory between them — textbook cross-chain bridge behavior. And **no Upbit-labeled flow appears on either chain.** The largest BNB-side exchange flows were also Binance-internal moves, the `0x26209`↔Bitget 6 round-trip, and many small distributed deposits into Binance (58, 70, 41, 35 transfers into one hot wallet).
+
+We note the limits honestly. (1) `cex.addresses`' Upbit deposit labels may be incomplete — but on neither chain is there a *single ~500M block* transfer to one exchange deposit address (the largest CEX flows are Binance-internal, the Bitget round-trip, or small distributed deposits). (2) We did not assert at the ABI level that `0x194e` is literally Chainlink's CCIP contract (Dune has not decoded it); we say only that its deploy timing and two-chain cycling are *consistent* with that explanation. The bottom line: the specific "team dumped 500M to Upbit" claim is not reproduced on **either** Ethereum or BNB Chain, and the transfer pattern fits the bridge account.
+
+## Data
+
+### Bridge-pool cadence — own measurement
+
+We measured, hour by hour, whether `0x194e` merely *holds* tokens or *cycles* them. The pattern is clear: outflows exceeded inflows on June 8–9 and the pool net-drained, then was replenished 300M/day on June 9–10. That matches the team's statement — "withdrawals to Ethereum surged June 9 and drained the bridge pool, which we have since replenished" — in both timing and direction.
+
+<ChartFrame
+  kind="BRIDGE POOL CADENCE · own measurement"
+  caption={<>
+    Daily inflow (lock) / outflow (release) of the 0x194e pool, June 3 – 11, 2026 (own Dune indexing).
+    <br />
+    <br />
+    Net drain June 8–9 → replenished 300M/day June 9–10. Active cycling, not static custody.
+    <br />
+    <br />
+    Consistent with the team's "CCIP pool drained then refilled" account.
+  </>}
+  source="Dune Analytics · BscScan/Etherscan"
+  aspect="video"
+>
+  <SaharaPoolCadence />
+</ChartFrame>
+
+### Price action
+
+<ChartFrame
+  kind="PRICE · SAHARA / USDT · BINANCE SPOT · 1D"
+  caption={<>
+    SAHARA/USDT spot daily (Binance), Jul 2025 – Jun 2026.
+    <br />
+    <br />
+    ~90% structural decline from the ~$0.16 July ATH, with two single-day crashes along the way — late November and early June.
+    <br />
+    <br />
+    The volume-spike candle at the far right is June 9 (-55 to -60%). Click to zoom.
+  </>}
+  source="Binance spot · TradingView capture (locally hosted)"
+  aspect="auto"
+>
+  <ZoomableImage src={priceSpot1d} alt="SAHARA/USDT spot daily (Binance), Jul 2025–Jun 2026 — ~90% decline from ATH with two single-day crashes" />
+</ChartFrame>
+
+<ChartFrame
+  kind="PRICE · SAHARA / USDT · BINANCE PERP · 4H + OI"
+  caption={<>
+    SAHARA/USDT perpetual 4h + open interest (OI, lower panel), May – Jun 2026 (Binance).
+    <br />
+    <br />
+    At the far right (June 9), a vertical drop ~$0.038 → ~$0.0145 with a volume spike.
+    <br />
+    <br />
+    OI collapses from ~1B at the same moment — a leverage liquidation cascade (~$22.65M of longs liquidated in 24h). Click to zoom.
+  </>}
+  source="Binance perpetual · TradingView capture (locally hosted)"
+  aspect="auto"
+>
+  <ZoomableImage src={pricePerp4h} alt="SAHARA/USDT perpetual 4h + OI (Binance), May–Jun 2026 — June 9 vertical crash and OI collapse" />
+</ChartFrame>
+
+| When | Price | Note |
+|------|-------|------|
+| 2025-07-24 | $0.1605 | All-time high (~1 month after listing) |
+| 2025-11-29 | $0.081 → $0.0346 | First ~57% single-day crash (MM unwind account) |
+| 2026-02-06 | ~$0.0136 | All-time low area |
+| 2026-06-09 | $0.0396 → $0.0145 | Second ~55–60% crash, $22.65M longs liquidated |
+| Jun 2026 (now) | ~$0.016–0.017 | ~90% below ATH |
+
+So where did the selling that actually pushed price down on June 9 come from? On-chain, the flows toward exchanges were not one insider's bulk deposit but **many distinct wallets making small, distributed deposits into Binance** (147, 38, and 40 transfers into a single hot wallet — and the same pattern on BNB: 58, 70, 41 transfers). In other words, on top of a setup of unlock cliff + heavy leverage + thin real demand, *many holders panic-sold at once*. We also record that the Bitget hot wallet `0x1ab4…8f23` (Bitget 6) — the same address seen in the RAVE and LAB cases — reappears with ~350M tokens of throughput in the same window: the same exchange infrastructure recurring across cases.
+
+## Lessons — signals to identify the next case like this
+
+The takeaway here differs from RAVE/LAB. It is not about asserting "who dumped," but about **how to verify an ambiguous signal, and what structure repeatedly invites a crash**.
+
+### On-chain verification signals (this case's distinction)
+
+- For a large transfer, first check **whether the destination is a contract or an EOA** — exchange deposits are EOAs; bridge/staking pools are contracts
+- Check whether the destination carries an **exchange deposit label** (Etherscan/Dune)
+- Check whether that address **holds or forwards** the tokens — a pool that cycles may be bridge/MM behavior
+- A tweet saying "500M moved to X" is held until you *check the destination yourself* — don't promote an allegation into a fact
+
+### Supply / unlock signals
+
+- When circulating is ~30% of supply and **the rest is locked on cliffs**, that is pre-announced overhang
+- The closer the first major insider (team + backers) unlock, the more sell-pressure expectation is priced in
+- A low MC/FDV (0.34 here) means the market is thin relative to un-circulating supply
+
+### Derivatives / leverage signals
+
+- When a single-day crash comes with **large long liquidations** ($22.65M), it is a leverage cascade
+- Low float plus high perp open interest is an environment where small selling triggers liquidation chains
+
+### Recurrence signal (most important)
+
+- The same token taking **two or more similar single-day crashes in a short span** (~60% each in Nov 2025 and Jun 2026 here)
+- Each explained by an *external factor* (market-maker unwind → bridge fill), with the explanation changing each time
+- Whether or not each explanation is true, *the fact that it is repeatedly crash-prone* is itself the warning
+
+### Trading takeaway
+
+> A structurally crash-prone token is dangerous regardless of whether the allegation is true.
+
+When low float, an imminent unlock, high leverage, and single-market-maker dependence stack up — whether insiders actually dumped or it was a bridge fill — a position in either direction is dangerous. An allegation being *unproven* does not mean the token is *safe*.
+
+## Sources
+
+1. **CryptoTimes** — ["Sahara's 60% Crash: X Claims Team Dumped Before Massive Token Unlock"](https://www.cryptotimes.io/2026/06/09/saharas-60-crash-x-claims-team-dumped-before-massive-token-unlock/) — 2026.06.09 (allegation side)
+2. **crypto.news** — ["Sahara AI price crashes 55% as team denies 600M token dump"](https://crypto.news/sahara-ai-price-crashes-55-as-team-denies-600m-token-dump/) — 2026.06.09 (team rebuttal + CCIP account)
+3. **BeInCrypto** — ["Binance-backed Sahara AI token crashes"](https://beincrypto.com/binance-backed-sahara-ai-token-crashes/) — 2026.06.09
+4. **AMBCrypto** — ["Sahara AI denies triggering 60% price crash: 'No team tokens have been sold'"](https://ambcrypto.com/sahara-ai-denies-triggering-60-price-crash-no-team-tokens-have-been-sold/) — 2026.06.09
+5. **Cryptopolitan** — ["Market maker blamed for Sahara token crash"](https://www.cryptopolitan.com/market-maker-blamed-for-sahara-token-crash/) — 2025.11 (first crash)
+6. **CoinGecko** — [Sahara AI price/supply/contract](https://www.coingecko.com/en/coins/sahara-ai) · **CoinMarketCap** — [SAHARA](https://coinmarketcap.com/currencies/sahara-ai/)
+7. **PR Newswire** — ["Sahara AI Raises $43M to Build a Collaborative AI Economy"](https://www.prnewswire.com/news-releases/sahara-ai-raises-43m-to-build-a-collaborative-ai-economy-302222316.html) · **Pantera Capital** — [Investing in Sahara AI](https://panteracapital.com/blog-investing-in-sahara-ai/)
+8. **Own on-chain measurement** — Dune Analytics (Ethereum + BNB Chain, `0xFDFfB411C4A70AA7C95D5C981a6Fb4Da867e1111`): [ETH large transfers](https://dune.com/queries/7703583) · [contract creators](https://dune.com/queries/7703599) · [ETH CEX flows](https://dune.com/queries/7703610) · [pool cadence](https://dune.com/queries/7703614) · [pool outflow destinations](https://dune.com/queries/7703624) · [BNB large transfers](https://dune.com/queries/7703745) · [BNB CEX flows](https://dune.com/queries/7703760)
