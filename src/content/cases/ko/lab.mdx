@@ -3,9 +3,9 @@ slug: "lab"
 title: "LAB (LABtrade)"
 tokenSymbol: "LAB"
 incidentDate: "2026-05-11"
-publishedDate: "2026-05-29"
+publishedDate: "2026-07-10"
 status: "alleged"
-severity: "high"
+severity: "critical"
 patterns:
   - "supply-concentration"
   - "cross-exchange-coordination"
@@ -13,12 +13,12 @@ patterns:
   - "proxy-contract-risk"
 metrics:
   startPrice: 0.70
-  peakPrice: 6.66
-  bottomPrice: 2.91
-  maxGain: 8.51
-  maxDrawdown: -0.65
-  marketCapPeak: 6000000000
-  pumpDurationDays: 9
+  peakPrice: 27.30
+  bottomPrice: 1.82
+  maxGain: 38.0
+  maxDrawdown: -0.85
+  marketCapPeak: 5000000000
+  marketCapEvaporated: 4600000000
   crashDurationHours: 24
 exchanges:
   binanceSpot: false
@@ -38,7 +38,15 @@ allegations:
     sourceUrl: "https://news.bitcoin.com/lab-token-bitget-withdrawal-manipulation-2026/"
     date: "2026-05-12"
     summary: "5/11~12 약 1억 LAB(~$480M)이 Bitget에서 신규 10개 지갑으로 이동 — 보고된 유통량 309.95M의 32.26%에 해당."
-relatedCases: ["rave", "siren", "aria"]
+  - source: "Cryptopolitan"
+    sourceUrl: "https://www.cryptopolitan.com/lab-token-crashes-after-multiple-warnings/"
+    date: "2026-07-08"
+    summary: "7/8 LAB이 24시간 만에 약 −85% 붕괴(약 $14~15 → $1.82~2.18, ATH $27.30 대비 약 −93%). 시총 $5B+ → 수억 달러대로 축소, Binance perp 롱 강제청산. 7/14 프리세일 cliff 언락(약 27M LAB, ~$336M) 임박이 매도 압력으로 지목됨."
+  - source: "자체 온체인 측정 (Dune)"
+    sourceUrl: "https://dune.com/queries/7938697"
+    date: "2026-07-10"
+    summary: "붕괴 윈도우(7/4~9)를 직접 인덱싱한 결과, 5월에 특정한 상위 라운드넘버 지갑 4개(합계 약 60%)가 −85% 붕괴 내내 온체인 LAB 전송 0건. 붕괴일(7/8) 전송 건수·총량은 폭발(526K건·147.6M)했으나 최대 단일 전송은 1.78M로 파편화된 churn이었고, 10M 규모 블록은 바닥 이후 7/9에야 등장."
+relatedCases: ["rave", "siren", "aria", "humanity"]
 ---
 
 import { ChartFrame } from '@/components/chart-frame'
@@ -76,6 +84,20 @@ LAB은 "AI 멀티체인 트레이딩 터미널"을 표방한 BNB 체인 토큰�
 
 우리는 이 컨트랙트를 직접 인덱싱해 ZachXBT가 제기한 핵심 수치를 자체 검증했다. 결과는 아래 각 섹션에 정리한다.
 
+## 라이브 업데이트 (2026-07-08) — 예고된 붕괴
+
+이 페이지의 나머지 서술은 5월 셋업(1차 펌프·−65%·인사이더 집중 의혹) 시점의 스냅샷이다. 이 절만 이후 경과를 기록한다.
+
+5월 이후 LAB은 무너지기는커녕 오히려 더 올라 **6월 2일 사상 최고가 약 $27.30**을 찍었다. 그리고 **7월 8일, 24시간 만에 약 −85% 붕괴**했다(약 $14~15 → $1.82~2.18, ATH 대비 약 −93%). 시총은 $5B대에서 수억 달러대로 축소됐고, Binance perp에서 레버리지 롱이 강제청산됐다. BTC·ETH는 같은 기간 약보합이라, 이 붕괴는 시장 전체가 아니라 LAB 고유의 사건이었다. 그리고 **7월 14일 프리세일 cliff 언락**(약 27M LAB, ~$336M)이 사흘 앞에 놓여 있었다.
+
+핵심 질문은 하나였다 — *5월에 84%를 쥐고 있던 그 지갑들이, 드디어 팔았는가?* 우리는 같은 컨트랙트를 붕괴 윈도우(7/4~9)에 다시 인덱싱했다. 자체 측정 결과:
+
+- **집중 공급을 쥔 상위 라운드넘버 지갑 4개(1위 20% · 3위 15% · 4위 13.8% · 5위 10.8%, 합계 약 60%)는 −85% 붕괴 내내 온체인 LAB 전송이 0건이었다.** 단 한 개도 움직이지 않았다.
+- 유일하게 유의미하게 움직인 상위 지갑은 6위(9.36%) `0xf79f…02fa` 로, 정확히 10M LAB을 **단 한 번**, 그것도 **바닥을 친 뒤인 7/9 17:24 UTC**에 보냈다.
+- 붕괴일(7/8)의 온체인 활동은 폭발했다 — 전송 526,337건, 총 147.6M LAB. 그러나 **최대 단일 전송은 1.78M에 그쳤다.** 즉 거대 고래 블록이 아니라 잘게 쪼개진 churn이다. 10M 규모의 큰 블록은 붕괴 *다음날* 7/9에야 처음 나타났다.
+
+요컨대 **−85%는 온체인 대형 분배 없이 일어났다.** 장전됐던 overhang은 붕괴 순간에도 대부분 잠들어 있었고, 가격은 CEX 현물·파생에서 무너졌다. 이는 본 사이트 BEAT 케이스의 핵심 명제 — *가격은 파생·CEX에서 만들어지고 큰 물량은 아직 안 움직인다* — 와 정확히 겹치며, ZachXBT가 5월부터 주장한 "미상 MM이 CEX에서 만든 조작"이라는 프레임과도 부합한다. 다만 본 페이지는 어느 지갑의 *의도*도 단정하지 않는다 — 측정된 것은 "붕괴 중 대형 온체인 분배가 없었다"는 사실뿐이다. (자체 측정: Dune [7938687](https://dune.com/queries/7938687) · [7938694](https://dune.com/queries/7938694) · [7938697](https://dune.com/queries/7938697))
+
 ## 타임라인
 
 <Timeline>
@@ -105,6 +127,18 @@ ZachXBT가 종합 조사 스레드 발표. 인사이더 95%+ 통제 의혹, OTC 
   </TimelineEvent>
   <TimelineEvent date="2026년 5월 16일 이후">
 모바일 앱 출시 기대감으로 일시 반등($4대 회복). 지속성은 불확실.
+  </TimelineEvent>
+  <TimelineEvent date="2026년 6월 2일 — 사상 최고가">
+5월 폭락 이후 오히려 재상승해 ATH 약 $27.30 도달. 집중된 공급이 유지된 채 가격만 상단으로.
+  </TimelineEvent>
+  <TimelineEvent date="2026년 7월 8일 — 최종 붕괴 (자체 측정)">
+24시간 만에 약 −85% 붕괴(약 $14~15 → $1.82~2.18, ATH 대비 약 −93%). 시총 $5B+ → 수억 달러대. Binance perp 롱 강제청산. **자체 측정: 상위 라운드넘버 지갑 4개(합계 ~60%)는 붕괴 내내 온체인 전송 0건, 붕괴일 147.6M 볼륨은 최대 단일 1.78M의 파편화 churn.**
+  </TimelineEvent>
+  <TimelineEvent date="2026년 7월 9일 — 붕괴 후 첫 대형 블록">
+바닥 이후, 6위 지갑 `0xf79f…02fa`가 10M LAB을 단일 전송(17:24 UTC). 10M 규모 블록의 첫 등장.
+  </TimelineEvent>
+  <TimelineEvent date="2026년 7월 14일 — 프리세일 cliff 언락 (예정)">
+약 27M LAB(~$336M) 프리세일 cliff 언락 예정. 붕괴 직후의 추가 공급 overhang.
   </TimelineEvent>
 </Timeline>
 
@@ -250,6 +284,7 @@ LAB은 RAVE의 거의 모든 위험 요소를 공유한다. 단일 항목은 약
 - **펌프 직전 거래소 핫월렛 → 신규 지갑들로 대량 분산 인출** (LAB: Bitget→신규 9지갑, 5/8~12)
 - 신규 지갑들이 거의 균등한 금액으로 동시 자금 수령 (조율 정황)
 - **이전 manipulation 의혹 케이스에서 본 거래소·중개 주소가 재등장** — RAVE의 Bitget 6/35, Gate.io, 크로스토큰 지갑이 LAB 상위권에 그대로 나타남
+- **폭락이 대형 온체인 분배 없이 일어남** — 7/8 −85% 붕괴 중 집중 공급 상위 지갑들은 온체인 전송 0건. 붕괴가 CEX·파생에서 진행되고 큰 물량이 잠들어 있으면, 온체인만 보면 "조용"해 보여도 위험은 그대로다 (BEAT와 동일 패턴)
 
 ### 가격·파생 시그널
 
@@ -271,4 +306,6 @@ RAVE에서 본 short squeeze 셋업이든, LAB처럼 분산 인출 후 분배든
 4. **Bitcoin News** — ["ZachXBT Says 95% of LAB Token Is Insider-Controlled…"](https://news.bitcoin.com/zachxbt-lab-token-insider-control-bitget-investigation-2026/)
 5. **Crypto Times** — ["ZachXBT Alleges 95% LAB Token Are Controlled by Insiders"](https://www.cryptotimes.io/2026/05/14/zachxbt-alleges-95-lab-token-are-controlled-by-insiders/) — 2026.05.14
 6. **Phemex Academy** — ["What Is LAB and Why This Multi-Chain Trading Terminal Token Just Surged 364%"](https://phemex.com/academy/what-is-lab-token-and-why-it-surged)
-7. **자체 온체인 측정** — Dune Analytics: [Top holders](https://dune.com/queries/7606732) · [클러스터 자금원](https://dune.com/queries/7606761) (BNB 체인 `0x7ec43cf65f1663f820427c62a5780b8f2e25593a`)
+7. **Cryptopolitan** — ["LAB token crashes 85% after multiple warnings"](https://www.cryptopolitan.com/lab-token-crashes-after-multiple-warnings/) — 2026.07.08 붕괴·언락
+8. **InteractiveCrypto** — ["LAB Token's 80% Crash Exposes Deep Market Manipulation and Looming Token Unlock Risks"](https://www.interactivecrypto.com/lab-token-s-80-crash-exposes-deep-market-manipulation-and-looming-token-unlock-risks-jul-2026) — ATH $27.30·시총 축소·7/14 언락
+9. **자체 온체인 측정** — Dune Analytics: [Top holders](https://dune.com/queries/7606732) · [클러스터 자금원](https://dune.com/queries/7606761) · [7월 붕괴 대형 전송](https://dune.com/queries/7938687) · [7월 일별 활동](https://dune.com/queries/7938694) · [상위 지갑 7월 이동](https://dune.com/queries/7938697) (BNB 체인 `0x7ec43cf65f1663f820427c62a5780b8f2e25593a`)

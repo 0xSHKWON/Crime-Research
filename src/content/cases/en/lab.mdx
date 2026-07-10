@@ -3,9 +3,9 @@ slug: "lab"
 title: "LAB (LABtrade)"
 tokenSymbol: "LAB"
 incidentDate: "2026-05-11"
-publishedDate: "2026-05-29"
+publishedDate: "2026-07-10"
 status: "alleged"
-severity: "high"
+severity: "critical"
 patterns:
   - "supply-concentration"
   - "cross-exchange-coordination"
@@ -13,12 +13,12 @@ patterns:
   - "proxy-contract-risk"
 metrics:
   startPrice: 0.70
-  peakPrice: 6.66
-  bottomPrice: 2.91
-  maxGain: 8.51
-  maxDrawdown: -0.65
-  marketCapPeak: 6000000000
-  pumpDurationDays: 9
+  peakPrice: 27.30
+  bottomPrice: 1.82
+  maxGain: 38.0
+  maxDrawdown: -0.85
+  marketCapPeak: 5000000000
+  marketCapEvaporated: 4600000000
   crashDurationHours: 24
 exchanges:
   binanceSpot: false
@@ -38,7 +38,15 @@ allegations:
     sourceUrl: "https://news.bitcoin.com/lab-token-bitget-withdrawal-manipulation-2026/"
     date: "2026-05-12"
     summary: "~100M LAB (~$480M) moved from Bitget to 10 fresh wallets on May 11-12 — equal to 32.26% of the reported 309.95M circulating supply."
-relatedCases: ["rave", "siren", "aria"]
+  - source: "Cryptopolitan"
+    sourceUrl: "https://www.cryptopolitan.com/lab-token-crashes-after-multiple-warnings/"
+    date: "2026-07-08"
+    summary: "On July 8, LAB crashed ~85% in 24 hours (~$14-15 → $1.82-2.18, about −93% from the $27.30 ATH). Market cap shrank from $5B+ to the hundreds of millions; leveraged longs were force-liquidated on Binance perps. The July 14 presale cliff unlock (~27M LAB, ~$336M) was cited as looming sell pressure."
+  - source: "Own on-chain measurement (Dune)"
+    sourceUrl: "https://dune.com/queries/7938697"
+    date: "2026-07-10"
+    summary: "Indexing the crash window (Jul 4-9) directly: the four top round-number wallets identified in May (~60% combined) sent zero LAB on-chain throughout the −85% crash. On the crash day (Jul 8), transfer count and volume exploded (526K transfers, 147.6M) but the largest single transfer was only 1.78M — fragmented churn; 10M-scale blocks appeared only on Jul 9, after the bottom."
+relatedCases: ["rave", "siren", "aria", "humanity"]
 ---
 
 import { ChartFrame } from '@/components/chart-frame'
@@ -76,6 +84,20 @@ This token is unrelated to the 2021 real-estate NFT project "LABS Group" — it 
 
 We indexed this contract ourselves to verify ZachXBT's key figures. The results appear in each section below.
 
+## Live update (2026-07-08) — the foretold collapse
+
+The rest of this page is a snapshot from the May setup (first pump, −65%, insider-concentration allegation). This section records what happened since.
+
+After May, LAB didn't collapse — it climbed further, hitting an **all-time high of ~$27.30 on June 2**. Then, on **July 8, it crashed ~85% in 24 hours** (~$14-15 → $1.82-2.18, about −93% from the ATH). Market cap fell from the $5B range to the hundreds of millions, and leveraged longs were force-liquidated on Binance perps. BTC and ETH were roughly flat over the same window, so this was idiosyncratic to LAB, not market-wide. And a **presale cliff unlock** (~27M LAB, ~$336M) sat just three days ahead, on July 14.
+
+The key question was singular — *did the wallets holding 84% in May finally sell?* We re-indexed the same contract across the crash window (Jul 4-9). Our measurement:
+
+- **The four top round-number wallets holding the concentrated supply (#1 20% · #3 15% · #4 13.8% · #5 10.8%, ~60% combined) sent zero LAB on-chain throughout the −85% crash.** Not one of them moved.
+- The only top wallet that moved meaningfully was #6 (9.36%) `0xf79f…02fa`, which sent exactly 10M LAB **once** — and only **after the bottom, at Jul 9 17:24 UTC**.
+- On-chain activity on the crash day (Jul 8) did explode — 526,337 transfers, 147.6M LAB total. But **the largest single transfer was just 1.78M** — fragmented churn, not whale blocks. The first 10M-scale block appeared only the *next* day, Jul 9.
+
+In short, **the −85% happened without large on-chain distribution.** The loaded overhang stayed mostly dormant even at the moment of collapse, and the price broke on CEX spot and derivatives. This overlaps exactly with our BEAT case's core thesis — *price is made on derivatives/CEX while the big supply hasn't moved* — and fits ZachXBT's framing since May of "an unknown MM's manipulation made on CEXs." That said, this page asserts nothing about any wallet's *intent* — what is measured is only the fact that there was no large on-chain distribution during the crash. (Own measurement: Dune [7938687](https://dune.com/queries/7938687) · [7938694](https://dune.com/queries/7938694) · [7938697](https://dune.com/queries/7938697))
+
 ## Timeline
 
 <Timeline>
@@ -105,6 +127,18 @@ ZachXBT published a comprehensive investigation thread — alleging 95%+ insider
   </TimelineEvent>
   <TimelineEvent date="After May 16, 2026">
 A temporary bounce (recovery into the $4s) on mobile-app launch speculation. Durability unclear.
+  </TimelineEvent>
+  <TimelineEvent date="June 2, 2026 — all-time high">
+After the May drop, LAB rallied again to an ATH of ~$27.30. The concentrated supply held; only the price moved to the top.
+  </TimelineEvent>
+  <TimelineEvent date="July 8, 2026 — the final collapse (own measurement)">
+~85% crash in 24 hours (~$14-15 → $1.82-2.18, about −93% from the ATH). Market cap $5B+ → hundreds of millions. Force-liquidations of longs on Binance perps. **Own measurement: the four top round-number wallets (~60% combined) sent zero on-chain through the crash; the crash day's 147.6M volume was fragmented churn with a 1.78M single-transfer max.**
+  </TimelineEvent>
+  <TimelineEvent date="July 9, 2026 — first large block after the crash">
+After the bottom, wallet #6 `0xf79f…02fa` sent 10M LAB in a single transfer (17:24 UTC) — the first appearance of a 10M-scale block.
+  </TimelineEvent>
+  <TimelineEvent date="July 14, 2026 — presale cliff unlock (scheduled)">
+~27M LAB (~$336M) presale cliff unlock scheduled. Additional supply overhang right after the collapse.
   </TimelineEvent>
 </Timeline>
 
@@ -250,6 +284,7 @@ LAB shares nearly every risk factor with RAVE. A single item is weak, but **seve
 - **Large layered withdrawal from an exchange hot wallet to fresh wallets right before the pump** (LAB: Bitget → 9 fresh wallets, May 8-12)
 - Fresh wallets receiving near-identical amounts simultaneously (coordination signal)
 - **Exchange / intermediary addresses from prior suspected-manipulation cases reappearing** — RAVE's Bitget 6/35, Gate.io, and a cross-token wallet all show up in LAB's top ranks
+- **A crash that happens without large on-chain distribution** — during the Jul 8 −85% collapse, the concentrated top wallets sent zero on-chain. When a crash runs on CEX/derivatives while the big supply stays parked, on-chain can look "quiet" while the risk is fully intact (same pattern as BEAT)
 
 ### Price / derivatives signals
 
@@ -271,4 +306,6 @@ Whether it is a short-squeeze setup like RAVE, or a withdraw-then-distribute pat
 4. **Bitcoin News** — ["ZachXBT Says 95% of LAB Token Is Insider-Controlled…"](https://news.bitcoin.com/zachxbt-lab-token-insider-control-bitget-investigation-2026/)
 5. **Crypto Times** — ["ZachXBT Alleges 95% LAB Token Are Controlled by Insiders"](https://www.cryptotimes.io/2026/05/14/zachxbt-alleges-95-lab-token-are-controlled-by-insiders/) — May 14, 2026
 6. **Phemex Academy** — ["What Is LAB and Why This Multi-Chain Trading Terminal Token Just Surged 364%"](https://phemex.com/academy/what-is-lab-token-and-why-it-surged)
-7. **Own on-chain measurement** — Dune Analytics: [Top holders](https://dune.com/queries/7606732) · [cluster funder](https://dune.com/queries/7606761) (BNB Chain `0x7ec43cf65f1663f820427c62a5780b8f2e25593a`)
+7. **Cryptopolitan** — ["LAB token crashes 85% after multiple warnings"](https://www.cryptopolitan.com/lab-token-crashes-after-multiple-warnings/) — Jul 8, 2026 crash and unlock
+8. **InteractiveCrypto** — ["LAB Token's 80% Crash Exposes Deep Market Manipulation and Looming Token Unlock Risks"](https://www.interactivecrypto.com/lab-token-s-80-crash-exposes-deep-market-manipulation-and-looming-token-unlock-risks-jul-2026) — $27.30 ATH, market-cap shrinkage, July 14 unlock
+9. **Own on-chain measurement** — Dune Analytics: [Top holders](https://dune.com/queries/7606732) · [cluster funder](https://dune.com/queries/7606761) · [July crash large transfers](https://dune.com/queries/7938687) · [July daily activity](https://dune.com/queries/7938694) · [top wallets in July](https://dune.com/queries/7938697) (BNB Chain `0x7ec43cf65f1663f820427c62a5780b8f2e25593a`)
