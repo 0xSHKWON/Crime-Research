@@ -30,10 +30,15 @@ fi
 # 한국어 "사기" 는 "사기성" 등 부분 매칭 제외, "사기꾼" / "사기다" / "사기였" 등은 검출
 forbidden_pattern='사기꾼|사기였|사기다|사기[를을이가는]|범죄자|도둑[질]?|박살내|잡아내자|처벌하자|scam[^_a-z]|fraud[^_a-z]|criminal[^_a-z]|thief'
 
+# 허용 예외 (검사 전에 라인에서 제거 — sed 는 라인 수를 보존하므로 grep -n 라인 번호 유지):
+# 1) URL — 출처 링크 슬러그 (예: justice.gov 의 criminal-investigation, 기사 슬러그의 -fraud)
+# 2) "wire fraud" — 미 연방법 죄명 (18 U.S.C. §1343). 법률 고유명사 인용은 규칙 3 위반이 아님.
+allowlist_sed='s#https?://[^ )">]+##g; s/wire[- ]?fraud//Ig'
+
 violations=""
 for f in $mdx_files; do
   if [[ -f "$f" ]]; then
-    matches=$(grep -niE "$forbidden_pattern" "$f" 2>/dev/null || true)
+    matches=$(sed -E "$allowlist_sed" "$f" | grep -niE "$forbidden_pattern" 2>/dev/null || true)
     if [[ -n "$matches" ]]; then
       violations+="
 === $f ===
