@@ -1,0 +1,223 @@
+---
+slug: "gotbit"
+title: "NexFundAI (NEXF) — The DOJ Sting"
+tokenSymbol: "NEXF"
+incidentDate: "2024-10-09"
+publishedDate: "2026-07-10"
+status: "documented"
+severity: "high"
+patterns:
+  - "wash-trading"
+  - "mm-as-a-service"
+  - "direct-dump"
+allegations:
+  - source: "DOJ, District of Massachusetts (official announcement)"
+    sourceUrl: "https://www.justice.gov/usao-ma/pr/eighteen-individuals-and-entities-charged-international-operation-targeting-widespread"
+    date: "2024-10-09"
+    summary: "Announced charges against 18 individuals and entities for market manipulation and wash trading — the first time crypto 'financial services firms' (market makers) were criminally charged. The FBI-created trap token NexFundAI anchored the investigation; the announcement included $25M+ in seized crypto and trading bots deactivated across ~60 tokens."
+  - source: "DOJ, District of Massachusetts (Gotbit guilty plea)"
+    sourceUrl: "https://www.justice.gov/usao-ma/pr/cryptocurrency-financial-services-firm-gotbit-and-founder-plead-guilty-market"
+    date: "2025-03-19"
+    summary: "Market maker Gotbit and founder Aleksei Andriunin pleaded guilty to wire fraud and market-manipulation conspiracy, admitting Gotbit provided artificial-volume services for clients including Robo Inu and Saitama between 2018 and 2024, and agreeing to forfeit ~$23M in seized cryptocurrency."
+  - source: "DOJ, Northern District of California / IRS-CI"
+    sourceUrl: "https://www.justice.gov/usao-ndca/pr/ten-foreign-nationals-charged-international-operation-targeting-cryptocurrency-market"
+    date: "2025-10-02"
+    summary: "Ten foreign nationals tied to Gotbit, Vortex, Contrarian and Antier charged with wire fraud and conspiracy across three grand-jury indictments (Mar–Sep 2025). Three defendants extradited from Singapore on 2025-10-02; $1M+ in crypto seized in this branch of the investigation."
+  - source: "SEC (parallel civil actions)"
+    sourceUrl: "https://www.sec.gov/enforcement-litigation/litigation-releases/lr-26155"
+    date: "2024-10-09"
+    summary: "On the same day as the DOJ announcement, the SEC filed parallel civil actions against Saitama-linked individuals (Manpreet Singh Kohli et al.) and ZM Quant (LR-26155, LR-26158)."
+  - source: "Own on-chain measurement (Dune)"
+    sourceUrl: "https://dune.com/queries/7938125"
+    date: "2026-07-10"
+    summary: "Direct indexing of the Ethereum contract the community attributes to NexFundAI (0x16ca…54c, symbol NexF). Measured: deploy on 2024-05-29 → 12 dormant weeks → a four-week metronomic churn window (Aug 22–Sep 18) by 15–19 wallets whose cumulative buys ≈ cumulative sells (gap under 0.001%) → a dead stop three weeks before charges were unsealed. Also measured: 36 takers generated ~$607K of volume in those four weeks."
+relatedCases: ["gps-shell", "lab", "rave"]
+---
+
+import { ChartFrame } from '@/components/chart-frame'
+import { Timeline, TimelineEvent } from '@/components/case-timeline'
+import { GotbitChurn } from '@/components/gotbit-churn'
+import { GotbitWash } from '@/components/gotbit-wash'
+
+## Overview
+
+The protagonist of this case is not a token that crashed. It is a token that **was never real to begin with**. NexFundAI (NEXF) was a trap token the FBI created for a market-manipulation investigation — an ERC-20 purporting to represent shares in an AI-related fund. Posing as the project's operators, agents approached market makers with a simple ask — "make the token look actively traded" — and collected the sales pitches, contracts and bot activity of the firms that took the job.
+
+On October 9, 2024, the U.S. Attorney's Office for the District of Massachusetts announced charges against 18 individuals and entities — the first time the DOJ criminally charged crypto "financial services firms" (market makers) with market manipulation and wash trading. Four market makers appear in the filings: Gotbit, ZM Quant, CLS Global and MyTrade, alongside executives of client token projects (including Saitama, at one point a multi-billion-dollar market cap, and Robo Inu). More than $25M in crypto was seized, and trading bots running across roughly 60 tokens were deactivated.
+
+> "purportedly offering market making services … in fact engaged in artificial trading of digital assets to give the false appearance that there was an active (and heavily traded) market"
+> — the filings' description of the scheme. Market making on the label, artificial trading underneath — that is the prosecution's account, and several defendants, including Gotbit, later admitted it in court.
+
+Where our other cases run "allegation → verification," this one runs the other way. **The court record already documented the method** — so we measured the footprint that method left on-chain. Indexing the contract the community attributes to NexFundAI (`0x16ca…54c` — the filings don't name an address, so we label it "attributed"), we found: 12 dormant weeks after deploy → four weeks of mechanical churn by 15–19 wallets → a dead stop three weeks before the charges were unsealed. Few specimens show what wash trading looks like on-chain this cleanly.
+
+## Timeline
+
+<Timeline>
+  <TimelineEvent date="May 29, 2024 — trap token deployed (own measurement)">
+The attributed contract (`0x16ca…54c`, symbol `NexF`) deploys on Ethereum; 1,257 transfers on day one seed the initial distribution. All trading thereafter happens in a single Uniswap pool.
+  </TimelineEvent>
+  <TimelineEvent date="June – August 21, 2024 — 12 fully dormant weeks (own measurement)">
+Roughly 12 weeks of zero on-chain transfers. A token with no organic demand whatsoever — unsurprising, for a trap.
+  </TimelineEvent>
+  <TimelineEvent date="August 22, 2024 — bots switch on (own measurement)">
+The dormancy ends abruptly: uniform daily transfers of 40–69 begin. Timing and shape match the filings' account of an MM activating volume bots at the FBI's request.
+  </TimelineEvent>
+  <TimelineEvent date="September 18, 2024 — on-chain activity stops (own measurement)">
+The last transfer. The token goes silent — three weeks before the charges are unsealed.
+  </TimelineEvent>
+  <TimelineEvent date="October 7–8, 2024 — arrests">
+Saitama CEO Manpreet Kohli is arrested in the UK (Oct 7); Gotbit founder Aleksei Andriunin in Portugal (Oct 8).
+  </TimelineEvent>
+  <TimelineEvent date="October 9, 2024 — charges unsealed">
+The District of Massachusetts announces charges against 18 individuals and entities — market makers Gotbit, ZM Quant, CLS Global and MyTrade, plus client-project executives. $25M+ seized; bots across ~60 tokens deactivated. The SEC files parallel civil actions the same day. MyTrade's side is reported to have pleaded guilty that same month.
+  </TimelineEvent>
+  <TimelineEvent date="February 2025 — Andriunin extradited">
+Transferred from Portugal to the United States.
+  </TimelineEvent>
+  <TimelineEvent date="March 19, 2025 — Gotbit pleads guilty">
+Gotbit and Andriunin plead guilty to wire fraud and market-manipulation conspiracy, agreeing to forfeit ~$23M in seized crypto ($9M USDT + $4.2M USDC + two further wallets). CLS Global is reported convicted in April 2025.
+  </TimelineEvent>
+  <TimelineEvent date="March – September 2025 — second wave (N.D. California)">
+Three grand-jury indictments (Mar 25 San Francisco; Aug 28 and Sep 4 Oakland) charge ten foreign nationals tied to Gotbit, Vortex, Contrarian and Antier with wire fraud and conspiracy.
+  </TimelineEvent>
+  <TimelineEvent date="June 13, 2025 — Andriunin sentenced">
+Judge Angel Kelley sentences Andriunin to eight months' incarceration (with credit for time in custody — his counsel described it as effectively time served) and one year of supervised release. Gotbit the entity: five years' probation, full cessation of operations, $23M forfeiture.
+  </TimelineEvent>
+  <TimelineEvent date="October 2, 2025 — Singapore extraditions">
+Three second-wave defendants are extradited from Singapore. $1M+ seized in this branch.
+  </TimelineEvent>
+  <TimelineEvent date="April 2, 2026 — 'still pervasive' coverage">
+CoinDesk revisits the sting and reports the industry's assessment that wash trading remains "far more common" than expected among low-cap tokens and on unregulated venues. Not a closed case — an ongoing structure.
+  </TimelineEvent>
+</Timeline>
+
+## Market structure — a market with no market
+
+Conventional supply analysis doesn't apply to NEXF: it was never a token sold to investors, it was an investigative instrument. Instead, its trading structure is the essence of the case — **a market whose participants were essentially all bots**.
+
+| Item | Value (own measurement) |
+|------|------|
+| Chain / venue | Ethereum / single Uniswap pool |
+| Attributed contract | `0x16ca471aE755f8a2cD4eC315A4a7439dcfEBE54c` |
+| Full lifetime | 2024-05-29 to 09-18 (112 days) |
+| Lifetime on-chain transfers | 2,600 |
+| Lifetime DEX trades / takers | 2,186 / 652 (mostly deploy-day) |
+| Bot-window (08-22–09-18) trades / takers | 827 / **36** |
+| Bot-window "volume" | ~$607K (avg trade $734) |
+
+For four weeks, this token's entire "market" was 36 takers. Those 36 printed $20–30K a day — $607K in total. From the outside, the chart would have read as "a small token with steady turnover."
+
+## Method — manipulation-as-a-service
+
+What this case documents is not one token's misbehavior but an **industrialized service product**. Per the filings, the market makers pitched "market making," then sold a product that repeatedly traded tokens between wallets they controlled to manufacture volume. ZM Quant advertised a trading bot that could "create volume"; sales happened over Telegram and video calls, the filings state. Client projects were charged with using that manufactured activity to draw investors in and then selling into the artificially supported prices — the classic pump-and-dump structure.
+
+<ChartFrame
+  kind="FUND FLOW · STING STRUCTURE"
+  caption={<>
+    The four stages of the NexFundAI sting.
+    <br />
+    (1) The FBI deploys a trap token,
+    <br />
+    (2) approaches MMs undercover with a "volume support" job,
+    <br />
+    (3) 15–19 bot wallets round-trip the Uniswap pool for four weeks (cumulative buys ≈ sells),
+    <br />
+    (4) the fake volume becomes the indictment evidence.
+  </>}
+  source="DOJ filings and plea records + own Dune indexing"
+  aspect="square"
+>
+  <GotbitWash />
+</ChartFrame>
+
+### The on-chain fingerprint of wash trading — buys ≈ sells
+
+Aggregate the bot window's top wallets and the fingerprint is unmistakable. Excluding the pool, every top wallet **sent almost exactly as much as it received**:
+
+| Wallet | sends | recvs | Sent | Received | Gap |
+|--------|-------|-------|------|----------|-----|
+| `0x19e7…1d7a` (Uniswap pool) | 404 | 425 | 516.7B | 518.1B | — |
+| `0x7699…444e` | 40 | 39 | 50,802,652,773 | 50,802,358,640 | **0.0006%** |
+| `0xcc98…ccfc` | 31 | 36 | 64,208,172,129 | 64,207,356,260 | 0.001% |
+| `0x2ae4…727b` | 32 | 33 | 56.77B | 56.77B | ≈0 |
+| `0xc9e7…8fe1` | 29 | 31 | 56.19B | 56.19B | ≈0 |
+| 14 further similar wallets | 17–29 | 17–31 | ≈ | ≈ | ≈0 |
+
+Buy what you sold, sell what you bought. Net position change over four weeks: effectively zero — no price exposure, no profit-seeking. The sole output of this trading is **the volume itself**. That symmetry cannot arise from organic demand, and it is the on-chain form of the "wash trading between controlled wallets" the filings describe.
+
+## Data
+
+### On-chain activity timeline — deploy, silence, bots, stop
+
+<ChartFrame
+  kind="ON-CHAIN · DAILY TRANSFERS · OWN MEASUREMENT"
+  caption={<>
+    Daily on-chain transfers of the attributed NexF contract (own Dune indexing, 2024-05-29 to 10-09).
+    <br />
+    <br />
+    1,257 on deploy day (clipped) → 12 fully dormant weeks (zero) → bots on 08-22, four weeks of metronomic 24–69/day churn → dead stop on 09-18.
+    <br />
+    <br />
+    Charges unsealed three weeks later, on 10-09. The final week ran on just 4–6 wallets.
+  </>}
+  source="Dune Analytics — own measurement (query 7938125)"
+  aspect="video"
+>
+  <GotbitChurn />
+</ChartFrame>
+
+| Phase | Period | Transfers/day | Active wallets |
+|-------|--------|---------------|----------------|
+| Deploy/distribution | 05-29 – 05-31 | 49 – 1,257 | 400+ (airdrop-like) |
+| Full dormancy | 06-01 – 08-21 | **0** | 0 |
+| Bot window | 08-22 – 09-11 | 43 – 69 | 11–28 senders |
+| Bot taper | 09-12 – 09-18 | 24 – 45 | **4–6** senders |
+| Stop | from 09-19 | 0 | 0 |
+
+Daily token volume is just as uniform — 70B–100B tokens a day throughout the window. None of the jaggedness of a human market.
+
+### DEX profile
+
+| Item | Lifetime | Bot window (4 weeks) |
+|------|----------|----------------------|
+| Trades | 2,186 | 827 |
+| Unique takers | 652 | **36** |
+| USD volume | $1.07M | $607K |
+| Avg trade size | — | $734 |
+| Venue | Uniswap only | Uniswap only |
+
+## Lessons — volume is a purchasable product
+
+The lesson here is simple and heavy: **trading volume is not a trust signal.** The court record confirms that volume-manufacturing was a service genuinely for sale, and that a few dozen bots complete the look of an "actively traded token."
+
+### Signals for checking the quality of volume
+
+- **Trades vs unique traders** — NEXF's bot window: 827 trades, 36 takers. When participants are abnormally few relative to volume, question where the volume comes from
+- **Per-wallet cumulative buys ≈ sells** — if the most active wallets sell exactly what they buy (no net position change), that volume is churn, not demand
+- **Metronomic uniformity** — daily trade counts and volume holding a narrow band for weeks looks more like bot output than a human market
+- **Sudden 'activation' after long dormancy** — when a token with no organic demand starts trading on a steady rhythm one day, ask who signed what at that moment
+
+### Structural takeaways
+
+- **DEX volume is at least verifiable** — this case's fingerprint (taker counts, wallet symmetry) was countable because it was on-chain. CEX internal volume allows no such verification — treat the reported volume of thin CEX-listed tokens with one more level of doubt
+- **Listing requirements create manipulation demand** — because exchanges weigh volume in listing and maintenance reviews, projects have a structural incentive to buy it. Impressive volume right after a new listing proves nothing by itself
+- **Market-maker contracts are a black box** — when a project doesn't disclose which MM it engaged and on what terms, investors have no way to judge the authenticity of its volume (part of why Binance mandated MM disclosure in March 2026)
+- **The method did not die with the indictments** — as of 2026, the industry's own assessment is that wash trading remains "far more common" than expected among low-cap tokens. That is why the NEXF fingerprint is worth memorizing
+
+> A chart's volume bars don't show how many people care. They may show how much someone paid to make it look that way.
+
+## Sources
+
+1. **DOJ, District of Massachusetts** — [Eighteen Individuals and Entities Charged…](https://www.justice.gov/usao-ma/pr/eighteen-individuals-and-entities-charged-international-operation-targeting-widespread) — Oct 9, 2024 announcement (primary)
+2. **DOJ, District of Massachusetts** — [Gotbit and Founder Plead Guilty…](https://www.justice.gov/usao-ma/pr/cryptocurrency-financial-services-firm-gotbit-and-founder-plead-guilty-market) — Gotbit/Andriunin plea (primary)
+3. **DOJ, N.D. California (with IRS-CI)** — [Ten Foreign Nationals Charged…](https://www.justice.gov/usao-ndca/pr/ten-foreign-nationals-charged-international-operation-targeting-cryptocurrency-market) — second wave, extraditions (primary)
+4. **SEC** — [LR-26155 (Saitama)](https://www.sec.gov/enforcement-litigation/litigation-releases/lr-26155) · [LR-26158 (ZM Quant)](https://www.sec.gov/enforcement-litigation/litigation-releases/lr-26158) — parallel civil actions (primary)
+5. **Decrypt** — [Gotbit Founder Sentenced to Prison for Crypto Wash Trading](https://decrypt.co/325111/gotbit-founder-sentenced-prison-crypto-wash-trading) — June 13, 2025 sentencing details
+6. **TRM Labs** — [FBI Creates Token Project in Trojan Horse Crypto Operation](https://www.trmlabs.com/resources/blog/fbi-creates-token-project-in-trojan-horse-crypto-operation-that-seizes-25-million) — $25M seizure analysis
+7. **Cointelegraph** — [FBI token: How the FBI used a fake AI fund coin](https://cointelegraph.com/news/fbi-token-fake-ai-fund-coin-fraud) — the community attribution of the contract address (basis for our "attributed" labeling)
+8. **CoinDesk** — [DOJ sting exposes crypto wash trading…'far more common' than expected](https://www.coindesk.com/business/2026/04/02/doj-sting-exposes-crypto-wash-trading-continues-to-be-far-more-common-than-expected) — April 2026 follow-up
+9. **Own on-chain measurement** — Dune Analytics (Ethereum, attributed contract `0x16ca…54c`): [Q0 sanity](https://dune.com/queries/7938100) · [Q1 daily churn](https://dune.com/queries/7938125) · [Q2 wallet cluster](https://dune.com/queries/7938135) · [Q3 DEX profile](https://dune.com/queries/7938143) · [Q4 bot-window volume](https://dune.com/queries/7938153)
+
+---
+
+*Note: allegations against defendants who have not been convicted are the prosecution's claims, and those defendants are presumed innocent unless and until proven guilty in court. The contract address is a community attribution, not one named in the filings.*

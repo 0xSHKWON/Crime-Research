@@ -1,0 +1,223 @@
+---
+slug: "gotbit"
+title: "NexFundAI (NEXF) — DOJ 함정수사"
+tokenSymbol: "NEXF"
+incidentDate: "2024-10-09"
+publishedDate: "2026-07-10"
+status: "documented"
+severity: "high"
+patterns:
+  - "wash-trading"
+  - "mm-as-a-service"
+  - "direct-dump"
+allegations:
+  - source: "DOJ 매사추세츠 연방지검 (공식 발표)"
+    sourceUrl: "https://www.justice.gov/usao-ma/pr/eighteen-individuals-and-entities-charged-international-operation-targeting-widespread"
+    date: "2024-10-09"
+    summary: "개인·법인 18곳을 시장 조작 및 wash trading 혐의로 기소했다고 발표. 크립토 업계 금융서비스 회사(마켓메이커)를 상대로 한 최초의 형사 기소. FBI가 만든 함정 토큰 NexFundAI가 수사의 축이었고, $25M 이상의 암호화폐 압수와 약 60개 토큰에 걸친 트레이딩 봇 비활성화를 함께 발표."
+  - source: "DOJ 매사추세츠 연방지검 (Gotbit 유죄 인정)"
+    sourceUrl: "https://www.justice.gov/usao-ma/pr/cryptocurrency-financial-services-firm-gotbit-and-founder-plead-guilty-market"
+    date: "2025-03-19"
+    summary: "마켓메이커 Gotbit과 창업자 Aleksei Andriunin이 wire fraud 및 시장 조작 공모 혐의에 대해 유죄를 인정. 2018~2024년 Robo Inu·Saitama 등 고객사를 위해 인위적 거래량을 만드는 manipulation 서비스를 제공했음을 인정했고, 압수 암호화폐 약 $23M 몰수에 합의."
+  - source: "DOJ 캘리포니아 북부지검 / IRS-CI"
+    sourceUrl: "https://www.justice.gov/usao-ndca/pr/ten-foreign-nationals-charged-international-operation-targeting-cryptocurrency-market"
+    date: "2025-10-02"
+    summary: "Gotbit·Vortex·Contrarian·Antier 소속 외국인 10명을 wire fraud 및 공모 혐의로 추가 기소(2025년 3~9월 대배심 3건). 2025-10-02 싱가포르에서 3명 인도. 이 수사 갈래에서 $1M 이상 암호화폐 압수."
+  - source: "SEC (병행 민사 제재)"
+    sourceUrl: "https://www.sec.gov/enforcement-litigation/litigation-releases/lr-26155"
+    date: "2024-10-09"
+    summary: "형사 기소와 같은 날 SEC가 Saitama 관련 인사(Manpreet Singh Kohli 등)와 ZM Quant 등을 상대로 병행 민사 소송 제기(LR-26155, LR-26158)."
+  - source: "자체 온체인 측정 (Dune)"
+    sourceUrl: "https://dune.com/queries/7938125"
+    date: "2026-07-10"
+    summary: "커뮤니티가 NexFundAI로 지목한 이더리움 컨트랙트(0x16ca…54c, 심볼 NexF)를 직접 인덱싱. 2024-05-29 배포 → 12주 휴면 → 08-22~09-18 4주간 지갑 15~19개의 메트로놈 회전(매수 누적 ≈ 매도 누적, 오차 0.001% 미만) → 기소 공개 3주 전 완전 정지를 측정. taker 36개가 4주간 약 $607K의 볼륨을 만든 것도 확인."
+relatedCases: ["gps-shell", "lab", "rave"]
+---
+
+import { ChartFrame } from '@/components/chart-frame'
+import { Timeline, TimelineEvent } from '@/components/case-timeline'
+import { GotbitChurn } from '@/components/gotbit-churn'
+import { GotbitWash } from '@/components/gotbit-wash'
+
+## 개요
+
+이 케이스의 주인공은 폭락한 토큰이 아니다. **애초에 진짜였던 적이 없는 토큰**이다. NexFundAI(NEXF)는 FBI가 시장 조작 수사를 위해 직접 만든 함정 토큰으로, "AI 관련 펀드의 지분을 표방하는" ERC-20이었다. FBI는 이 위장 프로젝트의 운영자를 자처하며 마켓메이커들에게 접근했고, "거래가 활발해 보이게 volume을 만들어 달라"는 의뢰에 응한 업체들의 영업 대화·계약·봇 가동 전 과정을 증거로 수집했다.
+
+2024년 10월 9일, 매사추세츠 연방지검은 개인·법인 18곳을 기소했다고 발표했다. 미국 법무부가 크립토 "금융서비스 회사" — 마켓메이커 — 를 시장 조작과 wash trading 혐의로 형사 기소한 첫 사례다. 기소장에 등장한 마켓메이커는 Gotbit·ZM Quant·CLS Global·MyTrade 네 곳. 이들의 고객사였던 토큰 프로젝트(한때 시총 수십억 달러였던 Saitama, Robo Inu 등) 경영진도 함께 기소됐다. $25M 이상의 암호화폐가 압수됐고, 약 60개 토큰에서 돌아가던 트레이딩 봇이 비활성화됐다.
+
+> "purportedly offering market making services … in fact engaged in artificial trading of digital assets to give the false appearance that there was an active (and heavily traded) market"
+> — 기소장이 서술한 수법. 시장 조성을 표방했지만 실제로는 "활발히 거래되는 시장이 있는 것처럼 보이게 하는" 인위적 거래였다는 것이 검찰의 주장이며, Gotbit 등 일부는 이후 법정에서 이를 인정했다.
+
+본 사이트의 다른 케이스들이 "의혹 제기 → 검증"의 구조라면, 이 케이스는 반대 방향에서 출발한다. **법원 기록이 이미 수법을 문서화했고**, 우리는 그 수법이 온체인에 남긴 발자국을 직접 측정했다. 커뮤니티가 NexFundAI로 지목한 컨트랙트(`0x16ca…54c` — 기소장에 주소가 명시되지는 않아 "추정"으로 표기한다)를 인덱싱한 결과: 배포 후 12주 휴면 → 4주간 지갑 15~19개의 기계적 회전 → 기소 공개 3주 전 완전 정지. wash trading이 온체인에서 어떤 모양인지를 이보다 깨끗하게 보여주는 표본은 드물다.
+
+## 타임라인
+
+<Timeline>
+  <TimelineEvent date="2024년 5월 29일 — 함정 토큰 배포 (자체 측정)">
+추정 컨트랙트(`0x16ca…54c`, 심볼 `NexF`)가 이더리움에 배포되고 첫날 1,257건의 전송으로 초기 분배. 이후 Uniswap 단일 풀에서만 거래.
+  </TimelineEvent>
+  <TimelineEvent date="2024년 6월 ~ 8월 21일 — 12주 완전 휴면 (자체 측정)">
+약 12주간 온체인 전송 0건. 실수요가 전혀 없는 토큰이라는 뜻 — 함정 토큰이니 당연하다.
+  </TimelineEvent>
+  <TimelineEvent date="2024년 8월 22일 — 봇 가동 (자체 측정)">
+휴면이 갑자기 끝나고 일 40~69건의 균일한 전송이 시작됨. 기소장 서술(FBI 의뢰를 받은 MM이 volume 봇을 가동)과 시기·모양이 부합.
+  </TimelineEvent>
+  <TimelineEvent date="2024년 9월 18일 — 온체인 활동 정지 (자체 측정)">
+마지막 전송. 이후 이 토큰은 온체인에서 완전히 침묵 — 기소 공개 3주 전이다.
+  </TimelineEvent>
+  <TimelineEvent date="2024년 10월 7~8일 — 체포">
+Saitama CEO Manpreet Kohli가 영국에서(10-07), Gotbit 창업자 Aleksei Andriunin이 포르투갈에서(10-08) 체포됨.
+  </TimelineEvent>
+  <TimelineEvent date="2024년 10월 9일 — 기소 공개">
+매사추세츠 연방지검, 개인·법인 18곳 기소 발표. 마켓메이커 Gotbit·ZM Quant·CLS Global·MyTrade와 고객 토큰 프로젝트 경영진 포함. $25M+ 압수, 약 60개 토큰의 봇 비활성화. 같은 날 SEC가 병행 민사 소송 제기. MyTrade 측은 같은 달 유죄를 인정했다고 보도됨.
+  </TimelineEvent>
+  <TimelineEvent date="2025년 2월 — Andriunin 미국 인도">
+포르투갈에서 미국으로 신병 인도.
+  </TimelineEvent>
+  <TimelineEvent date="2025년 3월 19일 — Gotbit 유죄 인정">
+Gotbit 법인과 Andriunin이 wire fraud·시장 조작 공모 혐의에 유죄 인정. 압수 암호화폐 약 $23M 몰수 합의(USDT $9M + USDC $4.2M + 추가 지갑 2개). CLS Global도 2025년 4월 유죄 판결을 받았다고 보도됨.
+  </TimelineEvent>
+  <TimelineEvent date="2025년 3~9월 — 2차 기소 (캘리포니아 북부지검)">
+대배심 3건(3-25 샌프란시스코, 8-28·9-04 오클랜드)으로 Gotbit·Vortex·Contrarian·Antier 소속 외국인 10명을 wire fraud 및 공모 혐의로 추가 기소.
+  </TimelineEvent>
+  <TimelineEvent date="2025년 6월 13일 — Andriunin 선고">
+연방지법(Angel Kelley 판사)이 Andriunin에게 8개월 구금형(기 구금 산입, 변호인은 사실상 time served라고 밝힘)과 1년 보호관찰 선고. Gotbit 법인은 5년 보호관찰 + 영업 전면 중단 + $23M 몰수.
+  </TimelineEvent>
+  <TimelineEvent date="2025년 10월 2일 — 싱가포르 인도">
+2차 기소 피고인 중 3명이 싱가포르에서 미국으로 인도됨. 이 갈래에서 $1M+ 압수.
+  </TimelineEvent>
+  <TimelineEvent date="2026년 4월 2일 — '여전히 만연' 보도">
+CoinDesk가 이 함정수사를 되짚으며 wash trading이 저시총 토큰과 비규제 거래소에서 "생각보다 훨씬 흔하다"는 업계 진단을 보도. 기소로 끝난 사건이 아니라 진행형 구조라는 것.
+  </TimelineEvent>
+</Timeline>
+
+## 시장 구조 — "시장"이 없는 시장
+
+NEXF에는 통상적 의미의 공급 구조 분석이 성립하지 않는다. 애초에 투자자에게 팔기 위한 토큰이 아니라 수사 도구였기 때문이다. 대신 이 토큰의 거래 구조 자체가 이 케이스의 본질을 보여준다 — **참여자가 사실상 봇뿐인 시장**.
+
+| 항목 | 값 (자체 측정) |
+|------|------|
+| 체인 / 거래 장소 | Ethereum / Uniswap 단일 풀 |
+| 추정 컨트랙트 | `0x16ca471aE755f8a2cD4eC315A4a7439dcfEBE54c` |
+| 전 생애 | 2024-05-29 ~ 09-18 (112일) |
+| 전 생애 온체인 전송 | 2,600건 |
+| 전 생애 DEX 거래 / taker | 2,186건 / 652개 (대부분 배포일 집중) |
+| 봇 윈도우(08-22~09-18) 거래 / taker | 827건 / **36개** |
+| 봇 윈도우 "볼륨" | 약 $607K (평균 거래 $734) |
+
+봇 윈도우 4주간 이 토큰의 "시장"은 taker 36개가 전부였다. 그 36개가 일 $20~30K씩, 합계 $607K의 거래량을 찍었다. 외부에서 차트만 보면 "꾸준히 거래되는 소형 토큰"으로 보였을 숫자다.
+
+## 수법 분석 — manipulation-as-a-service
+
+이 케이스가 문서화한 것은 특정 토큰의 일탈이 아니라 **산업화된 서비스 상품**이다. 기소장에 따르면 마켓메이커들은 "시장 조성 서비스"를 표방하며 접근한 뒤, 실제로는 자신들이 통제하는 지갑 사이에서 토큰을 반복 매매해 거래량을 만들어내는 상품을 팔았다. ZM Quant는 "volume을 만들어낼 수 있는" 트레이딩 봇을 광고했고, 영업은 텔레그램 메시지와 화상회의로 이뤄졌다고 기소장은 적고 있다. 고객 프로젝트들은 이렇게 만든 가짜 활성도로 투자자를 끌어들인 뒤 인위적으로 부양된 가격에 토큰을 매도한 혐의(전형적 pump-and-dump 구조)를 받았다.
+
+<ChartFrame
+  kind="FUND FLOW · 함정수사 구조"
+  caption={<>
+    NexFundAI 함정수사의 4단계.
+    <br />
+    (1) FBI가 함정 토큰을 배포하고
+    <br />
+    (2) 위장 신원으로 MM들에 "volume 지원"을 의뢰,
+    <br />
+    (3) 봇 지갑 15~19개가 Uniswap 풀을 4주간 왕복 회전(매수 누적 ≈ 매도 누적),
+    <br />
+    (4) 그 가짜 volume이 그대로 기소 증거가 됨.
+  </>}
+  source="DOJ 기소장·유죄 인정 기록 + 자체 Dune 인덱싱"
+  aspect="square"
+>
+  <GotbitWash />
+</ChartFrame>
+
+### wash trading의 온체인 지문 — 매수 누적 ≈ 매도 누적
+
+봇 윈도우(08-22~09-18)의 상위 지갑들을 직접 집계하면 수법의 지문이 그대로 드러난다. 풀을 제외한 상위 지갑 전원이 **보낸 총량과 받은 총량이 거의 정확히 일치**한다:
+
+| 지갑 | sends | recvs | 보낸 양 | 받은 양 | 오차 |
+|------|-------|-------|---------|---------|------|
+| `0x19e7…1d7a` (Uniswap 풀) | 404 | 425 | 516.7B | 518.1B | — |
+| `0x7699…444e` | 40 | 39 | 50,802,652,773 | 50,802,358,640 | **0.0006%** |
+| `0xcc98…ccfc` | 31 | 36 | 64,208,172,129 | 64,207,356,260 | 0.001% |
+| `0x2ae4…727b` | 32 | 33 | 56.77B | 56.77B | ≈0 |
+| `0xc9e7…8fe1` | 29 | 31 | 56.19B | 56.19B | ≈0 |
+| 그 외 유사 지갑 14개 | 17~29 | 17~31 | ≈ | ≈ | ≈0 |
+
+산 만큼 팔고, 판 만큼 다시 산다. 4주 내내 순포지션 변화가 사실상 0 — 가격 노출도, 수익 추구도 없다. 이 거래의 유일한 산출물은 **거래량 그 자체**다. 실수요 거래에서는 나올 수 없는 대칭성이고, 기소장이 서술한 "지갑 간 반복 매매(wash trading)"의 온체인 형태다.
+
+## 데이터
+
+### 온체인 활동 타임라인 — 배포, 침묵, 봇, 정지
+
+<ChartFrame
+  kind="ON-CHAIN · 일별 전송 건수 · 자체 측정"
+  caption={<>
+    추정 NexF 컨트랙트의 일별 온체인 전송 (자체 Dune 인덱싱, 2024-05-29 ~ 10-09).
+    <br />
+    <br />
+    배포일 1,257건(축 절단) → 12주 완전 휴면(전송 0) → 08-22 봇 가동, 4주간 일 24~69건의 메트로놈 회전 → 09-18 완전 정지.
+    <br />
+    <br />
+    3주 뒤 10-09 기소 공개. 마지막 일주일은 지갑 4~6개가 회전을 유지했다.
+  </>}
+  source="Dune Analytics — 자체 측정 (쿼리 7938125)"
+  aspect="video"
+>
+  <GotbitChurn />
+</ChartFrame>
+
+| 구간 | 기간 | 일 전송 | 활동 지갑 |
+|------|------|---------|-----------|
+| 배포/분배 | 05-29 ~ 05-31 | 49 ~ 1,257 | 400+ (에어드랍성) |
+| 완전 휴면 | 06-01 ~ 08-21 | **0** | 0 |
+| 봇 윈도우 | 08-22 ~ 09-11 | 43 ~ 69 | senders 11~28 |
+| 봇 축소 | 09-12 ~ 09-18 | 24 ~ 45 | senders **4~6** |
+| 정지 | 09-19 ~ | 0 | 0 |
+
+일별 전송량도 균일하다 — 봇 윈도우 내내 하루 70B~100B 토큰 수준을 오간다. 사람의 시장에서 나오는 들쭉날쭉함이 없다.
+
+### DEX 프로필
+
+| 항목 | 전 생애 | 봇 윈도우 (4주) |
+|------|---------|-----------------|
+| 거래 건수 | 2,186 | 827 |
+| 고유 taker | 652 | **36** |
+| USD 볼륨 | $1.07M | $607K |
+| 평균 거래 크기 | — | $734 |
+| 거래 장소 | Uniswap 단일 | Uniswap 단일 |
+
+## 교훈 — volume은 "구매 가능한 상품"이다
+
+이 케이스의 교훈은 단순하고 무겁다. **거래량은 신뢰 지표가 아니다.** 법원 기록이 확인해준 바에 따르면, 거래량을 만들어주는 서비스는 시장에서 실제로 팔리고 있었고, 봇 몇십 개면 "활발히 거래되는 토큰"의 외형이 완성된다.
+
+### 거래량의 질을 확인하는 시그널
+
+- **거래 건수 대비 고유 트레이더 수** — NEXF의 봇 윈도우는 827건 거래에 taker가 36개였다. 거래량 대비 참여자가 비정상적으로 적으면 volume의 출처를 의심한다
+- **지갑별 매수 누적 ≈ 매도 누적** — 상위 활동 지갑들이 산 만큼 정확히 팔고 있다면(순포지션 변화 없음), 그 거래량은 수요가 아니라 회전이다
+- **메트로놈 같은 균일성** — 일 거래 건수·volume이 몇 주간 좁은 밴드에서 유지되는 패턴은 사람의 시장보다 봇의 산출물에 가깝다
+- **긴 휴면 후 갑작스러운 '활성화'** — 실수요 없이 잠들어 있던 토큰이 어느 날부터 일정한 리듬으로 거래되기 시작하면, 그 시점에 누가 무엇을 계약했는지 물어야 한다
+
+### 구조적으로 기억할 것
+
+- **DEX 볼륨은 그나마 검증 가능하다** — 이 케이스의 지문(taker 수, 지갑 대칭성)은 온체인이라 우리가 직접 셀 수 있었다. CEX 내부 체결 볼륨은 이런 검증 자체가 불가능하다 — 저유동성 CEX 상장 토큰의 거래량은 한 단계 더 의심해야 한다
+- **"상장 요건"이 조작 수요를 만든다** — 거래소들이 상장·유지 심사에서 거래량을 보기 때문에, 프로젝트가 volume을 구매할 유인이 구조적으로 존재한다. 신규 상장 직후의 화려한 거래량은 그 자체로는 아무것도 증명하지 않는다
+- **마켓메이커 계약은 블랙박스다** — 어떤 MM과 어떤 조건으로 계약했는지 공개되지 않는 프로젝트에서, 투자자는 거래량의 진위를 판별할 수단이 없다 (Binance가 2026년 3월 MM 정보 공개를 의무화한 배경이기도 하다)
+- **이 수법은 기소로 사라지지 않았다** — 2026년에도 wash trading이 저시총 토큰에서 "생각보다 훨씬 흔하다"는 것이 업계의 진단이다. NEXF의 지문을 익혀두는 이유다
+
+> 차트의 거래량 막대는 "얼마나 많은 사람이 관심을 갖는가"를 보여주지 않는다. "누군가 얼마를 지불하고 그렇게 보이게 만들었는가"일 수 있다.
+
+## 출처
+
+1. **DOJ 매사추세츠 연방지검** — [Eighteen Individuals and Entities Charged…](https://www.justice.gov/usao-ma/pr/eighteen-individuals-and-entities-charged-international-operation-targeting-widespread) — 2024-10-09 기소 발표 (1차 출처)
+2. **DOJ 매사추세츠 연방지검** — [Gotbit and Founder Plead Guilty…](https://www.justice.gov/usao-ma/pr/cryptocurrency-financial-services-firm-gotbit-and-founder-plead-guilty-market) — Gotbit·Andriunin 유죄 인정 (1차 출처)
+3. **DOJ 캘리포니아 북부지검 (IRS-CI 병행 발표)** — [Ten Foreign Nationals Charged…](https://www.justice.gov/usao-ndca/pr/ten-foreign-nationals-charged-international-operation-targeting-cryptocurrency-market) — 2차 기소·싱가포르 인도 (1차 출처)
+4. **SEC** — [LR-26155 (Saitama 관련)](https://www.sec.gov/enforcement-litigation/litigation-releases/lr-26155) · [LR-26158 (ZM Quant)](https://www.sec.gov/enforcement-litigation/litigation-releases/lr-26158) — 병행 민사 제재 (1차 출처)
+5. **Decrypt** — [Gotbit Founder Sentenced to Prison for Crypto Wash Trading](https://decrypt.co/325111/gotbit-founder-sentenced-prison-crypto-wash-trading) — 2025-06-13 선고·몰수 세부
+6. **TRM Labs** — [FBI Creates Token Project in Trojan Horse Crypto Operation](https://www.trmlabs.com/resources/blog/fbi-creates-token-project-in-trojan-horse-crypto-operation-that-seizes-25-million) — $25M 압수 분석
+7. **Cointelegraph** — [FBI token: How the FBI used a fake AI fund coin](https://cointelegraph.com/news/fbi-token-fake-ai-fund-coin-fraud) — 컨트랙트 주소 커뮤니티 추정 경위 (본 페이지의 "추정" 표기 근거)
+8. **CoinDesk** — [DOJ sting exposes crypto wash trading…'far more common' than expected](https://www.coindesk.com/business/2026/04/02/doj-sting-exposes-crypto-wash-trading-continues-to-be-far-more-common-than-expected) — 2026-04 후속 진단
+9. **자체 온체인 측정** — Dune Analytics (Ethereum, 추정 컨트랙트 `0x16ca…54c`): [Q0 sanity](https://dune.com/queries/7938100) · [Q1 일별 churn](https://dune.com/queries/7938125) · [Q2 지갑 클러스터](https://dune.com/queries/7938135) · [Q3 DEX 프로필](https://dune.com/queries/7938143) · [Q4 봇 윈도우 볼륨](https://dune.com/queries/7938153)
+
+---
+
+*유의: 위 기소 내용 중 유죄가 확정되지 않은 피고인에 대한 혐의는 검찰의 주장이며, 해당 피고인들은 법원에서 유죄가 입증되기 전까지 무죄로 추정된다. 컨트랙트 주소는 커뮤니티 추정으로, 기소장에 명시된 것이 아니다.*
