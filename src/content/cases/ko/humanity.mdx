@@ -1,0 +1,188 @@
+---
+slug: "humanity"
+title: "Humanity Protocol (H)"
+tokenSymbol: "H"
+incidentDate: "2026-06-08"
+publishedDate: "2026-07-10"
+status: "alleged"
+severity: "high"
+patterns:
+  - "proxy-contract-risk"
+  - "staged-exploit"
+  - "supply-concentration"
+metrics:
+  peakPrice: 0.85
+  bottomPrice: 0.099
+  maxDrawdown: -0.86
+  crashDurationHours: 12
+allegations:
+  - source: "ZachXBT"
+    sourceUrl: "https://www.cryptotimes.io/2026/06/09/zachxbt-calls-32m-humanity-protocol-hack-possibly-staged-h-crashes-86/"
+    date: "2026-06-09"
+    summary: "온체인 분석가 ZachXBT가 이 '사건'이 'possibly staged(연출된 것일 수 있다)'며, '팀 서사를 믿지 않는다 — active MM이 빠져나가기 편리한 방식'이라고 의혹을 제기. 팀이 '펀더멘털 없이 수 주간 crime pump'를 했다며, 먼저 'HK 법인과의 active MM 계약'을 공개하라고 요구."
+  - source: "Halborn (보안 분석)"
+    sourceUrl: "https://www.halborn.com/blog/post/explained-the-humanity-protocol-hack-june-2026"
+    date: "2026-06-10"
+    summary: "개발자 머신 멀웨어 감염으로 루트 접근 후 총 7개 키(핫월렛 1 + Safe 3키 세트 2개) 탈취. ETH 브릿지 컨트랙트 악성 업그레이드로 141M H 드레인, 핫월렛에서 6,045,060 H 이전, BSC Safe에서 300M H 무단 민팅 — 추정 총 447M H 탈취/민팅."
+  - source: "Terence Kwok (창업자 / 공식)"
+    sourceUrl: "https://www.coindesk.com/tech/2026/06/09/humanity-protocol-token-crashes-more-than-80-after-a-usd32-million-private-key-hack"
+    date: "2026-06-09"
+    summary: "창업자 Terence Kwok이 Humanity Foundation 멤버의 private key 침해라고 설명하며 '보안 전문가·거래소 파트너와 해결 중, 깊이 사과한다'고 밝힘. ZachXBT의 staged 의혹에 대한 구체적 반박은 공개되지 않음."
+  - source: "자체 온체인 측정 (Dune)"
+    sourceUrl: "https://dune.com/queries/7938540"
+    date: "2026-07-10"
+    summary: "ETH 침해 컨트랙트(0xcf51…16eb)를 직접 인덱싱해 141,182,632 H 브릿지 드레인(tx 0xa665…29e5b)과 6,045,060 H 핫월렛 절도(tx 0x94a4…ee015)를 트랜잭션 단위로 확인 — Halborn 보도 수치와 정확히 일치. 두 흐름 모두 공격자 집결 지갑 0x9e99…0504로 수렴(≈140.9M). BSC 정품 컨트랙트(0x44f1…5cc)에서 6/9 신규 지갑 0x6aa2로 100B 규모의 계단식 무단 민팅도 확인."
+relatedCases: ["coai", "lab"]
+---
+
+import { ChartFrame } from '@/components/chart-frame'
+import { Timeline, TimelineEvent } from '@/components/case-timeline'
+import { HumanityFlow } from '@/components/humanity-flow'
+
+## 개요
+
+2026년 6월 8~9일, ZK 신원증명 프로젝트 Humanity Protocol의 H 토큰이 약 $32M 규모로 드레인됐고 가격은 12시간 만에 −86% 폭락했다($0.7183 → $0.099). 창업자 Terence Kwok은 재단 멤버의 private key가 침해된 해킹이라고 설명했다. 여기까지는 흔한 "키 유출" 사고다.
+
+이 케이스가 본 사이트에 들어온 이유는 그 다음이다. 온체인 분석가 ZachXBT가 **"이 '사건'은 연출된 것일 수 있다(possibly staged)"**며, "팀 서사를 믿지 않는다 — active 마켓메이커가 빠져나가기에 편리한 방식"이라고 공개적으로 의혹을 제기했다. 그는 팀이 "펀더멘털 없이 수 주간 crime pump를 해놓고" CT(크립토 트위터)가 서사를 그대로 믿길 기대한다며, 먼저 "HK 법인과의 active MM 계약"을 공개하라고 요구했다.
+
+> "The 'incident' seems possibly staged. I am not buying the teams story — it's a convenient way for the active MM to have exited."
+> — ZachXBT (2026-06-09). 이는 제기된 의혹이며, 본 페이지는 어느 쪽도 단정하지 않는다. 팀은 이를 정면 반박하지 않았지만, staged 라는 독립적 확증도 나오지 않았다.
+
+그래서 이 케이스는 **"해킹인가, 연출된 exit인가"** 라는 판단을 요구한다. 우리는 그 판단을 대신 내리지 않는다. 대신 그 판단에 필요한 온체인 사실을 직접 측정했다. ETH 침해 컨트랙트를 인덱싱한 결과, 보도된 두 핵심 수치가 트랜잭션 단위로 정확히 확인됐다 — **141,182,632 H 브릿지 드레인**과 **6,045,060 H 핫월렛 절도**. 두 흐름은 하나의 공격자 지갑으로 수렴했고, BSC 쪽에서는 정품 유통량을 압도하는 규모의 무단 민팅이 관측됐다. 무엇이 확인됐고 무엇이 여전히 의혹인지, 그 경계를 분명히 하는 것이 이 페이지의 목적이다.
+
+## 타임라인
+
+<Timeline>
+  <TimelineEvent date="2025년 6월 — 메인넷 런칭, 키 백업 사고">
+Halborn 분석에 따르면 메인넷 런칭 당시 private key가 실수로 백업되며 후일 침해의 단초가 됨.
+  </TimelineEvent>
+  <TimelineEvent date="2026년 4~5월 — 공격자 지갑 사전 자금 투입 (외부 분석 인용)">
+분석가 Elton은 공격에 쓰인 지갑들이 사건 수 주 전(4~5월)에 미리 자금을 받고 민팅 권한이 '워밍업'됐다고 분석 — 즉흥적 침해가 아니라 사전 준비 정황이라는 주장. (본 리서치가 사전 자금 흐름 자체를 재검증하지는 않음.)
+  </TimelineEvent>
+  <TimelineEvent date="2026년 6월 2일 — 사상 최고가">
+H가 약 $0.85로 ATH 기록. 2026년 들어 300~800%대 랠리 뒤 최고가 부근에서 거래.
+  </TimelineEvent>
+  <TimelineEvent date="2026년 6월 8일 — 크로스체인 드레인 (자체 측정)">
+17:32 UTC 핫월렛에서 6,045,060 H가 공격자 지갑으로 이전(tx 0x94a4…ee015). 19:52 UTC ETH 브릿지 컨트랙트 악성 업그레이드로 141,182,632 H 드레인(tx 0xa665…29e5b). 두 흐름 모두 집결 지갑 0x9e99…0504로 수렴. 같은 날 8시간에 걸쳐 Uniswap·PancakeSwap 등에서 매도.
+  </TimelineEvent>
+  <TimelineEvent date="2026년 6월 8일 — 리커버리 스냅샷">
+신규 H 배포용 스냅샷 기준일. 기존 홀더는 1:1로 신규(감사) 토큰을 받도록 설계.
+  </TimelineEvent>
+  <TimelineEvent date="2026년 6월 9일 — BSC 무단 민팅 + ZachXBT 의혹 (자체 측정)">
+BSC proxy admin 탈취 후 신규 지갑 0x6aa2로 계단식 무단 민팅(1e8 → 1e11 규모). 같은 날 ZachXBT가 'possibly staged / MM exit' 의혹 공개. 가격 −86%, 시총 약 $282M로 축소.
+  </TimelineEvent>
+  <TimelineEvent date="2026년 6월 12일 — 폭락 후 반등">
+H가 24시간 +43%, 이후 최대 +200%대의 relief rally. 폭락 직후 반등이 오히려 변동성 위험을 키움.
+  </TimelineEvent>
+  <TimelineEvent date="2026년 6월 중순 — 신규 토큰 리스트럭처링">
+팀이 침해된 구 컨트랙트를 sunset 하고 감사받은 신규 H(0xE76c…a5dE1)로 1:1 리커버리 프로그램 발표.
+  </TimelineEvent>
+</Timeline>
+
+## 공급/컨트랙트 구조 — 어느 H가 진짜인가
+
+크로스체인 사건이라 먼저 컨트랙트부터 정리해야 한다. 심볼 `H` 또는 `Humanity`를 쓰는 토큰은 온체인에 수십 개가 있고(카피캣 포함), 사건 당일 새로 만들어진 파생 컨트랙트도 섞여 있다. 우리는 DEX 볼륨과 이력으로 정품을 특정했다.
+
+| 체인 | 컨트랙트 | 판정 (자체 측정) |
+|------|----------|------------------|
+| Ethereum | `0xcf5104d094e3864cfcbda43b82e1cefd26a016eb` | 침해된 구 H (이후 sunset) |
+| BNB Chain | `0x44f161ae29361e332dea039dfa2f404e0bc5b5cc` | 정품 — 2025-06부터 수백만 transfer/월의 긴 이력 |
+| Ethereum | `0xE76c5b78f93909d34404E9eb4C1f19e7582a5dE1` | 신규(감사) H — 1:1 리커버리 |
+
+BSC 정품 컨트랙트는 2025년 6월(549K transfers/월)부터 2026년 6월(3.0M transfers/월)까지 꾸준한 이력을 가진 진짜 토큰이다. 사건 당일(6/9 14:23) 처음 등장한 `0x2189…1ab4` 같은 컨트랙트는 DEX 볼륨 $955K로 정품($190M)에 비하면 파생·모방으로 분류된다. 이 구분을 먼저 해두지 않으면 카피캣 트랜잭션을 사건으로 오인하기 쉽다.
+
+핵심은 **키 침해가 곧 무제한 발행 권한 침해**였다는 점이다. proxy admin과 Safe 멀티시그 키까지 넘어가면서, 공격자는 단순히 지갑 잔고를 훔친 게 아니라 컨트랙트 자체를 통제했다. 이것이 이 케이스를 COAI의 `proxy-contract-risk`와 같은 계열로 묶는 이유다 — admin 권한이 살아있는 컨트랙트에서는 "해킹"과 "내부 발행"의 경계가 온체인만으로는 구분되지 않는다.
+
+## 수법 분석 — 크로스체인 드레인의 해부
+
+<ChartFrame
+  kind="FUND FLOW · 크로스체인 드레인 · 자체 측정"
+  caption={<>
+    침해된 키로 실행된 세 갈래.
+    <br />
+    (A) ETH 브릿지 컨트랙트 악성 업그레이드 → 141.18M H 드레인,
+    <br />
+    (B) ETH 핫월렛에서 6.045M H 절도 — 둘 다 집결 지갑 0x9e99로 수렴,
+    <br />
+    (C) BSC proxy admin 탈취 → 신규 지갑에 100B 규모 무단 민팅 → DEX 매도.
+    <br />
+    <br />
+    A·B는 트랜잭션 단위 자체 확인, C는 민팅 자체 확인. 사전 자금(4~5월)은 외부 분석 인용.
+  </>}
+  source="Dune Analytics 자체 인덱싱 (쿼리 7938540·7938493) + Halborn·ZachXBT"
+  aspect="square"
+>
+  <HumanityFlow />
+</ChartFrame>
+
+측정된 세 갈래는 이렇다.
+
+**(A) 브릿지 악성 업그레이드 — 141,182,632 H.** ETH 브릿지 컨트랙트가 악성 업그레이드된 뒤, 단일 트랜잭션(6/8 19:52 UTC, tx `0xa665…29e5b`)으로 141,182,632 H가 공격자 1홉 지갑(`0xd1ea823d…78ea`)으로 빠져나갔다. 이 수치는 Halborn이 보도한 "141 million H drained via malicious bridge upgrade"와 정확히 일치한다.
+
+**(B) 핫월렛 절도 — 6,045,060 H.** 앞서 6/8 17:32 UTC, 핫월렛(`0x0fd9…612a`)에서 6,045,060 H가 공격자 집결 지갑(`0x9e99…0504`)으로 직접 이전됐다(tx `0x94a4…ee015`). Halborn의 "6,045,060 H from hot wallet"과 소수점까지 일치한다. 브릿지 드레인분도 여러 조각(50M + 30M + 22.6M + 21.7M + 10.4M + 6.0M ≈ 140.9M)으로 나뉘어 결국 같은 집결 지갑으로 수렴했다.
+
+**(C) BSC 무단 민팅 — 유통량을 압도하는 규모.** BSC 정품 컨트랙트의 proxy admin이 탈취되면서, 6/9 신규 지갑(`0x6aa2…`)으로 계단식 민팅이 실행됐다(1e8 → 1e9 → 1e10 → 1e11 규모, amount_raw로 검증). **여기서 한 가지 눈에 띄는 게 있다** — 찍어낸 양이 정품 유통량(시총 $282M ≈ 28억 토큰)을 수십 배 초과했다. 반면 이 지갑이 DEX에서 직접 실현한 매도(taker 기준)는 6/9 오전 24건 $7,892에 그쳤다. 즉 **"발행할 수 있는 양"과 "빼낼 수 있는 양"의 괴리가 컸다** — 유동성이 흡수할 수 있는 한계 때문이다. 보도상 minted-token 덤프 규모 ~$12.9M은 라우터·중계 경유분을 포함한 추정치로, 우리 직접 측정(단일 taker)으로는 그 일부만 확인된다. 정직하게 경계를 긋는다.
+
+### "해킹 vs staged exit"을 온체인은 어떻게 보나
+
+ZachXBT의 의혹의 핵심은 *메커니즘*이 아니라 *의도*다. 드레인이 실제로 일어났다는 건 우리도 측정으로 확인했다. 쟁점은 그것이 외부 침입인지, 아니면 내부자가 "해킹"의 외피를 쓰고 포지션을 정리한 것인지다. 온체인 데이터는 이 둘을 직접 구분하지 못한다 — 같은 트랜잭션이 양쪽 서사에 다 부합한다. 다만 정황 신호는 존재한다: (1) 공격자 지갑의 사전 자금 투입(외부 분석), (2) admin/민팅 권한이 살아있던 컨트랙트 구조(자체 확인), (3) 매도가 DEX에 집중됐다는 점, (4) ZachXBT가 요구한 "MM 계약 미공개". 이들은 의혹을 강화하는 정황이지 확증이 아니다.
+
+## 데이터
+
+### 가격 — ATH 직후의 붕괴와 반등
+
+| 시점 | 가격 | 비고 |
+|------|------|------|
+| 2026-06-02 | 약 $0.85 | 사상 최고가 |
+| 2026-06-08 (사건 직전) | 약 $0.7183 | 드레인 시작 시점 |
+| 2026-06-09 (바닥) | 약 $0.099 | −86%, 시총 약 $282M |
+| 2026-06-12 | 반등 | 24h +43%, 최대 +200%대 relief rally |
+
+폭락은 약 12시간에 압축됐고, 매도는 Uniswap·PancakeSwap·Kyber 등 DEX에 집중됐다. 폭락 직후의 급반등(+200%대)은 회복이라기보다 유동성이 얇아진 토큰의 변동성 확대로 읽는 게 안전하다.
+
+### 온체인 앵커 (자체 측정)
+
+| 항목 | 값 | 트랜잭션 / 쿼리 |
+|------|-----|-----------------|
+| 브릿지 드레인 | 141,182,632 H | tx `0xa665…29e5b` |
+| 핫월렛 절도 | 6,045,060 H | tx `0x94a4…ee015` |
+| 집결 지갑 수렴 | ≈ 140.9M H | `0x9e99…0504` |
+| BSC 무단 민팅 | 100B 규모 (계단식) | 신규 지갑 `0x6aa2` |
+| 직접 taker DEX 매도 | $7,892 / 1.61M H | 6/9 24건 |
+
+## 교훈 — "해킹"이라는 단어를 의심하는 법
+
+이 케이스의 교훈은 특이하다. 폭락을 피하는 시그널이 아니라, **폭락 이후의 서사를 어떻게 읽을 것인가**에 관한 것이다.
+
+### 컨트랙트 구조 시그널 (사건 *전에* 볼 수 있는 것)
+
+- **admin/upgrade 권한 미포기** — proxy admin과 민팅 권한이 살아있는 컨트랙트는, 키 한 세트만 뚫려도 지갑 잔고가 아니라 *공급 전체*가 위험하다. 이 케이스에서 실제로 100B 규모 민팅이 가능했던 이유다 (COAI와 같은 계열)
+- **멀티시그의 실질적 분산 여부** — Safe 3키 세트가 한 개발자 머신 계열에서 함께 백업/접근됐다면, 멀티시그의 방어 가치는 사라진다. "몇-of-몇"이라는 숫자보다 키의 *물리적 독립성*이 중요하다
+- **브릿지 컨트랙트의 업그레이더빌리티** — 브릿지가 업그레이드 가능하고 그 권한이 같은 키에 묶여 있으면, 브릿지는 최대 규모 단일 실패 지점이 된다 (여기서 141M이 한 tx로 빠졌다)
+
+### 사건 *후* 서사를 검증하는 시그널
+
+- **사전 자금 투입 여부** — 공격 지갑이 사건 수 주 전에 자금을 받고 권한이 '워밍업'됐다면, "즉흥적 외부 침입" 서사와 충돌한다. 지갑의 첫 자금 시점을 확인한다
+- **매도처가 DEX에 집중** — 진짜 외부 해커도 DEX를 쓰지만, 내부 exit 역시 CEX 입금 없이 DEX로 조용히 처분하는 경향이 있다. 어느 쪽도 단정할 수 없으나, 정황의 한 조각이다
+- **MM 계약·팀 서사의 투명성** — ZachXBT가 요구한 것도 이것이다. "MM 계약을 공개하라"는 요구에 침묵이 이어지면, 서사의 검증 가능성 자체가 낮다는 신호다
+- **발행량 ≫ 유통량** — 무단 민팅 규모가 정품 유통량을 수십 배 초과하면, 이는 "잔고를 훔친 사고"보다 "공급 통제권이 넘어간 사건"에 가깝다
+
+### 거래 판단
+
+> "해킹당했다"는 발표는 사건의 끝이 아니라, 검증의 시작이어야 한다.
+
+키 침해 사고와 연출된 내부 exit은 온체인에서 같은 모양을 할 수 있다. 투자자가 할 수 있는 건 서사를 그대로 믿는 것도, 무작정 음모론으로 모는 것도 아니다 — *무엇이 트랜잭션으로 확인되고 무엇이 여전히 의혹인지*의 경계를 아는 것이다. 이 페이지가 그 경계를 그은 방식이 하나의 예시다. (작성: 2026-07-10, 이후 팀·거래소·수사 측 추가 발표로 사실관계가 갱신될 수 있다.)
+
+## 출처
+
+1. **ZachXBT / Crypto Times** — [ZachXBT Calls $32M Humanity Protocol Hack 'Possibly Staged,' $H Crashes 86%](https://www.cryptotimes.io/2026/06/09/zachxbt-calls-32m-humanity-protocol-hack-possibly-staged-h-crashes-86/) — staged 의혹·인용 (1차성 인용)
+2. **Halborn** — [Explained: The Humanity Protocol Hack (June 2026)](https://www.halborn.com/blog/post/explained-the-humanity-protocol-hack-june-2026) — 키 탈취·브릿지 업그레이드·민팅 메커니즘·수치
+3. **CoinDesk** — [Humanity Protocol token crashes more than 80% after a $32 million private-key hack](https://www.coindesk.com/tech/2026/06/09/humanity-protocol-token-crashes-more-than-80-after-a-usd32-million-private-key-hack) — 창업자 Terence Kwok 공식 입장·가격
+4. **news.bitcoin.com** — [Humanity Protocol Loses $32M in Private Key Hack as ZachXBT Calls Incident 'Possibly Staged'](https://news.bitcoin.com/humanity-protocol-exploit-zachxbt-staged/) — 17~19개 지갑 드레인·DEX 매도 정황
+5. **CryptoTimes** — [Why is the Humanity H Token Up 43% Today After the Hack?](https://www.cryptotimes.io/2026/06/12/why-is-the-humanity-h-token-is-up-43-today-after-the-hack/) — 폭락 후 반등
+6. **TradingView / NewsBTC** — [Humanity Protocol Plans New H Token After $36 Million Key Compromise](https://www.tradingview.com/news/newsbtc:61385c386094b:0-humanity-protocol-plans-new-h-token-after-36-million-key-compromise/) — 신규 토큰·1:1 리커버리·6/8 스냅샷
+7. **자체 온체인 측정** — Dune Analytics (ETH `0xcf51…16eb` / BSC `0x44f1…5cc`): [ETH 드레인 대형 전송](https://dune.com/queries/7938540) · [BSC 민팅](https://dune.com/queries/7938493) · [민팅 decimals 검증](https://dune.com/queries/7938515) · [BSC 정품 이력](https://dune.com/queries/7938522) · [심볼-H DEX 볼륨 순위](https://dune.com/queries/7938504) · [taker 직접 매도](https://dune.com/queries/7938565)
+
+---
+
+*유의: staged / MM exit 은 ZachXBT가 제기한 의혹이며, 독립적으로 확증되지 않았다. 팀은 private key 침해(해킹)로 설명한다. 본 페이지는 어느 서사도 단정하지 않고, 자체 측정으로 확인된 트랜잭션과 외부 인용을 구분해 제시한다. 컨트랙트/지갑 주소는 온체인 공개 데이터다.*

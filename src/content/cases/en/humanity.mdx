@@ -1,0 +1,188 @@
+---
+slug: "humanity"
+title: "Humanity Protocol (H)"
+tokenSymbol: "H"
+incidentDate: "2026-06-08"
+publishedDate: "2026-07-10"
+status: "alleged"
+severity: "high"
+patterns:
+  - "proxy-contract-risk"
+  - "staged-exploit"
+  - "supply-concentration"
+metrics:
+  peakPrice: 0.85
+  bottomPrice: 0.099
+  maxDrawdown: -0.86
+  crashDurationHours: 12
+allegations:
+  - source: "ZachXBT"
+    sourceUrl: "https://www.cryptotimes.io/2026/06/09/zachxbt-calls-32m-humanity-protocol-hack-possibly-staged-h-crashes-86/"
+    date: "2026-06-09"
+    summary: "On-chain investigator ZachXBT said the 'incident' seems 'possibly staged,' that he was 'not buying the team's story — a convenient way for the active MM to have exited,' accused the team of 'crime pumping the token for weeks with zero fundamentals,' and demanded they first disclose their 'active MM agreements with the HK entity.'"
+  - source: "Halborn (security analysis)"
+    sourceUrl: "https://www.halborn.com/blog/post/explained-the-humanity-protocol-hack-june-2026"
+    date: "2026-06-10"
+    summary: "Malware on a developer machine gained root access; seven keys were taken (one hot-wallet key + two sets of three Safe keys). A malicious upgrade to the ETH bridge contract drained 141M H, 6,045,060 H moved from the hot wallet, and 300M H was minted without authorization on the BSC Safe — an estimated 447M H stolen or minted in total."
+  - source: "Terence Kwok (founder / official)"
+    sourceUrl: "https://www.coindesk.com/tech/2026/06/09/humanity-protocol-token-crashes-more-than-80-after-a-usd32-million-private-key-hack"
+    date: "2026-06-09"
+    summary: "Founder Terence Kwok attributed the breach to a compromised private key belonging to a Humanity Foundation member, saying the team was 'working with security experts and exchange partners on resolution' and was 'deeply sorry.' No specific rebuttal of ZachXBT's staging claim was published."
+  - source: "Own on-chain measurement (Dune)"
+    sourceUrl: "https://dune.com/queries/7938540"
+    date: "2026-07-10"
+    summary: "Direct indexing of the compromised ETH contract (0xcf51…16eb) confirmed, at transaction level, the 141,182,632 H bridge drain (tx 0xa665…29e5b) and the 6,045,060 H hot-wallet theft (tx 0x94a4…ee015) — matching Halborn's figures exactly. Both flows converge on attacker consolidation wallet 0x9e99…0504 (≈140.9M). Also confirmed: stepwise unauthorized minting on the genuine BSC contract (0x44f1…5cc) to fresh wallet 0x6aa2 on June 9 at a ~100B scale."
+relatedCases: ["coai", "lab"]
+---
+
+import { ChartFrame } from '@/components/chart-frame'
+import { Timeline, TimelineEvent } from '@/components/case-timeline'
+import { HumanityFlow } from '@/components/humanity-flow'
+
+## Overview
+
+On June 8–9, 2026, the H token of ZK identity project Humanity Protocol was drained of roughly $32M, and the price fell 86% within 12 hours ($0.7183 → $0.099). Founder Terence Kwok explained it as a hack — a compromised private key belonging to a foundation member. So far, an ordinary "key leak" incident.
+
+What brought this case onto the site is what came next. On-chain investigator ZachXBT publicly alleged that **"the 'incident' seems possibly staged,"** saying he was "not buying the team's story — a convenient way for the active market maker to have exited." He accused the team of "crime pumping the token for weeks with zero fundamentals" and expecting CT (crypto Twitter) to take the story at face value, and demanded they first disclose their "active MM agreements with the HK entity."
+
+> "The 'incident' seems possibly staged. I am not buying the teams story — it's a convenient way for the active MM to have exited."
+> — ZachXBT (2026-06-09). This is an allegation as raised, and this page asserts neither side. The team did not directly rebut it, but no independent confirmation of staging emerged either.
+
+So this case demands a judgment — **hack, or staged exit?** We don't make that call for you. Instead we measured the on-chain facts that the call requires. Indexing the compromised ETH contract, two reported headline figures matched exactly at transaction level — a **141,182,632 H bridge drain** and a **6,045,060 H hot-wallet theft**. Both flows converged on a single attacker wallet, and on the BSC side we observed unauthorized minting at a scale that dwarfs the genuine float. The point of this page is to draw a clear line between what is confirmed and what remains alleged.
+
+## Timeline
+
+<Timeline>
+  <TimelineEvent date="June 2025 — mainnet launch, key-backup mishap">
+Per Halborn's analysis, a private key was accidentally backed up at mainnet launch, seeding the later compromise.
+  </TimelineEvent>
+  <TimelineEvent date="April–May 2026 — attacker wallets pre-funded (external analysis)">
+Analyst Elton found that the wallets used in the attack were funded weeks in advance (April–May) with minting authority "warmed up" — evidence, he argues, of advance preparation rather than an opportunistic compromise. (This research did not independently re-verify the pre-funding flows.)
+  </TimelineEvent>
+  <TimelineEvent date="June 2, 2026 — all-time high">
+H hits an ATH of about $0.85, trading near its peak after 300–800% rallies earlier in 2026.
+  </TimelineEvent>
+  <TimelineEvent date="June 8, 2026 — cross-chain drain (own measurement)">
+At 17:32 UTC, 6,045,060 H moves from the hot wallet to the attacker wallet (tx 0x94a4…ee015). At 19:52 UTC, a malicious upgrade to the ETH bridge contract drains 141,182,632 H (tx 0xa665…29e5b). Both converge on consolidation wallet 0x9e99…0504. Selling on Uniswap, PancakeSwap et al. runs over roughly eight hours the same day.
+  </TimelineEvent>
+  <TimelineEvent date="June 8, 2026 — recovery snapshot">
+The snapshot date for the new H distribution. Existing holders are designed to receive the new (audited) token 1:1.
+  </TimelineEvent>
+  <TimelineEvent date="June 9, 2026 — BSC unauthorized mint + ZachXBT allegation (own measurement)">
+After the BSC proxy admin is seized, stepwise unauthorized minting flows to fresh wallet 0x6aa2 (1e8 → 1e11 scale). The same day, ZachXBT publishes the 'possibly staged / MM exit' allegation. Price −86%, market cap shrinks to ~$282M.
+  </TimelineEvent>
+  <TimelineEvent date="June 12, 2026 — post-crash bounce">
+H rallies +43% in 24 hours, then up to +200% in a relief rally. A sharp bounce right after a crash raises, rather than lowers, volatility risk.
+  </TimelineEvent>
+  <TimelineEvent date="Mid-June 2026 — token restructuring">
+The team sunsets the compromised old contract and announces a 1:1 recovery to an audited new H (0xE76c…a5dE1).
+  </TimelineEvent>
+</Timeline>
+
+## Supply / contract structure — which H is real
+
+Being a cross-chain incident, the contracts have to be sorted first. Dozens of tokens use the symbol `H` or `Humanity` (copycats included), and derivative contracts created on the day of the incident are mixed in. We pinned the genuine one by DEX volume and history.
+
+| Chain | Contract | Verdict (own measurement) |
+|-------|----------|---------------------------|
+| Ethereum | `0xcf5104d094e3864cfcbda43b82e1cefd26a016eb` | compromised old H (later sunset) |
+| BNB Chain | `0x44f161ae29361e332dea039dfa2f404e0bc5b5cc` | genuine — millions of transfers/month since 2025-06 |
+| Ethereum | `0xE76c5b78f93909d34404E9eb4C1f19e7582a5dE1` | new (audited) H — 1:1 recovery |
+
+The genuine BSC contract has a continuous history from June 2025 (549K transfers/month) to June 2026 (3.0M transfers/month) — a real token. Contracts like `0x2189…1ab4`, first seen on the day of the incident (06-09 14:23), carry $955K of DEX volume versus the genuine token's $190M, and classify as derivatives/imitations. Skip this step and you'll mistake a copycat transaction for the incident.
+
+The crux is that **key compromise here was compromise of unlimited mint authority.** With the proxy admin and Safe multisig keys taken, the attacker didn't merely steal a wallet balance — they controlled the contract itself. That is why this case sits in the same family as COAI's `proxy-contract-risk`: when admin authority is still live, on-chain data alone cannot separate a "hack" from an "insider mint."
+
+## Method — anatomy of a cross-chain drain
+
+<ChartFrame
+  kind="FUND FLOW · CROSS-CHAIN DRAIN · OWN MEASUREMENT"
+  caption={<>
+    Three prongs executed with the compromised keys.
+    <br />
+    (A) Malicious upgrade of the ETH bridge contract → 141.18M H drained,
+    <br />
+    (B) 6.045M H stolen from the ETH hot wallet — both converge on consolidation wallet 0x9e99,
+    <br />
+    (C) BSC proxy-admin seizure → ~100B unauthorized mint to a fresh wallet → sold on DEX.
+    <br />
+    <br />
+    A and B are confirmed at transaction level, C at the mint level. Pre-funding (Apr–May) is cited from external analysis.
+  </>}
+  source="Own Dune indexing (queries 7938540, 7938493) + Halborn, ZachXBT"
+  aspect="square"
+>
+  <HumanityFlow />
+</ChartFrame>
+
+The three measured prongs:
+
+**(A) Malicious bridge upgrade — 141,182,632 H.** After the ETH bridge contract was maliciously upgraded, a single transaction (06-08 19:52 UTC, tx `0xa665…29e5b`) moved 141,182,632 H to the attacker's first-hop wallet (`0xd1ea823d…78ea`). This matches Halborn's reported "141 million H drained via malicious bridge upgrade" exactly.
+
+**(B) Hot-wallet theft — 6,045,060 H.** Earlier, at 06-08 17:32 UTC, 6,045,060 H moved from the hot wallet (`0x0fd9…612a`) directly to the attacker consolidation wallet (`0x9e99…0504`) (tx `0x94a4…ee015`) — matching Halborn's "6,045,060 H from hot wallet" to the decimal. The bridge drain was also split into fragments (50M + 30M + 22.6M + 21.7M + 10.4M + 6.0M ≈ 140.9M) that converged on the same consolidation wallet.
+
+**(C) BSC unauthorized mint — a scale that dwarfs the float.** With the genuine BSC contract's proxy admin seized, stepwise minting flowed to a fresh wallet (`0x6aa2…`) on June 9 (1e8 → 1e9 → 1e10 → 1e11 scale, verified via amount_raw). **One thing stands out here** — the amount minted exceeded the genuine float (market cap $282M ≈ 2.8B tokens) many times over. Yet this wallet's direct DEX sells (by taker) amounted to only 24 trades / $7,892 on the morning of June 9. In other words, **the gap between "what could be minted" and "what could be extracted" was large** — bounded by what liquidity could absorb. The reported ~$12.9M of minted-token dumping is an estimate that includes router/relay hops; our direct measurement (single taker) confirms only a fraction. We mark the boundary honestly.
+
+### How on-chain data sees "hack vs staged exit"
+
+The core of ZachXBT's allegation is not *mechanism* but *intent*. That a drain happened, we confirmed by measurement. The question is whether it was an external intrusion, or an insider dressing a position exit in the clothing of a "hack." On-chain data cannot separate these directly — the same transaction fits both narratives. Circumstantial signals do exist: (1) pre-funding of attacker wallets (external analysis), (2) a contract structure with live admin/mint authority (our own confirmation), (3) selling concentrated on DEX, and (4) the undisclosed MM contract ZachXBT demanded. These strengthen the allegation; they do not confirm it.
+
+## Data
+
+### Price — a collapse just off the ATH, then a bounce
+
+| Point | Price | Note |
+|-------|-------|------|
+| 2026-06-02 | ~$0.85 | all-time high |
+| 2026-06-08 (pre-incident) | ~$0.7183 | drain begins |
+| 2026-06-09 (bottom) | ~$0.099 | −86%, market cap ~$282M |
+| 2026-06-12 | bounce | +43% in 24h, up to +200% relief rally |
+
+The crash compressed into about 12 hours, with selling concentrated on Uniswap, PancakeSwap and Kyber. The sharp bounce afterward (+200%) is safer read as volatility expansion in a token whose liquidity has thinned, not as recovery.
+
+### On-chain anchors (own measurement)
+
+| Item | Value | Transaction / query |
+|------|-------|---------------------|
+| Bridge drain | 141,182,632 H | tx `0xa665…29e5b` |
+| Hot-wallet theft | 6,045,060 H | tx `0x94a4…ee015` |
+| Consolidation convergence | ≈ 140.9M H | `0x9e99…0504` |
+| BSC unauthorized mint | ~100B (stepwise) | fresh wallet `0x6aa2` |
+| Direct-taker DEX sells | $7,892 / 1.61M H | 24 trades on 06-09 |
+
+## Lessons — how to doubt the word "hack"
+
+This case's lesson is unusual. It is not a signal for avoiding a crash, but for **how to read the narrative after one**.
+
+### Contract-structure signals (visible *before* the incident)
+
+- **Un-renounced admin/upgrade authority** — a contract where the proxy admin and mint authority remain live puts not a wallet balance but the *entire supply* at risk once a single key set is breached. That is precisely why a ~100B mint was possible here (same family as COAI)
+- **Whether the multisig is actually distributed** — if a Safe's three-key set was backed up or accessed on the same developer-machine lineage, the multisig's defensive value evaporates. The *physical independence* of keys matters more than the "N-of-M" number
+- **Bridge-contract upgradeability** — if a bridge is upgradeable and that authority is tied to the same keys, the bridge becomes the largest single point of failure (here 141M left in one tx)
+
+### Signals for verifying the narrative *after* the incident
+
+- **Pre-funding of attacker wallets** — if the attack wallets were funded and authority "warmed up" weeks before, that collides with the "spontaneous external intrusion" story. Check when the wallets were first funded
+- **Selling concentrated on DEX** — real external hackers use DEXes too, but an insider exit also tends to dispose quietly on DEX without CEX deposits. Neither is conclusive; it is one fragment of the picture
+- **Transparency of the MM contract and team story** — this is exactly what ZachXBT demanded. If silence follows a "disclose the MM agreement" request, that itself signals a low verifiability of the narrative
+- **Minted amount ≫ float** — when unauthorized minting exceeds the genuine float many times over, the event is closer to "supply control changed hands" than "a balance was stolen"
+
+### Trading judgment
+
+> A "we were hacked" announcement should be the start of verification, not the end of the story.
+
+A key-compromise incident and a staged insider exit can look identical on-chain. What an investor can do is neither swallow the narrative whole nor default to conspiracy — it is to know the boundary between *what is confirmed by transaction and what remains alleged*. The way this page drew that boundary is one example. (Written 2026-07-10; facts may be updated by subsequent team, exchange, or investigative disclosures.)
+
+## Sources
+
+1. **ZachXBT / Crypto Times** — [ZachXBT Calls $32M Humanity Protocol Hack 'Possibly Staged,' $H Crashes 86%](https://www.cryptotimes.io/2026/06/09/zachxbt-calls-32m-humanity-protocol-hack-possibly-staged-h-crashes-86/) — staging allegation and quotes
+2. **Halborn** — [Explained: The Humanity Protocol Hack (June 2026)](https://www.halborn.com/blog/post/explained-the-humanity-protocol-hack-june-2026) — key theft, bridge upgrade, mint mechanics, figures
+3. **CoinDesk** — [Humanity Protocol token crashes more than 80% after a $32 million private-key hack](https://www.coindesk.com/tech/2026/06/09/humanity-protocol-token-crashes-more-than-80-after-a-usd32-million-private-key-hack) — founder Terence Kwok's official position, price
+4. **news.bitcoin.com** — [Humanity Protocol Loses $32M in Private Key Hack as ZachXBT Calls Incident 'Possibly Staged'](https://news.bitcoin.com/humanity-protocol-exploit-zachxbt-staged/) — 17–19 wallets drained, DEX selling
+5. **CryptoTimes** — [Why is the Humanity H Token Up 43% Today After the Hack?](https://www.cryptotimes.io/2026/06/12/why-is-the-humanity-h-token-is-up-43-today-after-the-hack/) — post-crash bounce
+6. **TradingView / NewsBTC** — [Humanity Protocol Plans New H Token After $36 Million Key Compromise](https://www.tradingview.com/news/newsbtc:61385c386094b:0-humanity-protocol-plans-new-h-token-after-36-million-key-compromise/) — new token, 1:1 recovery, June 8 snapshot
+7. **Own on-chain measurement** — Dune Analytics (ETH `0xcf51…16eb` / BSC `0x44f1…5cc`): [ETH drain large transfers](https://dune.com/queries/7938540) · [BSC minting](https://dune.com/queries/7938493) · [mint decimals check](https://dune.com/queries/7938515) · [BSC genuine history](https://dune.com/queries/7938522) · [symbol-H DEX volume ranking](https://dune.com/queries/7938504) · [direct-taker sells](https://dune.com/queries/7938565)
+
+---
+
+*Note: "staged" / "MM exit" is an allegation raised by ZachXBT and has not been independently confirmed. The team explains it as a private-key compromise (a hack). This page asserts neither narrative, separating transactions confirmed by our own measurement from external citations. Contract and wallet addresses are public on-chain data.*
