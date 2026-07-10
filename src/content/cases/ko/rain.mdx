@@ -1,0 +1,148 @@
+---
+slug: "rain"
+title: "Rain Protocol (RAIN)"
+tokenSymbol: "RAIN"
+incidentDate: "2026-06-05"
+publishedDate: "2026-07-10"
+status: "pattern-match"
+severity: "high"
+patterns:
+  - "supply-concentration"
+  - "low-float"
+metrics:
+  marketCapPeak: 9500000000
+allegations:
+  - source: "ZachXBT"
+    sourceUrl: "https://www.cryptotimes.io/2026/06/05/zachxbt-traces-rain-teams-wallets-to-networks-behind-dop-and-tomi/"
+    date: "2026-06-05"
+    summary: "온체인 분석가 ZachXBT가 약 $8.8B 시총의 예측시장 프로젝트 RAIN에 대해 '어떤 경우에도 거래하지 말라'고 경고. 유통 공급의 99.97%를 81개 지갑이 보유하며, RAIN 팀 지갑이 과거 실패 프로젝트 DOP·TOMI 생태계와 Gems 핫월렛·CEX 입금주소를 통해 자금 흐름을 공유한다고 지적. 2025-10-14 15:31 UTC에 RAIN deployer 연계 지갑과 TOMI 팀 멀티시그가 같은 주소로 36초 간격 dust 전송을 보낸 정황도 제시."
+  - source: "crypto.news"
+    sourceUrl: "https://crypto.news/zachxbt-warns-traders-to-avoid-rain-protocol-over-8-8b-valuation/"
+    date: "2026-06-05"
+    summary: "RAIN이 약 $8.8B 밸류에이션에도 사용자·제품 트랙션이 빈약하고(연매출 ~$1M, TVL $27.2M이 전부 네이티브 토큰), 주요 백커나 팀의 공개 이력이 거의 없다고 보도. ZachXBT가 RAVE·EDGE·SIREN에 이어 지목했음을 전함."
+  - source: "자체 온체인 측정 (Dune)"
+    sourceUrl: "https://dune.com/queries/7939112"
+    date: "2026-07-10"
+    summary: "Arbitrum 컨트랙트(0x2511…099d)의 전체 transfer를 net balance로 재구성. 총 홀더 189,257개 중 상위 81개 지갑이 유통 공급의 99.97%를 보유(상위 10개 88.3%, 상위 50개 99.87%)함을 자체 확인 — ZachXBT의 '81지갑 99.97%' 주장과 정확히 일치."
+relatedCases: ["beat", "siren", "memecore", "lab"]
+---
+
+import { ChartFrame } from '@/components/chart-frame'
+import { Timeline, TimelineEvent } from '@/components/case-timeline'
+import { RainConcentration } from '@/components/rain-concentration'
+
+## 개요
+
+RAIN은 Arbitrum 위에서 돌아가는 예측시장(prediction market) 인프라 프로젝트다. SDK·API로 커스텀 예측시장을 만들 수 있는 "빌더 키트"를 표방한다. 2026년 6월 기준 시가총액이 약 $8.8~9.5B에 달했지만, 온체인 활동은 그 규모와 크게 어긋나 있다 — TVL은 약 $27.2M이고 그마저 사실상 전부 자기 네이티브 토큰이며, 프로토콜 연매출은 약 $1M 수준으로 보도됐다.
+
+이 케이스는 본 사이트의 BEAT와 같은 성격이다. **아직 아무 일도 일어나지 않았다.** 2026년 7월 10일 현재 RAIN은 폭락하지 않았고, 오히려 6월 29일 사상 최고가($0.01656) 부근에서 −13% 정도로 거래되고 있다. 그래서 우리는 이 페이지를 "무슨 일이 있었다"는 기록이 아니라, **"지금 어떤 구조적 조건이 보이는가"를 읽는 자료**로 쓴다. 어떤 결말도 예언하지 않는다.
+
+2026년 6월 5일, 온체인 분석가 ZachXBT는 RAIN을 지목하며 "어떤 경우에도 거래하지 말라"고 경고했다. 근거는 두 가지였다 — (1) 유통 공급의 99.97%가 81개 지갑에 몰려 있다는 극단적 집중도, (2) RAIN 팀 지갑이 과거 대형 모금 후 실패한 프로젝트 DOP·TOMI 생태계와 자금 흐름을 공유한다는 지갑 추적. 본 페이지는 이 지목을 단정으로 옮기지 않는다. 다만 우리가 직접 검증할 수 있는 부분 — 공급 집중도 — 을 재구성했고, 그 수치는 ZachXBT의 주장과 정확히 일치했다.
+
+> "Avoid Rain at all costs." — ZachXBT (2026-06-05). 이는 분석가가 제기한 경고이며, 어떤 manipulation도 확증된 바 없다. 본 페이지는 구조적 조건만 측정·정리하고, 지갑 링크 등 자체 검증하지 못한 부분은 인용으로 명시한다.
+
+## 타임라인
+
+<Timeline>
+  <TimelineEvent date="2025년 10월 14일 — dust 트랜잭션 정황 (외부 인용)">
+ZachXBT에 따르면 15:31:47 UTC에 RAIN deployer 연계 지갑이, 그보다 36초 앞서 TOMI 팀 멀티시그가 같은 목적지 주소로 각각 소액(dust) 전송을 보냄. (해당 주소들은 truncated 로만 공개돼 본 리서치가 재검증하지 않음.)
+  </TimelineEvent>
+  <TimelineEvent date="2026년 6월 5일 — ZachXBT 경고">
+ZachXBT가 RAIN을 "$8.8B인데 사용자·제품·백커·팀 이력이 빈약한 프로젝트"로 지목하고, 81지갑 99.97% 집중 + DOP/TOMI 지갑 링크를 근거로 "거래 금지"를 권고. RAVE·EDGE·SIREN에 이은 지목.
+  </TimelineEvent>
+  <TimelineEvent date="2026년 6월 29일 — 사상 최고가">
+RAIN이 약 $0.01656로 ATH 기록. 시총 약 $9.5B대.
+  </TimelineEvent>
+  <TimelineEvent date="2026년 7월 10일 — 현재 (본 페이지 작성)">
+ATH 대비 약 −13%. **아직 폭락 없음.** 공급 집중도는 유지된 것으로 자체 측정됨.
+  </TimelineEvent>
+</Timeline>
+
+## 공급 구조 — 이 케이스의 핵심
+
+RAIN에서 가장 또렷하고, 우리가 직접 검증할 수 있는 신호는 공급 집중도다. ZachXBT는 "유통 공급의 99.97%를 81개 지갑이 보유한다"고 했다. 우리는 Arbitrum 컨트랙트(`0x25118290e6a5f4139381d072181157035864099d`)의 전체 transfer를 net balance로 재구성해 이를 독립 검증했다.
+
+| 구간 | 누적 보유 비율 (자체 측정, 2026-07-10) |
+|------|----------------------------------------|
+| 상위 10 지갑 | **88.34%** |
+| 상위 50 지갑 | 99.87% |
+| **상위 81 지갑** | **99.97%** |
+| 상위 100 지갑 | 99.98% |
+| 총 홀더 수 | 189,257 |
+
+측정 결과는 ZachXBT의 수치와 **소수점까지 일치**했다(top 81 = 99.9708%). 뒤집어 말하면, 189,257개 홀더 중 상위 81개를 뺀 **나머지 약 189,176개 지갑이 전체의 약 0.03%만 나눠 갖고 있다**는 뜻이다. 시장에서 자유롭게 도는 물량이 사실상 존재하지 않는 구조다.
+
+<ChartFrame
+  kind="SUPPLY CONCENTRATION · 자체 측정"
+  caption={<>
+    RAIN 누적 공급 집중도 (Arbitrum, 자체 Dune 재구성).
+    <br />
+    <br />
+    상위 10개 88.3% → 상위 50개 99.87% → 상위 81개 99.97%.
+    <br />
+    <br />
+    총 홀더 189,257개 중 하위 약 189,176개가 약 0.03%만 보유. ZachXBT의 '81지갑 99.97%' 주장과 자체 측정이 일치.
+  </>}
+  source="Dune Analytics — 자체 측정 (쿼리 7939112)"
+  aspect="video"
+>
+  <RainConcentration />
+</ChartFrame>
+
+### 밸류에이션과 펀더멘털의 괴리
+
+집중도와 함께 보도된 또 하나의 구조적 신호는 밸류에이션 갭이다(아래는 보도 인용이며 본 리서치가 재계산하지는 않았다).
+
+| 항목 | 값 (보도 기준) |
+|------|----------------|
+| 시가총액 | 약 $8.8~9.5B |
+| TVL | 약 $27.2M (사실상 전부 네이티브 토큰) |
+| 프로토콜 연매출 | 약 $1M |
+| 홀더 대비 트랙션 | 사용자·제품·백커·팀 공개 이력 빈약 (보도) |
+
+수십억 달러의 시총이 $27M 규모의(그것도 자기 토큰으로 채워진) TVL과 연 $1M 매출 위에 올라 있다는 것은, 가격이 실사용·현금흐름이 아니라 **얇은 유통 물량과 집중된 보유 구조 위에서 형성**되고 있음을 시사한다. 이런 조건에서는 소량의 매도·매수가 가격을 크게 움직일 수 있다.
+
+## 수법 분석 — "무엇을 확인했고, 무엇이 인용인가"
+
+이 케이스에서 우리가 *측정으로 확인한 것*은 하나다: **극단적 공급 집중(81지갑 99.97%)**. 이것은 manipulation을 입증하지 않는다 — vesting·재단 보유·거래소 커스터디 등 정당한 이유로도 집중은 나타난다. 다만 유통 가능 물량이 이렇게 얇으면, 구조적으로 가격이 소수 주체에 취약해진다는 것은 사실이다.
+
+*인용으로만 전하는 것*은 ZachXBT의 지갑 링크다. 그는 RAIN 팀 지갑이 DOP·TOMI 생태계와 (1) 같은 목적지로의 36초 간격 dust 전송(2025-10-14), (2) Gems 핫월렛·CEX 입금주소를 통한 공유 자금 흐름으로 연결된다고 분석했다. DOP는 2024년 약 $162M을 모금한 뒤 실패한 프로젝트로, TOMI 역시 실패 사례로 거론된다. **본 리서치는 공개된 주소가 truncated 형태뿐이라 이 링크를 자체 재검증하지 않았다.** 배후로 거론되는 개인의 실명은 게재하지 않는다(공개된 프로젝트명·지갑 링크 수준으로만 다룬다).
+
+즉 이 케이스의 무게중심은 "누가 무엇을 했다"가 아니라 **"어떤 구조가 갖춰져 있는가"**다. 집중도는 확인됐고, 반복 인프라 정황은 신뢰할 만한 분석가가 제기했으며, 밸류에이션 갭은 보도됐다 — 이 셋이 겹친 토큰이 폭락에 취약한 구조라는 것이, 본 사이트의 사후 케이스들(RAVE·SIREN·LAB)이 반복해서 보여준 패턴이다.
+
+## 교훈 — 폭락 *전에* 이 구조를 알아보는 법
+
+RAIN이 주는 교훈은 "누가 덤프했나"가 아니다. 폭락이 오기 전, 어떤 조건이 겹치면 위험 구조로 읽어야 하는가다.
+
+### 공급 구조 시그널
+
+- **상위 소수 지갑이 유통 공급의 대부분 보유** — RAIN은 상위 81개가 99.97%, 상위 10개만으로 88.3%. 자유 유통 물량이 한 자릿수 %도 안 되면, 가격은 소수 주체의 결정에 종속된다
+- **홀더 수가 많다고 분산된 게 아니다** — RAIN의 홀더는 18.9만 개지만 그중 99.97%는 상위 81개에 있다. 홀더 "수"가 아니라 상위 집중 "비율"을 봐야 한다
+- **집중도는 온체인에서 직접 셀 수 있다** — 이 케이스의 핵심 수치는 우리가 재구성으로 검증했다. 의혹을 그대로 믿기 전에, 공급 분포는 스스로 확인할 수 있는 몇 안 되는 항목이다
+
+### 밸류에이션 / 펀더멘털 시그널
+
+- **시총 ≫ TVL·매출** — 수십억 달러 시총이 수천만 달러 TVL(그것도 자기 토큰) 위에 있으면, 가격은 실사용이 아니라 얇은 물량 위에 형성된 것
+- **팀·백커의 공개 이력 부재** — 검증 가능한 팀·투자자 정보가 없으면, 서사의 검증 가능성 자체가 낮다
+
+### 반복 인프라 시그널
+
+- **과거 실패 프로젝트와의 지갑 연결** — 신뢰할 만한 분석가가 팀 지갑을 과거 사례와 연결하면(자금 공유·동시 트랜잭션 등), 개별 토큰의 펀더멘털과 무관한 반복 구조를 의심할 근거가 된다 (RAIN↔DOP·TOMI, BEAT·SIREN의 크로스토큰 지갑과 같은 결)
+
+### 거래 판단
+
+> 구조적으로 취약한 토큰은, 폭락이 아직 안 왔다는 사실만으로 안전해지지 않는다.
+
+99.97% 집중 + 얇은 유통 + 밸류에이션 갭이 겹친 토큰에서는, 정점 부근에서 롱이든 떨어지는 칼을 잡는 숏이든 어느 방향의 포지션도 변동성 위험이 크다. "manipulation이 입증되지 않았다"는 것은 "안전하다"는 뜻이 아니다. 본 페이지는 RAIN의 결말을 예측하지 않으며, 이 글을 읽는 시점의 가격·구조는 이미 달라졌을 수 있다(작성: 2026-07-10).
+
+## 출처
+
+1. **ZachXBT / Crypto Times** — [ZachXBT Traces RAIN Team's Wallets to Networks Behind DOP and TOMI](https://www.cryptotimes.io/2026/06/05/zachxbt-traces-rain-teams-wallets-to-networks-behind-dop-and-tomi/) — 지갑 링크·집중도·경고
+2. **crypto.news** — [ZachXBT warns traders to avoid Rain Protocol over $8.8B valuation](https://crypto.news/zachxbt-warns-traders-to-avoid-rain-protocol-over-8-8b-valuation/) — 밸류에이션 갭·트랙션
+3. **CryptoPotato** — ["Avoid Rain at All Costs": ZachXBT Raises Red Flags Over $8.8B Prediction Market Project](https://cryptopotato.com/avoid-rain-at-all-costs-zachxbt-raises-red-flags-over-8-8b-prediction-market-project/) — 경고 요약
+4. **CoinGecko** — [Rain (RAIN)](https://www.coingecko.com/en/coins/rain) — 컨트랙트·가격·ATH($0.01656, 6/29)
+5. **자체 온체인 측정** — Dune Analytics (Arbitrum `0x25118290e6a5f4139381d072181157035864099d`): [공급 집중도 재구성](https://dune.com/queries/7939112) — 상위 81지갑 99.97% 자체 확인
+
+---
+
+*유의: RAIN에 대한 지목은 ZachXBT가 제기한 경고이며, 어떤 위법 행위도 확증되지 않았다. 본 페이지는 공급 집중도만 자체 측정으로 검증했고, 지갑 링크·밸류에이션 등은 출처를 명시해 인용했다. RAIN은 본 작성 시점 기준 폭락하지 않은 라이브 토큰이며, 구조적 위험 조건을 분석 목적으로 정리한 것이다. 컨트랙트/지갑 주소는 온체인 공개 데이터다.*

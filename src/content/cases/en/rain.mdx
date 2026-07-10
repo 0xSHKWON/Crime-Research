@@ -1,0 +1,148 @@
+---
+slug: "rain"
+title: "Rain Protocol (RAIN)"
+tokenSymbol: "RAIN"
+incidentDate: "2026-06-05"
+publishedDate: "2026-07-10"
+status: "pattern-match"
+severity: "high"
+patterns:
+  - "supply-concentration"
+  - "low-float"
+metrics:
+  marketCapPeak: 9500000000
+allegations:
+  - source: "ZachXBT"
+    sourceUrl: "https://www.cryptotimes.io/2026/06/05/zachxbt-traces-rain-teams-wallets-to-networks-behind-dop-and-tomi/"
+    date: "2026-06-05"
+    summary: "On-chain investigator ZachXBT warned traders to 'avoid Rain at all costs,' flagging that 99.97% of RAIN's circulating supply sits in 81 wallets and that RAIN team wallets share funding trails with the failed DOP and TOMI ecosystems via a Gems hot wallet and several CEX deposit addresses. He also cited a 2025-10-14 15:31 UTC pattern where a RAIN-deployer-linked wallet and a TOMI team multisig sent dust to the same destination 36 seconds apart."
+  - source: "crypto.news"
+    sourceUrl: "https://crypto.news/zachxbt-warns-traders-to-avoid-rain-protocol-over-8-8b-valuation/"
+    date: "2026-06-05"
+    summary: "Reported that RAIN carries an ~$8.8B valuation despite thin user/product traction (~$1M annual fees, $27.2M TVL that is essentially all native token) and little public history for its backers or team. Noted it follows ZachXBT's earlier flags on RAVE, EDGE and SIREN."
+  - source: "Own on-chain measurement (Dune)"
+    sourceUrl: "https://dune.com/queries/7939112"
+    date: "2026-07-10"
+    summary: "Reconstructed net balances from the full transfer history of the Arbitrum contract (0x2511…099d). Of 189,257 total holders, the top 81 wallets hold 99.97% of the circulating supply (top 10 = 88.3%, top 50 = 99.87%) — matching ZachXBT's '81 wallets, 99.97%' claim exactly."
+relatedCases: ["beat", "siren", "memecore", "lab"]
+---
+
+import { ChartFrame } from '@/components/chart-frame'
+import { Timeline, TimelineEvent } from '@/components/case-timeline'
+import { RainConcentration } from '@/components/rain-concentration'
+
+## Overview
+
+RAIN is a prediction-market infrastructure project on Arbitrum, marketed as a "builder kit" of SDKs and APIs for launching custom forecasting markets. As of June 2026 its market cap reached roughly $8.8–9.5B, yet its on-chain footprint diverges sharply from that scale — TVL is about $27.2M and essentially all of it is the project's own native token, while protocol annual fees were reported at around $1M.
+
+This case is the same character as our BEAT case. **Nothing has happened yet.** As of July 10, 2026, RAIN has not crashed — it trades about −13% off its June 29 all-time high ($0.01656). So we use this page not as a record of "what happened" but as a reading of **"what structural conditions are visible now."** We forecast no outcome.
+
+On June 5, 2026, on-chain investigator ZachXBT flagged RAIN and told traders to "avoid it at all costs." His grounds were twofold — (1) an extreme concentration in which 99.97% of the circulating supply sits in 81 wallets, and (2) a wallet trace linking RAIN team wallets to the funding flows of DOP and TOMI, prior projects that raised large sums and then failed. This page does not convert that flag into an assertion. But we did reconstruct the part we can verify ourselves — the supply concentration — and the figure matched ZachXBT's claim exactly.
+
+> "Avoid Rain at all costs." — ZachXBT (2026-06-05). This is a warning raised by an analyst; no manipulation has been confirmed. This page measures and lays out only the structural conditions, and marks anything we could not independently verify — such as the wallet links — as citation.
+
+## Timeline
+
+<Timeline>
+  <TimelineEvent date="Oct 14, 2025 — dust-transaction pattern (external citation)">
+Per ZachXBT, at 15:31:47 UTC a RAIN-deployer-linked wallet — and 36 seconds earlier, a TOMI team multisig — each sent a dust transfer to the same destination address. (The addresses are disclosed only in truncated form, so this research did not re-verify them.)
+  </TimelineEvent>
+  <TimelineEvent date="Jun 5, 2026 — ZachXBT warning">
+ZachXBT flagged RAIN as "an $8.8B project with thin users, product, backers and team history," recommending against trading it on the basis of the 81-wallet 99.97% concentration and the DOP/TOMI wallet links. A flag following RAVE, EDGE and SIREN.
+  </TimelineEvent>
+  <TimelineEvent date="Jun 29, 2026 — all-time high">
+RAIN hit an ATH of ~$0.01656, a market cap around $9.5B.
+  </TimelineEvent>
+  <TimelineEvent date="Jul 10, 2026 — present (this page)">
+About −13% off the ATH. **No crash yet.** The supply concentration is measured as intact.
+  </TimelineEvent>
+</Timeline>
+
+## Supply structure — the heart of this case
+
+RAIN's clearest signal, and the one we can verify directly, is supply concentration. ZachXBT said "99.97% of the circulating supply is held by 81 wallets." We reconstructed net balances from the full transfer history of the Arbitrum contract (`0x25118290e6a5f4139381d072181157035864099d`) to check it independently.
+
+| Bucket | Cumulative share (own measurement, 2026-07-10) |
+|--------|-------------------------------------------------|
+| Top 10 wallets | **88.34%** |
+| Top 50 wallets | 99.87% |
+| **Top 81 wallets** | **99.97%** |
+| Top 100 wallets | 99.98% |
+| Total holders | 189,257 |
+
+The result matched ZachXBT's figure to the decimal (top 81 = 99.9708%). Put the other way: of 189,257 holders, everyone outside the top 81 — **roughly 189,176 wallets — shares only about 0.03%** of the supply. There is effectively no freely circulating float.
+
+<ChartFrame
+  kind="SUPPLY CONCENTRATION · OWN MEASUREMENT"
+  caption={<>
+    RAIN cumulative supply concentration (Arbitrum, own Dune reconstruction).
+    <br />
+    <br />
+    Top 10 = 88.3% → top 50 = 99.87% → top 81 = 99.97%.
+    <br />
+    <br />
+    Of 189,257 holders, the bottom ~189,176 hold only ~0.03%. Own measurement matches ZachXBT's '81 wallets, 99.97%'.
+  </>}
+  source="Dune Analytics — own measurement (query 7939112)"
+  aspect="video"
+>
+  <RainConcentration />
+</ChartFrame>
+
+### The valuation-vs-fundamentals gap
+
+Alongside concentration, the other structural signal reported is a valuation gap (the figures below are cited from reporting; this research did not recompute them).
+
+| Item | Value (as reported) |
+|------|---------------------|
+| Market cap | ~$8.8–9.5B |
+| TVL | ~$27.2M (essentially all native token) |
+| Protocol annual fees | ~$1M |
+| Traction vs holders | thin user/product/backer/team history (reported) |
+
+A multi-billion-dollar market cap sitting atop ~$27M of TVL (and that filled with the project's own token) and ~$1M of annual fees suggests a price formed not on real usage or cash flow but on **a thin float and a concentrated holder base**. Under those conditions, small buys or sells can move price a lot.
+
+## Method — "what is confirmed, and what is citation"
+
+What we *confirmed by measurement* is one thing: **extreme supply concentration (81 wallets, 99.97%)**. This does not prove manipulation — concentration also arises from legitimate causes like vesting, foundation holdings, or exchange custody. But it is a fact that when the free float is this thin, price is structurally exposed to a handful of actors.
+
+What we relay *only as citation* is ZachXBT's wallet trace. He analyzed RAIN team wallets as connected to the DOP and TOMI ecosystems via (1) a 36-second-apart dust transfer to a shared destination (2025-10-14) and (2) shared funding flows through a Gems hot wallet and CEX deposit addresses. DOP is a project that raised ~$162M in 2024 and then failed; TOMI is likewise cited as a failed case. **This research did not re-verify these links, because the disclosed addresses are only in truncated form.** We do not publish the real name of any individual named as being behind them (we handle this only at the level of public project names and wallet links).
+
+So the center of gravity here is not "who did what" but **"what structure is in place."** Concentration is confirmed, the repeat-infrastructure pattern is raised by a credible analyst, and the valuation gap is reported — and the overlap of those three is the very setup our post-crash cases (RAVE, SIREN, LAB) have shown, again and again, to be vulnerable to a collapse.
+
+## Lessons — how to spot this structure *before* a crash
+
+RAIN's lesson is not "who dumped." It is which conditions, overlapping, should be read as a risk structure before a crash arrives.
+
+### Supply-structure signals
+
+- **A few top wallets hold most of the circulating supply** — RAIN's top 81 hold 99.97%, the top 10 alone 88.3%. When the free float is under single-digit percent, price is subordinate to a handful of actors
+- **Many holders does not mean distributed** — RAIN has 189K holders, but 99.97% sits in the top 81. Look at the top-concentration *ratio*, not the holder *count*
+- **Concentration is directly countable on-chain** — this case's key figure was verified by our own reconstruction. Before taking an allegation at face value, supply distribution is one of the few things you can check for yourself
+
+### Valuation / fundamentals signals
+
+- **Market cap ≫ TVL and fees** — when a multi-billion cap sits over tens of millions of TVL (and that in its own token), the price is built on a thin float, not real usage
+- **No public team/backer history** — with no verifiable team or investor information, the narrative's verifiability is low to begin with
+
+### Repeat-infrastructure signals
+
+- **Wallet links to prior failed projects** — when a credible analyst connects team wallets to earlier cases (shared funding, synchronized transactions), that is grounds to suspect a repeat structure independent of any single token's fundamentals (RAIN↔DOP/TOMI, in the same vein as the cross-token wallets in BEAT and SIREN)
+
+### Trading judgment
+
+> A structurally vulnerable token does not become safe just because the crash hasn't come yet.
+
+In a token where 99.97% concentration, a thin float and a valuation gap overlap, both a long near the top and a knife-catching short carry heavy volatility risk. "Manipulation isn't proven" does not mean "safe." This page forecasts no ending for RAIN, and by the time you read this the price and structure may already have changed (written 2026-07-10).
+
+## Sources
+
+1. **ZachXBT / Crypto Times** — [ZachXBT Traces RAIN Team's Wallets to Networks Behind DOP and TOMI](https://www.cryptotimes.io/2026/06/05/zachxbt-traces-rain-teams-wallets-to-networks-behind-dop-and-tomi/) — wallet links, concentration, warning
+2. **crypto.news** — [ZachXBT warns traders to avoid Rain Protocol over $8.8B valuation](https://crypto.news/zachxbt-warns-traders-to-avoid-rain-protocol-over-8-8b-valuation/) — valuation gap, traction
+3. **CryptoPotato** — ["Avoid Rain at All Costs": ZachXBT Raises Red Flags Over $8.8B Prediction Market Project](https://cryptopotato.com/avoid-rain-at-all-costs-zachxbt-raises-red-flags-over-8-8b-prediction-market-project/) — warning summary
+4. **CoinGecko** — [Rain (RAIN)](https://www.coingecko.com/en/coins/rain) — contract, price, ATH ($0.01656, Jun 29)
+5. **Own on-chain measurement** — Dune Analytics (Arbitrum `0x25118290e6a5f4139381d072181157035864099d`): [supply-concentration reconstruction](https://dune.com/queries/7939112) — top 81 wallets 99.97%, self-confirmed
+
+---
+
+*Note: the flag on RAIN is a warning raised by ZachXBT; no wrongdoing has been confirmed. This page verified only the supply concentration by our own measurement, and cited wallet links and valuation figures to their sources. RAIN is, as of writing, a live token that has not crashed; the structural risk conditions are laid out for analytical purposes. Contract and wallet addresses are public on-chain data.*
